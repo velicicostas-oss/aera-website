@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+  <title>AERA · Проверенные новости</title>
+  <link>https://aera-website-seven.vercel.app</link>
+  <description>Последние проверенные новости и аналитика с молдавским контекстом.</description>
+  <language>ru</language>
+  <item>
+    <title>Добро пожаловать в ленту AERA</title>
+    <link>https://aera-website-seven.vercel.app</link>
+    <description>Здесь будут появляться последние новости в формате RSS. Подпишитесь, чтобы быть в курсе событий.</description>
+    <pubDate>Sat, 21 Mar 2026 23:30:00 GMT</pubDate>
+  </item>
+</channel>
+</rss>

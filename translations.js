@@ -199,7 +199,12 @@ const STATIC_TRANSLATIONS = {
     optTech: 'Întrebare tehnică',
     optOther: 'Altele',
     btnSend: 'Trimite',
-    btnSent: 'Trimis ✓'
+    btnSent: 'Trimis ✓',
+    
+    // 404 Page
+    '404Title': 'Pagina nu a fost găsită',
+    '404Text': 'Posibil, materialul a fost șters sau mutat. Încercați să găsiți prin căutare sau reveniți la pagina principală.',
+    'btnHome': 'La pagina principală'
   },
   en: {
     about: 'About',
@@ -387,7 +392,12 @@ const STATIC_TRANSLATIONS = {
     optTech: 'Technical question',
     optOther: 'Other',
     btnSend: 'Send',
-    btnSent: 'Sent ✓'
+    btnSent: 'Sent ✓',
+
+    // 404 Page
+    '404Title': 'Page Not Found',
+    '404Text': 'The material might have been deleted or moved. Try searching or return to the homepage.',
+    'btnHome': 'To homepage'
   },
   ru: {
     about: 'О нас',
@@ -458,7 +468,7 @@ const STATIC_TRANSLATIONS = {
     colorGreen: '<strong style="color:#1a7a3c">🟢 80–100 · Проверено</strong> — подтверждено тремя и более надёжными источниками, факты согласуются',
     colorYellow: '<strong style="color:#8a6000">🟡 50–79 · Частично проверено</strong> — один-два источника или незначительные расхождения в деталях',
     colorRed: '<strong style="color:#b03020">🔴 0–49 · Непроверено</strong> — единственный источник, анонимная утечка или выявлены противоречия',
-    correctionsText: 'Если в материале обнарушена ошибка — мы исправляем её открыто. На странице статьи появляется пометка «Исправлено» с датой и описанием изменения. Мы не удаляем материалы без объяснений.',
+    correctionsText: 'Если в материале обнаружена ошибка — мы исправляем её открыто. На странице статьи появляется пометка «Исправлено» с датой и описанием изменения. Мы не удаляем материалы без объяснений.',
     correctionsContact: 'Заметили ошибку? Напишите: <strong>editors@aera.md</strong>',
 
     // Privacy page
@@ -575,7 +585,12 @@ const STATIC_TRANSLATIONS = {
     optTech: 'Технический вопрос',
     optOther: 'Другое',
     btnSend: 'Отправить',
-    btnSent: 'Отправлено ✓'
+    btnSent: 'Отправлено ✓',
+
+    // 404 Page
+    '404Title': 'Страница не найдена',
+    '404Text': 'Возможно, материал был удалён или перемещён. Попробуйте найти нужное через поиск или вернитесь на главную.',
+    'btnHome': 'На главную'
   }
 };
 
