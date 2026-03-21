@@ -3,10 +3,11 @@
  */
 
 window.AERA_THEME = localStorage.getItem('aera_theme') || 'light';
-if (window.AERA_THEME === 'dark') document.body.classList.add('dark');
+if (window.AERA_THEME === 'dark') document.documentElement.classList.add('dark');
 
 function toggleTheme() {
-  const isDark = document.body.classList.toggle('dark');
+  const isDark = document.documentElement.classList.toggle('dark');
+  document.body.classList.toggle('dark', isDark);
   window.AERA_THEME = isDark ? 'dark' : 'light';
   localStorage.setItem('aera_theme', window.AERA_THEME);
 }

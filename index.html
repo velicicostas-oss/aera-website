@@ -627,16 +627,16 @@ function escapeHtml(text){
   return (text || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m] || m));
 }
 function articleMatchesSection(article, section){
-  if (section === 'all') return true;
+  const s = (section || 'all').toLowerCase();
+  if (s === 'all') return true;
   const cat = (article.category || '').toLowerCase();
-  // Using more robust category matching
-  if (section === 'world') return cat.includes('world') || cat.includes('international');
-  if (section === 'moldova') return cat.includes('moldova');
-  if (section === 'economy') return cat.includes('econom');
-  if (section === 'politics') return cat.includes('polit');
-  if (section === 'security') return cat.includes('secur') || cat.includes('conflict');
-  if (section === 'technology') return cat.includes('tech');
-  if (section === 'conflicts') return cat.includes('conflict');
+  if (s === 'world') return cat.includes('world') || cat.includes('мир') || cat.includes('inter');
+  if (s === 'moldova') return cat.includes('moldova') || cat.includes('молдов');
+  if (s === 'economy') return cat.includes('econom') || cat.includes('эконом');
+  if (s === 'politics') return cat.includes('polit') || cat.includes('полит');
+  if (s === 'security') return cat.includes('secur') || cat.includes('безоп') || cat.includes('conflict');
+  if (s === 'technology') return cat.includes('tech') || cat.includes('техно');
+  if (s === 'conflicts') return cat.includes('conflict') || cat.includes('конфликт');
   return true;
 }
 function applyUiTranslations(){
@@ -662,14 +662,15 @@ async function loadArticles() {
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?status=eq.published&order=created_at.desc&limit=18`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
     const data = await res.json();
-    if (data && data.length > 0) {
+    if (data && Array.isArray(data)) {
       allArticles = data;
       populateBreakingBar(allArticles);
       populateTicker(allArticles);
-      renderPage();
     }
+    renderPage();
   } catch(e) {
-    console.log('DB not ready yet, showing demo content');
+    console.error('AERA Error loading articles:', e);
+    renderPage();
   }
 }
 
@@ -734,24 +735,42 @@ function renderHero(article) {
   // Dynamic Moldova Context
   const mdBox = document.querySelector('.md-box');
   const moldovaRaw = article.moldova_context || '';
-  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.startsWith('[HIDDEN]'))) {
+  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.includes('[HIDDEN]'))) {
     if (mdBox) mdBox.style.display = 'none';
   } else {
     if (mdBox) mdBox.style.display = 'block';
     let ctx = {};
-    try { ctx = typeof moldovaRaw === 'string' ? JSON.parse(moldovaRaw) : moldovaRaw; } catch(e) {}
-    if (ctx.economy_impact || ctx.economy || ctx.summary) {
-      const mdText = document.querySelector('.md-text');
-      if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
-      const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
-      const stats = document.querySelectorAll('.md-stat');
+    if (typeof moldovaRaw === 'string') {
+      if (moldovaRaw.trim().startsWith('{')) {
+        try { ctx = JSON.parse(moldovaRaw); } catch(e) {}
+      } else {
+        ctx = { summary: moldovaRaw };
+      }
+    } else {
+       ctx = moldovaRaw;
+    }
+    
+    const mdText = document.querySelector('.md-text');
+    if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
+    
+    const stats = document.querySelectorAll('.md-stat');
+    const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
+    if (figures.length > 0) {
+      stats.forEach(s => s.style.display = 'none');
       figures.slice(0,3).forEach((fig, i) => {
         if (stats[i]) {
+          stats[i].style.display = 'block';
           const parts = String(fig).split('—');
-          stats[i].querySelector('.md-stat-val').textContent = parts[0]?.trim() || fig;
-          stats[i].querySelector('.md-stat-lbl').textContent = parts[1]?.trim() || '';
+          const valEl = stats[i].querySelector('.md-stat-val');
+          const lblEl = stats[i].querySelector('.md-stat-lbl');
+          if (valEl) valEl.textContent = parts[0]?.trim() || fig;
+          if (lblEl) lblEl.textContent = parts[1]?.trim() || '';
         }
       });
+    } else {
+      // If no figures, maybe hide the stats row or show defaults? 
+      // For now we keep them hidden if figures is empty but moldova_context exists as string
+      stats.forEach(s => s.style.display = 'none');
     }
   }
 }
@@ -861,6 +880,11 @@ function updateCookieBanner(){
 }
 function acceptCookies(){
   localStorage.setItem('aera_cookies_ok','1');
+  const bar = document.getElementById('cookie-bar');
+  if(bar){ bar.style.opacity='0'; bar.style.transition='opacity .3s'; setTimeout(()=>bar.style.display='none',300); }
+}
+function declineCookies(){
+  localStorage.setItem('aera_cookies_ok','0');
   const bar = document.getElementById('cookie-bar');
   if(bar){ bar.style.opacity='0'; bar.style.transition='opacity .3s'; setTimeout(()=>bar.style.display='none',300); }
 }
