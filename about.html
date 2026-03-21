@@ -108,6 +108,29 @@ ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
   .about-grid{grid-template-columns:1fr;}
 }
 </style>
+<script src="translations.js"></script>
+<script>
+function setNav(el){
+  const section = el.textContent.trim().toLowerCase();
+  const map = { 'молдова': 'moldova', 'мир': 'world', 'экономика': 'economy', 'политика': 'politics', 'безопасность': 'security', 'технологии': 'technology' };
+  window.location.href = `index.html?section=${map[section] || 'all'}`;
+}
+function setLang(el){
+  document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  const lang = el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', lang);
+  applyPageTranslations(lang);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const lang = localStorage.getItem('aera_lang') || 'ru';
+  document.querySelectorAll('.lb').forEach(btn => {
+    if (btn.textContent.toLowerCase() === lang) btn.classList.add('on');
+    else btn.classList.remove('on');
+  });
+  applyPageTranslations(lang);
+});
+</script>
 </head>
 <body>
 <nav class="nav">
@@ -116,83 +139,78 @@ ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
     <div class="logo-dot"></div>
   </a>
   <div class="nav-mid">
-    <div class="ni" onclick="setNav(this)">Молдова</div>
-    <div class="ni" onclick="setNav(this)">Мир</div>
-    <div class="ni" onclick="setNav(this)">Экономика</div>
-    <div class="ni" onclick="setNav(this)">Политика</div>
-    <div class="ni" onclick="setNav(this)">Безопасность</div>
-    <div class="ni" onclick="setNav(this)">Технологии</div>
+    <div class="ni" onclick="setNav(this)" data-t="navMoldova">Молдова</div>
+    <div class="ni" onclick="setNav(this)" data-t="navWorld">Мир</div>
+    <div class="ni" onclick="setNav(this)" data-t="navEconomy">Экономика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navPolitics">Политика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navSecurity">Безопасность</div>
+    <div class="ni" onclick="setNav(this)" data-t="navTechnology">Технологии</div>
   </div>
   <div class="nav-r">
     <div class="lang-row">
       <button class="lb" onclick="setLang(this)">RO</button>
-      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">RU</button>
       <button class="lb" onclick="setLang(this)">EN</button>
     </div>
     <button class="tbtn" onclick="toggleTheme()"><div class="tth"></div></button>
   </div>
 </nav>
 <div class="page-wrap">
-  <div class="page-title">О нас</div>
-  <div class="page-sub">AERA — новостной портал Молдовы. Мы собираем и проверяем новости со всего мира и объясняем, что они означают для тебя.</div>
+  <div class="page-title" data-t="aboutTitle">О нас</div>
+  <div class="page-sub" data-t="aboutSub">AERA — новостной портал Молдовы. Мы собираем и проверяем новости со всего мира и объясняем, что они означают для тебя.</div>
 
-  <h2 class="sec">Почему AERA</h2>
-  <p class="txt">Новостей много — хороших мало. Большинство порталов просто копируют друг друга. Мы работаем иначе: каждый материал на AERA проверен по нескольким источникам, и к каждой международной новости добавлен молдавский контекст.</p>
-  <p class="txt">Наша цель — чтобы читатель понимал не только что случилось, но и почему это важно именно здесь, в Молдове.</p>
+  <h2 class="sec" data-t="whyAera">Почему AERA</h2>
+  <p class="txt" data-t="whyAeraText">Новостей много — хороших мало. Большинство порталов просто копируют друг друга. Мы работаем иначе: каждый материал на AERA проверен по нескольким источникам, и к каждой международной новости добавлен молдавский контекст.</p>
+  <p class="txt" data-t="goal">Наша цель — чтобы читатель понимал не только что случилось, но и почему это важно именно здесь, в Молдове.</p>
 
   <div class="about-grid">
     <div class="about-card">
       <div class="about-card-ico">🛡</div>
-      <div class="about-card-title">Верификация прежде всего</div>
-      <div class="about-card-txt">Каждый факт проверяется минимум по двум независимым источникам. Trust Score показывает степень достоверности прямо на странице материала.</div>
+      <div class="about-card-title" data-t="verification">Верификация прежде всего</div>
+      <div class="about-card-txt" data-t="verificationText">Каждый факт проверяется минимум по двум независимым источникам. Trust Score показывает степень достоверности прямо на странице материала.</div>
     </div>
     <div class="about-card">
       <div class="about-card-ico">🇲🇩</div>
-      <div class="about-card-title">Молдавский контекст</div>
-      <div class="about-card-txt">Международные новости — через призму Молдовы. Что означает решение ФРС для лея? Как война в регионе влияет на молдавский экспорт?</div>
+      <div class="about-card-title" data-t="moldovaImpact">Молдавский контекст</div>
+      <div class="about-card-txt" data-t="moldovaContextText">Международные новости — через призму Молдовы. Что означает решение ФРС для лея? Как война в регионе влияет на молдавский экспорт?</div>
     </div>
     <div class="about-card">
       <div class="about-card-ico">⚡</div>
-      <div class="about-card-title">Обновление каждые 15 минут</div>
-      <div class="about-card-txt">Мы мониторим более 20 источников круглосуточно. Новые материалы проходят проверку перед публикацией — быстро и без потери качества.</div>
+      <div class="about-card-title" data-t="updateSpeed">Обновление каждые 15 минут</div>
+      <div class="about-card-txt" data-t="updateText">Мы мониторим более 20 источников круглосуточно. Новые материалы проходят проверку перед публикацией — быстро и без потери качества.</div>
     </div>
     <div class="about-card">
       <div class="about-card-ico">🗣</div>
-      <div class="about-card-title">Три языка</div>
-      <div class="about-card-txt">Материалы публикуются на румынском, русском и английском. Каждая версия написана отдельно — не машинный перевод.</div>
+      <div class="about-card-title" data-t="languages">Три языка</div>
+      <div class="about-card-txt" data-t="languagesText">Материалы публикуются на румынском, русском и английском. Каждая версия написана отдельно — не машинный перевод.</div>
     </div>
   </div>
 
-  <h2 class="sec">Наши принципы</h2>
+  <h2 class="sec" data-t="principles">Наши принципы</h2>
   <ul class="lst">
-    <li><strong>Независимость</strong> — на нашу позицию не влияют рекламодатели или политические структуры</li>
-    <li><strong>Прозрачность</strong> — все источники указаны, Trust Score виден каждому читателю</li>
-    <li><strong>Оригинальность</strong> — мы пишем собственные тексты, а не копируем чужие</li>
-    <li><strong>Исправления</strong> — ошибки исправляются открыто, с датой и описанием изменения</li>
+    <li data-t="principle1"><strong>Независимость</strong> — на нашу позицию не влияют рекламодатели или политические структуры</li>
+    <li data-t="principle2"><strong>Прозрачность</strong> — все источники указаны, Trust Score виден каждому читателю</li>
+    <li data-t="principle3"><strong>Оригинальность</strong> — мы пишем собственные тексты, а не копируем чужие</li>
+    <li data-t="principle4"><strong>Исправления</strong> — ошибки исправляются открыто, с датой и описанием изменения</li>
   </ul>
 
-  <h2 class="sec">Связаться с нами</h2>
-  <p class="txt">Новости и сообщения: <strong>news@aera.md</strong><br/>
+  <h2 class="sec" data-t="contactUs">Связаться с нами</h2>
+  <p class="txt" data-t="contactText">Новости и сообщения: <strong>news@aera.md</strong><br/>
   Сотрудничество: <strong>partners@aera.md</strong><br/>
   Исправления: <strong>editors@aera.md</strong></p>
 </div>
 <div class="foot">
   <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
   <div class="flinks">
-    <a class="flink" href="about.html">О нас</a>
-    <a class="flink" href="verification.html">Как мы проверяем факты</a>
-    <a class="flink" href="privacy.html">Конфиденциальность</a>
-    <a class="flink" href="terms.html">Условия</a>
-    <a class="flink" href="cookies.html">Cookies</a>
-    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="about.html" data-t="about">О нас</a>
+    <a class="flink" href="verification.html" data-t="verification">Как мы проверяем факты</a>
+    <a class="flink" href="privacy.html" data-t="privacy">Конфиденциальность</a>
+    <a class="flink" href="terms.html" data-t="terms">Условия</a>
+    <a class="flink" href="cookies.html" data-t="cookies">Cookies</a>
+    <a class="flink" href="contact.html" data-t="contact">Контакты</a>
     <a class="flink" href="rss.xml">RSS</a>
   </div>
-  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+  <div class="fnote" data-t="footerNote">Проверенные новости · Обновление каждые 15 минут</div>
 </div>
-<script>
-function toggleTheme(){document.body.classList.toggle('dark');}
-function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-function setLang(el){document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-</script>
 </body>
 </html>

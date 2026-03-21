@@ -6,6 +6,7 @@
 <title>МВФ повышает прогноз для Молдовы — рост 3.8% в 2026 году · AERA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="translations.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -701,7 +702,7 @@ function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remo
 // ── SUPABASE + LANG ──
 const SUPABASE_URL = 'https://araqepkymkxktvhseeas.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_WX5Bkpcd92hY-aYmkwAJqA_-ugBJu6N';
-let currentLang = 'ru';
+let currentLang = localStorage.getItem('aera_lang') || 'ru';
 let articleData = null;
 let relatedArticles = [];
 
@@ -755,67 +756,131 @@ async function loadArticle() {
 
 function renderArticle(article) {
   applyNewsUi();
-  const t=NEWS_UI[currentLang];
-  const title = field(article,'title');
-  const deck = field(article,'summary1min') || field(article,'summary10s');
-  const modes = { '10s': field(article,'summary10s'), '1min': field(article,'summary1min'), 'full': field(article,'body') };
+  const t = NEWS_UI[currentLang];
+  const title = field(article, 'title');
+  const deck = field(article, 'summary1min') || field(article, 'summary10s');
+  const modes = { '10s': field(article, 'summary10s'), '1min': field(article, 'summary1min'), 'full': field(article, 'body') };
   const titleEl = document.querySelector('.art-h1'); if (titleEl) titleEl.textContent = title;
   const deckEl = document.querySelector('.art-deck'); if (deckEl) deckEl.textContent = deck;
   const catEl = document.querySelector('.art-cat'); if (catEl) catEl.textContent = translateCategory(article.category || 'general');
   const timeEl = document.querySelector('.art-time'); if (timeEl) timeEl.textContent = `${t.updated} ${formatTime(article.created_at)}`;
   const m10 = document.getElementById('mode-10s'); const m1m = document.getElementById('mode-1min'); const mfull = document.getElementById('mode-full');
   if (m10) m10.textContent = modes['10s']; if (m1m) m1m.textContent = modes['1min']; if (mfull) mfull.textContent = modes['full'];
-  // фото всегда вверху статьи
-  if (article.photo_url) { const img = document.querySelector('.art-img'); if (img) img.src = article.photo_url; }
-  // обновляем подпись к фото (alt)
-  if (article.photo_url) { const img = document.querySelector('.art-img'); if (img) img.alt = title; }
-  let sourceNames=[]; try{ sourceNames=JSON.parse(article.source_names||'[]'); }catch(e){}
-  const srcBar=document.querySelector('.sources-bar'); if(srcBar){ srcBar.innerHTML = `<span class="sources-label">${t.sources}</span>` + sourceNames.slice(0,5).map(s=>`<span class="stag">${escapeHtml(s)}</span>`).join(''); }
-  let ctx={}; try{ ctx = typeof article.moldova_context==='string' ? JSON.parse(article.moldova_context) : (article.moldova_context||{}); }catch(e){}
-  if(ctx && Object.keys(ctx).length){
-    const mdText=document.querySelector('.md-text'); if(mdText && (ctx.economy_impact || ctx.economy || ctx.summary)) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary;
-    const figs=Array.isArray(ctx.figures)?ctx.figures:[]; const stats=document.querySelectorAll('.md-stat');
-    figs.slice(0,3).forEach((fig,i)=>{ if(stats[i]){ const parts=String(fig).split('—'); stats[i].querySelector('.md-stat-val').textContent=parts[0]?.trim()||fig; stats[i].querySelector('.md-stat-lbl').textContent=parts[1]?.trim()||''; } });
+  
+  // Photo
+  if (article.photo_url) { const img = document.querySelector('.art-img'); if (img) { img.src = article.photo_url; img.alt = title; } }
+
+  // Dynamic Trust Score
+  const trustWrap = document.getElementById('trust-wrap');
+  const score = Math.round(article.trust_score || 0);
+  if (score < 0) {
+    if (trustWrap) trustWrap.style.display = 'none';
+  } else {
+    if (trustWrap) trustWrap.style.display = 'flex';
+    const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
+    const scoreLabel = score >= 80 ? t.verified : score >= 50 ? t.partial : t.unverified;
+    const trust = document.querySelector('.trust-wrap .trust');
+    if (trust) {
+      trust.className = `trust ${scoreClass}`;
+      trust.innerHTML = `<div class="tbar"><div class="tfill" style="width:${score}%;background:${score>=80?'#1a7a3c':score>=50?'#8a6000':'#b03020'};"></div></div>${scoreLabel} · ${score}/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>`;
+    }
   }
+
+  // Dynamic Sources
+  let sourceNames = [];
+  try { sourceNames = JSON.parse(article.source_names || '[]'); } catch(e) {}
+  const sourceCount = sourceNames.length;
+  const sourceBtn = document.querySelectorAll('.trust-wrap .trust')[1];
+  if (sourceBtn) {
+    if (sourceCount > 0) {
+      sourceBtn.style.display = 'inline-flex';
+      sourceBtn.textContent = sourceCount + ' ' + (currentLang === 'ro' ? 'surse' : currentLang === 'en' ? 'sources' : 'источника');
+    } else {
+      sourceBtn.style.display = 'none';
+    }
+  }
+
+  const srcBar = document.querySelector('.sources-bar');
+  if (srcBar) {
+    srcBar.innerHTML = `<span class="sources-label">${t.sources}</span>` + sourceNames.slice(0, 5).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
+  }
+
+  // Dynamic Moldova Context
+  const mdBox = document.querySelector('.md-box');
+  const moldovaRaw = article.moldova_context || '';
+  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.startsWith('[HIDDEN]'))) {
+    if (mdBox) mdBox.style.display = 'none';
+  } else {
+    if (mdBox) mdBox.style.display = 'block';
+    let ctx = {};
+    try { ctx = typeof moldovaRaw === 'string' ? JSON.parse(moldovaRaw) : moldovaRaw; } catch(e) {}
+    if (ctx.economy_impact || ctx.economy || ctx.summary) {
+      const mdText = document.querySelector('.md-text');
+      if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
+      const figs = Array.isArray(ctx.figures) ? ctx.figures : [];
+      const stats = document.querySelectorAll('.md-stat');
+      figs.slice(0, 3).forEach((fig, i) => {
+        if (stats[i]) {
+          const parts = String(fig).split('—');
+          stats[i].querySelector('.md-stat-val').textContent = parts[0]?.trim() || fig;
+          stats[i].querySelector('.md-stat-lbl').textContent = parts[1]?.trim() || '';
+        }
+      });
+    }
+  }
+
   renderRelated(article.id);
   populateBreakingBar(relatedArticles);
   populateTicker(relatedArticles);
 }
 
-function renderRelated(currentId){
+function renderRelated(currentId) {
   const container = document.querySelectorAll('.sb-block')[1];
-  if(!container) return;
+  if (!container) return;
   const header = container.querySelector('.sb-block-hdr');
   container.innerHTML = '';
   container.appendChild(header);
-  relatedArticles.filter(a=>a.id!==currentId).slice(0,3).forEach(article=>{
-    const a=document.createElement('a');
-    a.className='sb-item';
-    a.href=`news.html?id=${article.id}`;
-    const title=field(article,'title');
-    const score=Math.round(article.trust_score||0);
-    a.innerHTML = `${article.photo_url?`<img class="sb-thumb" src="${article.photo_url}" alt=""/>`:`<div class="sb-thumb-ph"></div>`}<div><div class="sb-cat">${escapeHtml(translateCategory(article.category || 'general'))}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${formatTime(article.created_at)}</span><span class="mt ${score>=80?'mtg':'mty'}">${score}</span></div></div>`;
+  relatedArticles.filter(a => a.id !== currentId).slice(0, 3).forEach(article => {
+    const a = document.createElement('a');
+    a.className = 'sb-item';
+    a.href = `news.html?id=${article.id}`;
+    const title = field(article, 'title');
+    const score = Math.round(article.trust_score || 0);
+    const scoreClass = score >= 80 ? 'mtg' : score >= 50 ? 'mty' : 'mtr';
+    a.innerHTML = `${article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`}<div><div class="sb-cat">${escapeHtml(translateCategory(article.category || 'general'))}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${formatTime(article.created_at)}</span><span class="mt ${scoreClass}">${score < 0 ? '?' : score}</span></div></div>`;
     container.appendChild(a);
   });
 }
 
-function setLang(el) { document.querySelectorAll('.lb').forEach(x => x.classList.remove('on')); el.classList.add('on'); currentLang = el.textContent.toLowerCase();
+function setLang(el){
+  document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  currentLang=el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', currentLang);
   updateCookieBanner();
-  updateBreakingLabel(); if (articleData) renderArticle(articleData); else applyNewsUi(); }
+  updateBreakingLabel();
+  if (articleData) renderArticle(articleData);
+  renderRelated(relatedArticles);
+}
 function setNav(el){ const section=el.dataset.section; window.location.href = `index.html?section=${section}`; }
 function copyLink(){
   navigator.clipboard.writeText(window.location.href).then(()=>{
     const btn=document.getElementById('copy-btn');
     if(btn){const orig=btn.textContent;btn.textContent='✓ Скопировано';setTimeout(()=>btn.textContent=orig,1500);}
+  }).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=window.location.href;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+  });
+}
 function shareTelegram(){
   const title=document.querySelector('.art-h1')?.textContent||document.title;
   window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent(title),'_blank');
 }
-
-  }).catch(()=>{const ta=document.createElement('textarea');ta.value=window.location.href;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
-}
 // Загружаем статью при открытии страницы
 applyNewsUi();
+document.querySelectorAll('.lb').forEach(btn => {
+  if (btn.textContent.toLowerCase() === currentLang) btn.classList.add('on');
+  else btn.classList.remove('on');
+});
 loadArticle();
 document.querySelectorAll('.share-btn').forEach(btn => { if (btn.textContent.includes('Скопировать') || btn.textContent.includes('Copy') || btn.textContent.includes('Copiază')) btn.onclick = copyLink; });
 

@@ -57,7 +57,6 @@ body.dark .tth{left:22px;background:var(--text);}
 .page-wrap{max-width:800px;margin:0 auto;padding:48px 40px;}
 .page-title{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:12px;}
 .page-sub{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border);}
-.page-updated{font-size:12px;color:var(--text3);margin-top:8px;}
 h2.sec{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin:40px 0 12px;}
 h3.subsec{font-size:15px;font-weight:600;color:var(--text);margin:24px 0 8px;}
 p.txt{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
@@ -65,49 +64,48 @@ ul.lst{margin:8px 0 16px 20px;}
 ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
 .highlight-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:16px 20px;margin:20px 0;}
 .highlight-box p{font-size:13px;color:var(--text2);line-height:1.7;margin:0;}
-.contact-form{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:28px;margin-top:32px;}
-.form-row{margin-bottom:16px;}
-.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block;}
-.form-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s;}
-.form-input:focus{border-color:var(--accent);}
-.form-textarea{min-height:120px;resize:vertical;}
-.form-btn{padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;}
-.form-btn:hover{opacity:.85;}
 .ts-bar{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;}
 .ts-label{font-size:13px;font-weight:500;color:var(--text);flex:1;}
 .ts-score{font-size:13px;font-weight:700;color:var(--accent);}
 .ts-fill{height:6px;border-radius:3px;background:var(--bg3);flex:2;overflow:hidden;}
 .ts-fill-inner{height:100%;border-radius:3px;background:var(--tg-txt);}
-.cookie-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
-.cookie-table th{background:var(--bg2);padding:10px 12px;text-align:left;border:1px solid var(--border);font-weight:600;color:var(--text);font-size:12px;}
-.cookie-table td{padding:10px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.5;}
-.badge-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;}
-.badge-green{background:var(--tg-bg);border:1px solid var(--tg-b);color:var(--tg-txt);}
-.badge-amber{background:var(--ty-bg);border:1px solid var(--ty-b);color:var(--ty-txt);}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
-.about-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;}
-.about-card-ico{font-size:22px;margin-bottom:10px;}
-.about-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
-.about-card-txt{font-size:13px;color:var(--text2);line-height:1.6;}
 .ver-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
 .ver-num{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
 .ver-body{flex:1;}
 .ver-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
 .ver-txt{font-size:13px;color:var(--text2);line-height:1.6;}
-.not-found-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:40px;}
-.not-found-num{font-family:'Playfair Display',serif;font-size:120px;font-weight:900;color:var(--bg3);line-height:1;}
-.not-found-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);margin:-20px 0 12px;}
-.not-found-txt{font-size:15px;color:var(--text2);line-height:1.7;max-width:420px;margin-bottom:28px;}
-.not-found-btn{padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+
 @media(max-width:640px){
   .page-wrap{padding:32px 20px;}
   .page-title{font-size:28px;}
   .nav{padding:0 16px;}
   .nav-mid{display:none;}
   .foot{padding:16px 20px;flex-direction:column;align-items:flex-start;}
-  .about-grid{grid-template-columns:1fr;}
 }
 </style>
+<script src="translations.js"></script>
+<script>
+function setNav(el){
+  const section = el.textContent.trim().toLowerCase();
+  const map = { 'молдова': 'moldova', 'мир': 'world', 'экономика': 'economy', 'политика': 'politics', 'безопасность': 'security', 'технологии': 'technology' };
+  window.location.href = `index.html?section=${map[section] || 'all'}`;
+}
+function setLang(el){
+  document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  const lang = el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', lang);
+  applyPageTranslations(lang);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const lang = localStorage.getItem('aera_lang') || 'ru';
+  document.querySelectorAll('.lb').forEach(btn => {
+    if (btn.textContent.toLowerCase() === lang) btn.classList.add('on');
+    else btn.classList.remove('on');
+  });
+  applyPageTranslations(lang);
+});
+</script>
 </head>
 <body>
 <nav class="nav">
@@ -116,111 +114,108 @@ ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
     <div class="logo-dot"></div>
   </a>
   <div class="nav-mid">
-    <div class="ni" onclick="setNav(this)">Молдова</div>
-    <div class="ni" onclick="setNav(this)">Мир</div>
-    <div class="ni" onclick="setNav(this)">Экономика</div>
-    <div class="ni" onclick="setNav(this)">Политика</div>
-    <div class="ni" onclick="setNav(this)">Безопасность</div>
-    <div class="ni" onclick="setNav(this)">Технологии</div>
+    <div class="ni" onclick="setNav(this)" data-t="navMoldova">Молдова</div>
+    <div class="ni" onclick="setNav(this)" data-t="navWorld">Мир</div>
+    <div class="ni" onclick="setNav(this)" data-t="navEconomy">Экономика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navPolitics">Политика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navSecurity">Безопасность</div>
+    <div class="ni" onclick="setNav(this)" data-t="navTechnology">Технологии</div>
   </div>
   <div class="nav-r">
     <div class="lang-row">
       <button class="lb" onclick="setLang(this)">RO</button>
-      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">RU</button>
       <button class="lb" onclick="setLang(this)">EN</button>
     </div>
     <button class="tbtn" onclick="toggleTheme()"><div class="tth"></div></button>
   </div>
 </nav>
+
 <div class="page-wrap">
-  <div class="page-title">Как мы проверяем факты</div>
-  <div class="page-sub">Trust Score — публичная система оценки достоверности, которая работает в реальном времени. Вот как она устроена.</div>
+  <div class="page-title" data-t="verificationTitle">Как мы проверяем факты</div>
+  <div class="page-sub" data-t="verificationSub">Trust Score — публичная система оценки достоверности, которая работает в реальном времени. Вот как она устроена.</div>
 
   <div class="highlight-box">
-    <p>Каждый материал на AERA получает оценку достоверности до публикации. Trust Score виден на странице каждой новости и обновляется по мере появления новых данных.</p>
+    <p data-t="verificationHighlight">Каждый материал на AERA получает оценку достоверности до публикации. Trust Score виден на странице каждой новости и обновляется по мере появления новых данных.</p>
   </div>
 
-  <h2 class="sec">Из чего складывается Trust Score</h2>
-  <p class="txt">Рейтинг от 0 до 100 — сумма четырёх составляющих:</p>
+  <h2 class="sec" data-t="tsComponents">Из чего складывается Trust Score</h2>
+  <p class="txt" data-t="tsComponentsSub">Рейтинг от 0 до 100 — сумма четырёх составляющих:</p>
 
-  <div class="ts-bar"><div class="ts-label">Количество источников</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score">до 30 баллов</div></div>
-  <div class="ts-bar"><div class="ts-label">Авторитетность источников</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score">до 30 баллов</div></div>
-  <div class="ts-bar"><div class="ts-label">Согласованность фактов между источниками</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score">до 30 баллов</div></div>
-  <div class="ts-bar"><div class="ts-label">Актуальность информации</div><div class="ts-fill"><div class="ts-fill-inner" style="width:33%"></div></div><div class="ts-score">до 10 баллов</div></div>
+  <div class="ts-bar"><div class="ts-label" data-t="sourceCountLabel">Количество источников</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score" data-t="score30">до 30 баллов</div></div>
+  <div class="ts-bar"><div class="ts-label" data-t="sourceAuthLabel">Авторитетность источников</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score" data-t="score30">до 30 баллов</div></div>
+  <div class="ts-bar"><div class="ts-label" data-t="sourceConsLabel">Согласованность фактов между источниками</div><div class="ts-fill"><div class="ts-fill-inner" style="width:100%"></div></div><div class="ts-score" data-t="score30">до 30 баллов</div></div>
+  <div class="ts-bar"><div class="ts-label" data-t="sourceActLabel">Актуальность информации</div><div class="ts-fill"><div class="ts-fill-inner" style="width:33%"></div></div><div class="ts-score" data-t="score10">до 10 баллов</div></div>
 
-  <h3 class="subsec">Уровни источников</h3>
+  <h3 class="subsec" data-t="sourceLevels">Уровни источников</h3>
   <ul class="lst">
-    <li><strong>Уровень 1 (30 баллов)</strong> — Reuters, AP, AFP, BBC, официальные пресс-службы правительств и международных организаций</li>
-    <li><strong>Уровень 2 (20 баллов)</strong> — национальные новостные порталы с редакционными стандартами</li>
-    <li><strong>Уровень 3 (10 баллов)</strong> — Telegram-каналы, социальные сети, неверифицированные источники</li>
+    <li data-t="sourceLevel1"><strong>Уровень 1 (30 баллов)</strong> — Reuters, AP, AFP, BBC, официальные пресс-службы правительств и международных организаций</li>
+    <li data-t="sourceLevel2"><strong>Уровень 2 (20 баллов)</strong> — национальные новостные порталы с редакционными стандартами</li>
+    <li data-t="sourceLevel3"><strong>Уровень 3 (10 баллов)</strong> — Telegram-каналы, социальные сети, неверифицированные источники</li>
   </ul>
 
-  <h2 class="sec">Процесс проверки</h2>
+  <h2 class="sec" data-t="verificationProcess">Процесс проверки</h2>
 
   <div class="ver-step">
     <div class="ver-num">1</div>
     <div class="ver-body">
-      <div class="ver-title">Сбор из источников</div>
-      <div class="ver-txt">Мы мониторим более 20 источников — международные агентства, молдавские порталы, официальные пресс-службы. Материалы об одном событии из разных источников сопоставляются вместе.</div>
+      <div class="ver-title" data-t="step1Title">Сбор из источников</div>
+      <div class="ver-txt" data-t="step1Text">Мы мониторим более 20 источников — международные агентства, молдавские порталы, официальные пресс-службы. Материалы об одном событии из разных источников сопоставляются вместе.</div>
     </div>
   </div>
   <div class="ver-step">
     <div class="ver-num">2</div>
     <div class="ver-body">
-      <div class="ver-title">Сравнение фактов</div>
-      <div class="ver-txt">Ключевые факты сравниваются между источниками. Если цифры или утверждения расходятся — материал получает пониженный Trust Score и пометку о расхождении.</div>
+      <div class="ver-title" data-t="step2Title">Сравнение фактов</div>
+      <div class="ver-txt" data-t="step2Text">Ключевые факты сравниваются между источниками. Если цифры или утверждения расходятся — материал получает пониженный Trust Score и пометку о расхождении.</div>
     </div>
   </div>
   <div class="ver-step">
     <div class="ver-num">3</div>
     <div class="ver-body">
-      <div class="ver-title">Проверка первоисточника</div>
-      <div class="ver-txt">Мы ищем первоначальный источник информации — кто сообщил об этом первым и на каком основании. Анонимные утечки без подтверждения получают красный флаг.</div>
+      <div class="ver-title" data-t="step3Title">Проверка первоисточника</div>
+      <div class="ver-txt" data-t="step3Text">Мы ищем первоначальный источник информации — кто сообщил об этом первым и на каком основании. Анонимные утечки без подтверждения получают красный флаг.</div>
     </div>
   </div>
   <div class="ver-step">
     <div class="ver-num">4</div>
     <div class="ver-body">
-      <div class="ver-title">Решение о публикации</div>
-      <div class="ver-txt">Каждый материал просматривает редактор перед публикацией. Он видит Trust Score, список источников и все предупреждения. Публикация — всегда осознанное решение человека.</div>
+      <div class="ver-title" data-t="step4Title">Решение о публикации</div>
+      <div class="ver-txt" data-t="step4Text">Каждый материал просматривает редактор перед публикацией. Он видит Trust Score, список источников и все предупреждения. Публикация — всегда осознанное решение человека.</div>
     </div>
   </div>
   <div class="ver-step">
     <div class="ver-num">5</div>
     <div class="ver-body">
-      <div class="ver-title">Обновление после публикации</div>
-      <div class="ver-txt">Trust Score живой — он пересчитывается по мере появления новых источников. Если позже выясняется расхождение — добавляется предупреждение прямо на странице.</div>
+      <div class="ver-title" data-t="step5Title">Обновление после публикации</div>
+      <div class="ver-txt" data-t="step5Text">Trust Score живой — он пересчитывается по мере появления новых источников. Если позже выясняется расхождение — добавляется предупреждение прямо на странице.</div>
     </div>
   </div>
 
-  <h2 class="sec">Что означают цвета</h2>
+  <h2 class="sec" data-t="colorMeaning">Что означают цвета</h2>
   <ul class="lst">
-    <li><strong style="color:#1a7a3c">🟢 80–100 · Проверено</strong> — подтверждено тремя и более надёжными источниками, факты согласуются</li>
-    <li><strong style="color:#8a6000">🟡 50–79 · Частично проверено</strong> — один-два источника или незначительные расхождения в деталях</li>
-    <li><strong style="color:#b03020">🔴 0–49 · Непроверено</strong> — единственный источник, анонимная утечка или выявлены противоречия</li>
+    <li data-t="colorGreen"><strong style="color:#1a7a3c">🟢 80–100 · Проверено</strong> — подтверждено тремя и более надёжными источниками, факты согласуются</li>
+    <li data-t="colorYellow"><strong style="color:#8a6000">🟡 50–79 · Частично проверено</strong> — один-два источника или незначительные расхождения в деталях</li>
+    <li data-t="colorRed"><strong style="color:#b03020">🔴 0–49 · Непроверено</strong> — единственный источник, анонимная утечка или выявлены противоречия</li>
   </ul>
 
-  <h2 class="sec">Исправления</h2>
-  <p class="txt">Если в материале обнаружена ошибка — мы исправляем её открыто. На странице статьи появляется пометка «Исправлено» с датой и описанием изменения. Мы не удаляем материалы без объяснений.</p>
-  <p class="txt">Заметили ошибку? Напишите: <strong>editors@aera.md</strong></p>
+  <h2 class="sec" data-t="corrections">Исправления</h2>
+  <p class="txt" data-t="correctionsText">Если в материале обнарушена ошибка — мы исправляем её открыто. На странице статьи появляется пометка «Исправлено» с датой и описанием изменения. Мы не удаляем материалы без объяснений.</p>
+  <p class="txt" data-t="correctionsContact">Заметили ошибку? Напишите: <strong>editors@aera.md</strong></p>
 </div>
+
 <div class="foot">
   <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
   <div class="flinks">
-    <a class="flink" href="about.html">О нас</a>
-    <a class="flink" href="verification.html">Как мы проверяем факты</a>
-    <a class="flink" href="privacy.html">Конфиденциальность</a>
-    <a class="flink" href="terms.html">Условия</a>
-    <a class="flink" href="cookies.html">Cookies</a>
-    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="about.html" data-t="about">О нас</a>
+    <a class="flink" href="verification.html" data-t="verification">Как мы проверяем факты</a>
+    <a class="flink" href="privacy.html" data-t="privacy">Конфиденциальность</a>
+    <a class="flink" href="terms.html" data-t="terms">Условия</a>
+    <a class="flink" href="cookies.html" data-t="cookies">Cookies</a>
+    <a class="flink" href="contact.html" data-t="contact">Контакты</a>
     <a class="flink" href="rss.xml">RSS</a>
   </div>
-  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+  <div class="fnote" data-t="footerNote">Проверенные новости · Обновление каждые 15 минут</div>
 </div>
-<script>
-function toggleTheme(){document.body.classList.toggle('dark');}
-function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-function setLang(el){document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-</script>
 </body>
 </html>

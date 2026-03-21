@@ -6,6 +6,7 @@
 <title>AERA — Știri verificate · Moldova & World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="translations.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -561,7 +562,7 @@ const SUPABASE_URL = 'https://araqepkymkxktvhseeas.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_WX5Bkpcd92hY-aYmkwAJqA_-ugBJu6N';
 
 // Текущий язык
-let currentLang = 'ru';
+let currentLang = localStorage.getItem('aera_lang') || 'ru';
 // Текущий режим чтения
 let currentMode = '10s';
 // Данные главной статьи
@@ -628,15 +629,14 @@ function escapeHtml(text){
 function articleMatchesSection(article, section){
   if (section === 'all') return true;
   const cat = (article.category || '').toLowerCase();
-  const title = [article.title_ro, article.title_ru, article.title_en].filter(Boolean).join(' ').toLowerCase();
-  const summary = [article.summary1min_ro, article.summary1min_ru, article.summary1min_en].filter(Boolean).join(' ').toLowerCase();
-  if (section === 'world') return cat.includes('world') || cat.includes('international') || cat.includes('general');
-  if (section === 'moldova') return cat.includes('moldova') || title.includes('молд') || summary.includes('молд');
-  if (section === 'economy') return cat.includes('econom') || title.includes('эконом') || summary.includes('эконом');
+  // Using more robust category matching
+  if (section === 'world') return cat.includes('world') || cat.includes('international');
+  if (section === 'moldova') return cat.includes('moldova');
+  if (section === 'economy') return cat.includes('econom');
   if (section === 'politics') return cat.includes('polit');
   if (section === 'security') return cat.includes('secur') || cat.includes('conflict');
   if (section === 'technology') return cat.includes('tech');
-  if (section === 'conflicts') return cat.includes('conflict') || title.includes('войн') || title.includes('украин') || summary.includes('войн');
+  if (section === 'conflicts') return cat.includes('conflict');
   return true;
 }
 function applyUiTranslations(){
@@ -664,8 +664,8 @@ async function loadArticles() {
     const data = await res.json();
     if (data && data.length > 0) {
       allArticles = data;
-  populateBreakingBar(allArticles);
-  populateTicker(allArticles);
+      populateBreakingBar(allArticles);
+      populateTicker(allArticles);
       renderPage();
     }
   } catch(e) {
@@ -690,44 +690,82 @@ function renderHero(article) {
   const deck = field(article,'summary1min') || field(article,'summary10s') || '';
   document.querySelector('.h1').textContent = title;
   document.querySelector('.deck').textContent = deck;
+  
+  // Dynamic Trust Score
+  const trustWrap = document.getElementById('trust-wrap');
   const score = Math.round(article.trust_score || 0);
-  const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
-  const scoreLabel = score >= 80 ? t.verified : score >= 50 ? t.partial : t.unverified;
-  const trust = document.querySelector('.trust-wrap .trust');
-  trust.className = `trust ${scoreClass}`;
-  trust.innerHTML = `<div class="tbar"><div class="tfill" style="width:${score}%;background:${score>=80?'#1a7a3c':score>=50?'#8a6000':'#b03020'};"></div></div>${scoreLabel} · ${score}/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>`;
+  if (score < 0) {
+    if (trustWrap) trustWrap.style.display = 'none';
+  } else {
+    if (trustWrap) trustWrap.style.display = 'flex';
+    const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
+    const scoreLabel = score >= 80 ? t.verified : score >= 50 ? t.partial : t.unverified;
+    const trust = document.querySelector('.trust-wrap .trust');
+    if (trust) {
+      trust.className = `trust ${scoreClass}`;
+      trust.innerHTML = `<div class="tbar"><div class="tfill" style="width:${score}%;background:${score>=80?'#1a7a3c':score>=50?'#8a6000':'#b03020'};"></div></div>${scoreLabel} · ${score}/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>`;
+    }
+  }
+
   updateHeroText();
   document.querySelector('.ecat').textContent = translateCategory(article.category || 'general');
   document.querySelector('.etime').textContent = `${t.updated} ${formatTime(article.created_at)}`;
   if (article.photo_url) document.querySelector('.hero-img').src = article.photo_url;
+  
+  // Dynamic Sources
   let sourceNames = [];
   try { sourceNames = JSON.parse(article.source_names || '[]'); } catch(e) {}
+  const sourceCount = sourceNames.length;
+  const sourceBtn = document.querySelectorAll('.trust-wrap .trust')[1];
+  if (sourceBtn) {
+    if (sourceCount > 0) {
+      sourceBtn.style.display = 'inline-flex';
+      sourceBtn.textContent = sourceCount + ' ' + (currentLang === 'ro' ? 'surse' : currentLang === 'en' ? 'sources' : 'источника');
+    } else {
+      sourceBtn.style.display = 'none';
+    }
+  }
+
   const srcContainer = document.querySelector('.sources');
-  srcContainer.innerHTML = `<span style="font-size:11px;color:var(--text3);">${t.sources}</span>` + sourceNames.slice(0,4).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
-  let ctx = {};
-  try { ctx = typeof article.moldova_context === 'string' ? JSON.parse(article.moldova_context) : (article.moldova_context || {}); } catch(e) {}
-  if (ctx.economy_impact || ctx.economy) {
-    document.querySelector('.md-text').textContent = ctx.economy_impact || ctx.economy || '';
-    const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
-    const stats = document.querySelectorAll('.md-stat');
-    figures.slice(0,3).forEach((fig, i) => {
-      if (stats[i]) {
-        const parts = String(fig).split('—');
-        stats[i].querySelector('.md-stat-val').textContent = parts[0]?.trim() || fig;
-        stats[i].querySelector('.md-stat-lbl').textContent = parts[1]?.trim() || '';
-      }
-    });
+  if (srcContainer) {
+    srcContainer.innerHTML = `<span style="font-size:11px;color:var(--text3);">${t.sources}</span>` + sourceNames.slice(0,4).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
+  }
+
+  // Dynamic Moldova Context
+  const mdBox = document.querySelector('.md-box');
+  const moldovaRaw = article.moldova_context || '';
+  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.startsWith('[HIDDEN]'))) {
+    if (mdBox) mdBox.style.display = 'none';
+  } else {
+    if (mdBox) mdBox.style.display = 'block';
+    let ctx = {};
+    try { ctx = typeof moldovaRaw === 'string' ? JSON.parse(moldovaRaw) : moldovaRaw; } catch(e) {}
+    if (ctx.economy_impact || ctx.economy || ctx.summary) {
+      const mdText = document.querySelector('.md-text');
+      if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
+      const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
+      const stats = document.querySelectorAll('.md-stat');
+      figures.slice(0,3).forEach((fig, i) => {
+        if (stats[i]) {
+          const parts = String(fig).split('—');
+          stats[i].querySelector('.md-stat-val').textContent = parts[0]?.trim() || fig;
+          stats[i].querySelector('.md-stat-lbl').textContent = parts[1]?.trim() || '';
+        }
+      });
+    }
   }
 }
 
 function updateHeroText() {
   if (!heroArticle) return;
   const texts = { '10s': field(heroArticle,'summary10s'), '1min': field(heroArticle,'summary1min'), 'full': field(heroArticle,'body') };
-  document.getElementById('ctxt').textContent = texts[currentMode] || '';
+  const ctxt = document.getElementById('ctxt');
+  if (ctxt) ctxt.textContent = texts[currentMode] || '';
 }
 
 function renderSidebar(articles) {
   const sb = document.querySelector('.sb');
+  if (!sb) return;
   sb.querySelectorAll('.sb-item').forEach(el => el.remove());
   articles.forEach(article => {
     const title = field(article,'title');
@@ -738,13 +776,14 @@ function renderSidebar(articles) {
     const item = document.createElement('div');
     item.className = 'sb-item';
     item.onclick = () => window.location.href = `news.html?id=${article.id}`;
-    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + `<div><div class="sb-cat">${escapeHtml(cat)}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span><span class="mt ${scoreClass}">${score}</span></div></div>`;
+    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + `<div><div class="sb-cat">${escapeHtml(cat)}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span><span class="mt ${scoreClass}">${score < 0 ? '?' : score}</span></div></div>`;
     sb.appendChild(item);
   });
 }
 
 function renderGrid(articles) {
   const grid = document.querySelector('.grid');
+  if (!grid) return;
   grid.innerHTML = '';
   articles.forEach(article => {
     const title = field(article,'title');
@@ -757,7 +796,7 @@ function renderGrid(articles) {
     card.className = 'card';
     card.href = `news.html?id=${article.id}`;
     card.style.textDecoration = 'none';
-    card.innerHTML = `<div class="card-img-wrap">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div><div class="card-body"><div class="ccat">${escapeHtml(cat)}</div><div class="ched">${escapeHtml(title)}</div><div class="cdeck">${escapeHtml(summary)}</div><div class="cfoot"><span class="ctime">${time}</span><div class="trust ${scoreClass}" style="font-size:10px;padding:3px 9px;">${score}/100 ⓘ</div></div></div>`;
+    card.innerHTML = `<div class="card-img-wrap">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div><div class="card-body"><div class="ccat">${escapeHtml(cat)}</div><div class="ched">${escapeHtml(title)}</div><div class="cdeck">${escapeHtml(summary)}</div><div class="cfoot"><span class="ctime">${time}</span><div class="trust ${scoreClass}" style="font-size:10px;padding:3px 9px;">${score < 0 ? '?' : score + '/100'} ⓘ</div></div></div>`;
     grid.appendChild(card);
   });
   if (articles.length === 0) grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);">${UI[currentLang].empty}</div>`;
@@ -767,6 +806,7 @@ function setLang(el) {
   document.querySelectorAll('.lb').forEach(x => x.classList.remove('on'));
   el.classList.add('on');
   currentLang = el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', currentLang);
   updateCookieBanner();
   updateBreakingLabel();
   renderPage();
@@ -779,7 +819,6 @@ function setMode(b, m) {
   updateHeroText();
 }
 
-function toggleTheme() { document.body.classList.toggle('dark'); }
 function setNav(el) {
   document.querySelectorAll('.ni').forEach(x => x.classList.remove('on'));
   el.classList.add('on');
@@ -802,6 +841,10 @@ if (sectionParam) {
   if (targetNav) { document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on')); targetNav.classList.add('on'); }
   if (targetTab) { document.querySelectorAll('.st').forEach(x=>x.classList.remove('on')); targetTab.classList.add('on'); }
 }
+document.querySelectorAll('.lb').forEach(btn => {
+  if (btn.textContent.toLowerCase() === currentLang) btn.classList.add('on');
+  else btn.classList.remove('on');
+});
 applyUiTranslations();
 loadArticles();
 setInterval(loadArticles, 5 * 60 * 1000);
@@ -868,7 +911,7 @@ function populateTicker(articles){
 <div class="cookie-bar" id="cookie-bar">
   <span id="cookie-text">🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.</span>
   <div class="cookie-bar-actions">
-    <button class="cookie-bar-decline" onclick="acceptCookies()">Отклонить</button>
+    <button class="cookie-bar-decline" onclick="declineCookies()">Отклонить</button>
     <button class="cookie-bar-btn" onclick="acceptCookies()">Принять</button>
   </div>
 </div>

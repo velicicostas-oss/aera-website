@@ -65,49 +65,44 @@ ul.lst{margin:8px 0 16px 20px;}
 ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
 .highlight-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:16px 20px;margin:20px 0;}
 .highlight-box p{font-size:13px;color:var(--text2);line-height:1.7;margin:0;}
-.contact-form{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:28px;margin-top:32px;}
-.form-row{margin-bottom:16px;}
-.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block;}
-.form-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s;}
-.form-input:focus{border-color:var(--accent);}
-.form-textarea{min-height:120px;resize:vertical;}
-.form-btn{padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;}
-.form-btn:hover{opacity:.85;}
-.ts-bar{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;}
-.ts-label{font-size:13px;font-weight:500;color:var(--text);flex:1;}
-.ts-score{font-size:13px;font-weight:700;color:var(--accent);}
-.ts-fill{height:6px;border-radius:3px;background:var(--bg3);flex:2;overflow:hidden;}
-.ts-fill-inner{height:100%;border-radius:3px;background:var(--tg-txt);}
 .cookie-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
 .cookie-table th{background:var(--bg2);padding:10px 12px;text-align:left;border:1px solid var(--border);font-weight:600;color:var(--text);font-size:12px;}
 .cookie-table td{padding:10px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.5;}
 .badge-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;}
 .badge-green{background:var(--tg-bg);border:1px solid var(--tg-b);color:var(--tg-txt);}
 .badge-amber{background:var(--ty-bg);border:1px solid var(--ty-b);color:var(--ty-txt);}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
-.about-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;}
-.about-card-ico{font-size:22px;margin-bottom:10px;}
-.about-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
-.about-card-txt{font-size:13px;color:var(--text2);line-height:1.6;}
-.ver-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
-.ver-num{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
-.ver-body{flex:1;}
-.ver-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
-.ver-txt{font-size:13px;color:var(--text2);line-height:1.6;}
-.not-found-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:40px;}
-.not-found-num{font-family:'Playfair Display',serif;font-size:120px;font-weight:900;color:var(--bg3);line-height:1;}
-.not-found-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);margin:-20px 0 12px;}
-.not-found-txt{font-size:15px;color:var(--text2);line-height:1.7;max-width:420px;margin-bottom:28px;}
-.not-found-btn{padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+
 @media(max-width:640px){
   .page-wrap{padding:32px 20px;}
   .page-title{font-size:28px;}
   .nav{padding:0 16px;}
   .nav-mid{display:none;}
   .foot{padding:16px 20px;flex-direction:column;align-items:flex-start;}
-  .about-grid{grid-template-columns:1fr;}
 }
 </style>
+<script src="translations.js"></script>
+<script>
+function setNav(el){
+  const section = el.textContent.trim().toLowerCase();
+  const map = { 'молдова': 'moldova', 'мир': 'world', 'экономика': 'economy', 'политика': 'politics', 'безопасность': 'security', 'технологии': 'technology' };
+  window.location.href = `index.html?section=${map[section] || 'all'}`;
+}
+function setLang(el){
+  document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  const lang = el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', lang);
+  applyPageTranslations(lang);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const lang = localStorage.getItem('aera_lang') || 'ru';
+  document.querySelectorAll('.lb').forEach(btn => {
+    if (btn.textContent.toLowerCase() === lang) btn.classList.add('on');
+    else btn.classList.remove('on');
+  });
+  applyPageTranslations(lang);
+});
+</script>
 </head>
 <body>
 <nav class="nav">
@@ -116,103 +111,100 @@ ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
     <div class="logo-dot"></div>
   </a>
   <div class="nav-mid">
-    <div class="ni" onclick="setNav(this)">Молдова</div>
-    <div class="ni" onclick="setNav(this)">Мир</div>
-    <div class="ni" onclick="setNav(this)">Экономика</div>
-    <div class="ni" onclick="setNav(this)">Политика</div>
-    <div class="ni" onclick="setNav(this)">Безопасность</div>
-    <div class="ni" onclick="setNav(this)">Технологии</div>
+    <div class="ni" onclick="setNav(this)" data-t="navMoldova">Молдова</div>
+    <div class="ni" onclick="setNav(this)" data-t="navWorld">Мир</div>
+    <div class="ni" onclick="setNav(this)" data-t="navEconomy">Экономика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navPolitics">Политика</div>
+    <div class="ni" onclick="setNav(this)" data-t="navSecurity">Безопасность</div>
+    <div class="ni" onclick="setNav(this)" data-t="navTechnology">Технологии</div>
   </div>
   <div class="nav-r">
     <div class="lang-row">
       <button class="lb" onclick="setLang(this)">RO</button>
-      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">RU</button>
       <button class="lb" onclick="setLang(this)">EN</button>
     </div>
     <button class="tbtn" onclick="toggleTheme()"><div class="tth"></div></button>
   </div>
 </nav>
+
 <div class="page-wrap">
-  <div class="page-title">Политика конфиденциальности</div>
+  <div class="page-title" data-t="privacyTitle">Политика конфиденциальности</div>
   <div class="page-sub">
-    AERA уважает вашу приватность. Мы собираем минимум данных — только то, что необходимо для работы портала.
-    <div class="page-updated">Последнее обновление: март 2026 · Версия 1.0</div>
+    <span data-t="privacySub">AERA уважает вашу приватность. Мы собираем минимум данных — только то, что необходимо для работы портала.</span>
+    <div class="page-updated" data-t="lastUpdateMarch">Последнее обновление: март 2026 · Версия 1.0</div>
   </div>
 
   <div class="highlight-box">
-    <p><strong>Коротко:</strong> Мы не продаём ваши данные. Мы не передаём их третьим лицам в рекламных целях. Мы собираем только анонимную статистику посещений для улучшения сайта.</p>
+    <p data-t="privacyHighlight"><strong>Коротко:</strong> Мы не продаём ваши данные. Мы не передаём их третьим лицам в рекламных целях. Мы собираем только анонимную статистику посещений для улучшения сайта.</p>
   </div>
 
-  <h2 class="sec">1. Кто мы</h2>
-  <p class="txt">AERA — новостной портал Республики Молдова, работающий по адресу aera.md. По вопросам конфиденциальности: <strong>privacy@aera.md</strong></p>
+  <h2 class="sec" data-t="whoWeAre">1. Кто мы</h2>
+  <p class="txt" data-t="whoWeAreText">AERA — новостной портал Республики Молдова, работающий по адресу aera.md. По вопросам конфиденциальности: <strong>privacy@aera.md</strong></p>
 
-  <h2 class="sec">2. Какие данные мы собираем</h2>
-  <h3 class="subsec">2.1 Данные, которые вы предоставляете</h3>
+  <h2 class="sec" data-t="dataWeCollect">2. Какие данные мы собираем</h2>
+  <h3 class="subsec" data-t="dataYouProvide">2.1 Данные, которые вы предоставляете</h3>
   <ul class="lst">
-    <li><strong>Форма обратной связи</strong> — имя и email, которые вы вводите при обращении к нам. Используются только для ответа на ваш запрос.</li>
-    <li><strong>Поле вопроса</strong> — текст, который вы вводите в поле «Спросите о...» на странице материала. Используется для формирования ответа и не сохраняется как персональные данные.</li>
+    <li data-t="dataYouProvideItem1"><strong>Форма обратной связи</strong> — имя и email, которые вы вводите при обращении к нам. Используются только для ответа на ваш запрос.</li>
+    <li data-t="dataYouProvideItem2"><strong>Поле вопроса</strong> — текст, который вы вводите в поле «Спросите о...» на странице материала. Используется для формирования ответа и не сохраняется как персональные данные.</li>
   </ul>
-  <h3 class="subsec">2.2 Данные, собираемые автоматически</h3>
+  <h3 class="subsec" data-t="dataAutoCollect">2.2 Данные, собираемые автоматически</h3>
   <ul class="lst">
-    <li><strong>Статистика посещений</strong> — анонимные данные: страницы, которые вы открывали, время на сайте, страна и тип устройства. Личная информация не собирается.</li>
-    <li><strong>Технические логи</strong> — анонимизированный IP-адрес, тип браузера. Используются исключительно для безопасности и стабильности работы. Хранятся не более 30 дней.</li>
-    <li><strong>Cookies</strong> — подробнее в разделе 4.</li>
+    <li data-t="dataAutoCollectItem1"><strong>Статистика посещений</strong> — анонимные данные: страницы, которые вы открывали, время на сайте, страна и тип устройства. Личная информация не собирается.</li>
+    <li data-t="dataAutoCollectItem2"><strong>Технические логи</strong> — анонимизированный IP-адрес, тип браузера. Используются исключительно для безопасности и стабильности работы. Хранятся не более 30 дней.</li>
+    <li data-t="dataAutoCollectItem3"><strong>Cookies</strong> — подробнее в разделе 4.</li>
   </ul>
 
-  <h2 class="sec">3. Для чего мы используем данные</h2>
+  <h2 class="sec" data-t="howWeUseData">3. Для чего мы используем данные</h2>
   <ul class="lst">
-    <li>Обеспечение работы портала и исправление ошибок</li>
-    <li>Анализ популярности материалов для улучшения качества контента</li>
-    <li>Ответы на ваши обращения</li>
-    <li>Защита от злоупотреблений</li>
+    <li data-t="useDataItem1">Обеспечение работы портала и исправление ошибок</li>
+    <li data-t="useDataItem2">Анализ популярности материалов для улучшения качества контента</li>
+    <li data-t="useDataItem3">Ответы на ваши обращения</li>
+    <li data-t="useDataItem4">Защита от злоупотреблений</li>
   </ul>
-  <p class="txt">Мы <strong>никогда</strong> не используем ваши данные для рекламного таргетинга и не передаём их третьим лицам в коммерческих целях.</p>
+  <p class="txt" data-t="useDataNote">Мы <strong>никогда</strong> не используем ваши данные для рекламного таргетинга и не передаём их третьим лицам в коммерческих целях.</p>
 
-  <h2 class="sec">4. Cookies</h2>
-  <p class="txt">AERA использует минимальный набор файлов cookie:</p>
+  <h2 class="sec" data-t="cookiesTitle">4. Cookies</h2>
+  <p class="txt" data-t="cookiesSub">AERA использует минимальный набор файлов cookie:</p>
   <table class="cookie-table">
-    <tr><th>Название</th><th>Тип</th><th>Назначение</th><th>Срок</th></tr>
-    <tr><td>theme</td><td><span class="badge-pill badge-green">Необходимые</span></td><td>Запоминает выбор светлой / тёмной темы</td><td>1 год</td></tr>
-    <tr><td>lang</td><td><span class="badge-pill badge-green">Необходимые</span></td><td>Запоминает выбранный язык (RO / RU / EN)</td><td>1 год</td></tr>
-    <tr><td>_analytics</td><td><span class="badge-pill badge-amber">Аналитика</span></td><td>Анонимная статистика посещений (Plausible Analytics — без личных данных)</td><td>Сессия</td></tr>
+    <tr><th data-t="thName">Название</th><th data-t="thType">Тип</th><th data-t="thPurpose">Назначение</th><th data-t="thDuration">Срок</th></tr>
+    <tr><td>theme</td><td><span class="badge-pill badge-green" data-t="necessary">Необходимые</span></td><td data-t="themeCook">Запоминает выбор светлой / тёмной темы</td><td data-t="1year">1 год</td></tr>
+    <tr><td>lang</td><td><span class="badge-pill badge-green" data-t="necessary">Необходимые</span></td><td data-t="langCook">Запоминает выбранный язык (RO / RU / EN)</td><td data-t="1year">1 год</td></tr>
+    <tr><td>_analytics</td><td><span class="badge-pill badge-amber" data-t="analytics">Аналитика</span></td><td data-t="analCook">Анонимная статистика посещений (Plausible Analytics — без личных данных)</td><td data-t="session">Сессия</td></tr>
   </table>
-  <p class="txt">Рекламные cookies не используются. Вы можете отключить аналитические cookies через баннер при первом посещении.</p>
+  <p class="txt" data-t="cookiesNote">Рекламные cookies не используются. Вы можете отключить аналитические cookies через баннер при первом посещении.</p>
 
-  <h2 class="sec">5. Ваши права (GDPR)</h2>
+  <h2 class="sec" data-t="yourRights">5. Ваши права (GDPR)</h2>
   <ul class="lst">
-    <li><strong>Право на доступ</strong> — узнать, какие данные мы храним о вас</li>
-    <li><strong>Право на исправление</strong> — потребовать исправления неточных данных</li>
-    <li><strong>Право на удаление</strong> — потребовать удаления ваших данных</li>
-    <li><strong>Право на возражение</strong> — возразить против обработки данных</li>
+    <li data-t="rightAccess"><strong>Право на доступ</strong> — узнать, какие данные мы храним о вас</li>
+    <li data-t="rightRectify"><strong>Право на исправление</strong> — потребовать исправления неточных данных</li>
+    <li data-t="rightDelete"><strong>Право на удаление</strong> — потребовать удаления ваших данных</li>
+    <li data-t="rightObject"><strong>Право на возражение</strong> — возразить против обработки данных</li>
   </ul>
-  <p class="txt">Для реализации прав напишите: <strong>privacy@aera.md</strong> — ответим в течение 30 дней.</p>
+  <p class="txt" data-t="rightNote">Для реализации прав напишите: <strong>privacy@aera.md</strong> — ответим в течение 30 дней.</p>
 
-  <h2 class="sec">6. Хранение данных</h2>
-  <p class="txt">Данные хранятся на серверах в Европейском Союзе (Германия). Передача за пределы ЕС не осуществляется. Соединение защищено HTTPS.</p>
+  <h2 class="sec" data-t="dataStorage">6. Хранение данных</h2>
+  <p class="txt" data-t="dataStorageText">Данные хранятся на серверах в Европейском Союзе (Германия). Передача за пределы ЕС не осуществляется. Соединение защищено HTTPS.</p>
 
-  <h2 class="sec">7. Изменения политики</h2>
-  <p class="txt">При существенных изменениях разместим уведомление на сайте. Дата обновления — в шапке этой страницы.</p>
+  <h2 class="sec" data-t="policyChanges">7. Изменения политики</h2>
+  <p class="txt" data-t="policyChangesText">При существенных изменениях разместим уведомление на сайте. Дата обновления — в шапке этой страницы.</p>
 
-  <h2 class="sec">8. Контакт</h2>
-  <p class="txt">По вопросам конфиденциальности: <strong>privacy@aera.md</strong></p>
+  <h2 class="sec" data-t="contactTitle">8. Контакт</h2>
+  <p class="txt" data-t="contactPrivacyText">По вопросам конфиденциальности: <strong>privacy@aera.md</strong></p>
 </div>
+
 <div class="foot">
   <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
   <div class="flinks">
-    <a class="flink" href="about.html">О нас</a>
-    <a class="flink" href="verification.html">Как мы проверяем факты</a>
-    <a class="flink" href="privacy.html">Конфиденциальность</a>
-    <a class="flink" href="terms.html">Условия</a>
-    <a class="flink" href="cookies.html">Cookies</a>
-    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="about.html" data-t="about">О нас</a>
+    <a class="flink" href="verification.html" data-t="verification">Как мы проверяем факты</a>
+    <a class="flink" href="privacy.html" data-t="privacy">Конфиденциальность</a>
+    <a class="flink" href="terms.html" data-t="terms">Условия</a>
+    <a class="flink" href="cookies.html" data-t="cookies">Cookies</a>
+    <a class="flink" href="contact.html" data-t="contact">Контакты</a>
     <a class="flink" href="rss.xml">RSS</a>
   </div>
-  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+  <div class="fnote" data-t="footerNote">Проверенные новости · Обновление каждые 15 минут</div>
 </div>
-<script>
-function toggleTheme(){document.body.classList.toggle('dark');}
-function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-function setLang(el){document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
-</script>
 </body>
 </html>
