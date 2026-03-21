@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>О нас · AERA</title>
+<meta name="description" content="AERA — новостной портал Молдовы. Проверенные факты, молдавский контекст, три языка."/>
+<meta property="og:title" content="О нас · AERA"/>
+<meta property="og:description" content="AERA — новостной портал Молдовы. Проверенные факты, молдавский контекст, три языка."/>
+<meta property="og:site_name" content="AERA"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#efede8;
+  --text:#0d0d0d;--text2:#5c5a56;--text3:#9a9896;
+  --border:#e4e2dc;--border2:#ccc9c2;
+  --accent:#c0392b;
+  --tg-bg:#f0faf3;--tg-txt:#1a7a3c;--tg-b:#b3dfc0;
+  --ty-bg:#fdf8ec;--ty-txt:#8a6000;--ty-b:#e8d49a;
+  --tr-bg:#fdf0ee;--tr-txt:#b03020;--tr-b:#f0bfba;
+}
+body.dark{
+  --bg:#0c0c0e;--bg2:#141417;--bg3:#1c1c22;
+  --text:#f0ede8;--text2:#8a8784;--text3:#55534f;
+  --border:#222228;--border2:#2e2e38;--accent:#e84030;
+  --tg-bg:#071410;--tg-txt:#4ecb71;--tg-b:#1a5c2a;
+  --ty-bg:#140e02;--ty-txt:#f0b429;--ty-b:#5c4a1a;
+  --tr-bg:#140505;--tr-txt:#e05252;--tr-b:#5c1a1a;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;transition:background .3s,color .3s;font-size:15px;min-height:100vh;}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:200;transition:background .3s;}
+.logo{display:flex;align-items:flex-start;gap:3px;cursor:pointer;user-select:none;text-decoration:none;}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--text);line-height:1;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+.nav-mid{display:flex;gap:2px;}
+.ni{padding:5px 14px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-radius:20px;transition:all .15s;letter-spacing:.02em;white-space:nowrap;}
+.ni:hover,.ni.on{color:var(--text);background:var(--bg2);}
+.nav-r{display:flex;align-items:center;gap:12px;}
+.lang-row{display:flex;gap:2px;}
+.lb{padding:4px 9px;font-size:11px;font-weight:500;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+.lb.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.tbtn{width:42px;height:22px;border-radius:11px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+.tth{width:16px;height:16px;border-radius:50%;background:var(--text2);position:absolute;top:2px;left:2px;transition:left .3s,background .3s;}
+body.dark .tth{left:22px;background:var(--text);}
+.foot{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-top:1px solid var(--border);margin-top:64px;flex-wrap:wrap;gap:12px;}
+.flogo{display:flex;align-items:flex-start;gap:3px;}
+.flogo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;letter-spacing:-1px;color:var(--text3);line-height:1;}
+.flogo-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:4px;}
+.flinks{display:flex;gap:20px;flex-wrap:wrap;}
+.flink{font-size:11px;color:var(--text3);cursor:pointer;text-decoration:none;}
+.flink:hover{color:var(--text);}
+.fnote{font-size:11px;color:var(--text3);}
+.page-wrap{max-width:800px;margin:0 auto;padding:48px 40px;}
+.page-title{font-family:'Playfair Display',serif;font-size:40px;font-weight:900;color:var(--text);line-height:1.15;margin-bottom:12px;}
+.page-sub{font-size:15px;color:var(--text2);line-height:1.7;margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--border);}
+.page-updated{font-size:12px;color:var(--text3);margin-top:8px;}
+h2.sec{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--text);margin:40px 0 12px;}
+h3.subsec{font-size:15px;font-weight:600;color:var(--text);margin:24px 0 8px;}
+p.txt{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:12px;}
+ul.lst{margin:8px 0 16px 20px;}
+ul.lst li{font-size:14px;color:var(--text2);line-height:1.8;margin-bottom:4px;}
+.highlight-box{background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;padding:16px 20px;margin:20px 0;}
+.highlight-box p{font-size:13px;color:var(--text2);line-height:1.7;margin:0;}
+.contact-form{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:28px;margin-top:32px;}
+.form-row{margin-bottom:16px;}
+.form-label{font-size:12px;font-weight:500;color:var(--text2);margin-bottom:6px;display:block;}
+.form-input{width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border .2s;}
+.form-input:focus{border-color:var(--accent);}
+.form-textarea{min-height:120px;resize:vertical;}
+.form-btn{padding:10px 24px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .15s;}
+.form-btn:hover{opacity:.85;}
+.ts-bar{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin:12px 0;}
+.ts-label{font-size:13px;font-weight:500;color:var(--text);flex:1;}
+.ts-score{font-size:13px;font-weight:700;color:var(--accent);}
+.ts-fill{height:6px;border-radius:3px;background:var(--bg3);flex:2;overflow:hidden;}
+.ts-fill-inner{height:100%;border-radius:3px;background:var(--tg-txt);}
+.cookie-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;}
+.cookie-table th{background:var(--bg2);padding:10px 12px;text-align:left;border:1px solid var(--border);font-weight:600;color:var(--text);font-size:12px;}
+.cookie-table td{padding:10px 12px;border:1px solid var(--border);color:var(--text2);vertical-align:top;line-height:1.5;}
+.badge-pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:500;}
+.badge-green{background:var(--tg-bg);border:1px solid var(--tg-b);color:var(--tg-txt);}
+.badge-amber{background:var(--ty-bg);border:1px solid var(--ty-b);color:var(--ty-txt);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;}
+.about-card{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:20px;}
+.about-card-ico{font-size:22px;margin-bottom:10px;}
+.about-card-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;}
+.about-card-txt{font-size:13px;color:var(--text2);line-height:1.6;}
+.ver-step{display:flex;gap:14px;margin-bottom:20px;align-items:flex-start;}
+.ver-num{width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.ver-body{flex:1;}
+.ver-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.ver-txt{font-size:13px;color:var(--text2);line-height:1.6;}
+.not-found-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;padding:40px;}
+.not-found-num{font-family:'Playfair Display',serif;font-size:120px;font-weight:900;color:var(--bg3);line-height:1;}
+.not-found-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--text);margin:-20px 0 12px;}
+.not-found-txt{font-size:15px;color:var(--text2);line-height:1.7;max-width:420px;margin-bottom:28px;}
+.not-found-btn{padding:10px 28px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;text-decoration:none;}
+@media(max-width:640px){
+  .page-wrap{padding:32px 20px;}
+  .page-title{font-size:28px;}
+  .nav{padding:0 16px;}
+  .nav-mid{display:none;}
+  .foot{padding:16px 20px;flex-direction:column;align-items:flex-start;}
+  .about-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <div class="logo-text">AERA</div>
+    <div class="logo-dot"></div>
+  </a>
+  <div class="nav-mid">
+    <div class="ni" onclick="setNav(this)">Молдова</div>
+    <div class="ni" onclick="setNav(this)">Мир</div>
+    <div class="ni" onclick="setNav(this)">Экономика</div>
+    <div class="ni" onclick="setNav(this)">Политика</div>
+    <div class="ni" onclick="setNav(this)">Безопасность</div>
+    <div class="ni" onclick="setNav(this)">Технологии</div>
+  </div>
+  <div class="nav-r">
+    <div class="lang-row">
+      <button class="lb" onclick="setLang(this)">RO</button>
+      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">EN</button>
+    </div>
+    <button class="tbtn" onclick="toggleTheme()"><div class="tth"></div></button>
+  </div>
+</nav>
+<div class="page-wrap">
+  <div class="page-title">О нас</div>
+  <div class="page-sub">AERA — новостной портал Молдовы. Мы собираем и проверяем новости со всего мира и объясняем, что они означают для тебя.</div>
+
+  <h2 class="sec">Почему AERA</h2>
+  <p class="txt">Новостей много — хороших мало. Большинство порталов просто копируют друг друга. Мы работаем иначе: каждый материал на AERA проверен по нескольким источникам, и к каждой международной новости добавлен молдавский контекст.</p>
+  <p class="txt">Наша цель — чтобы читатель понимал не только что случилось, но и почему это важно именно здесь, в Молдове.</p>
+
+  <div class="about-grid">
+    <div class="about-card">
+      <div class="about-card-ico">🛡</div>
+      <div class="about-card-title">Верификация прежде всего</div>
+      <div class="about-card-txt">Каждый факт проверяется минимум по двум независимым источникам. Trust Score показывает степень достоверности прямо на странице материала.</div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-ico">🇲🇩</div>
+      <div class="about-card-title">Молдавский контекст</div>
+      <div class="about-card-txt">Международные новости — через призму Молдовы. Что означает решение ФРС для лея? Как война в регионе влияет на молдавский экспорт?</div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-ico">⚡</div>
+      <div class="about-card-title">Обновление каждые 15 минут</div>
+      <div class="about-card-txt">Мы мониторим более 20 источников круглосуточно. Новые материалы проходят проверку перед публикацией — быстро и без потери качества.</div>
+    </div>
+    <div class="about-card">
+      <div class="about-card-ico">🗣</div>
+      <div class="about-card-title">Три языка</div>
+      <div class="about-card-txt">Материалы публикуются на румынском, русском и английском. Каждая версия написана отдельно — не машинный перевод.</div>
+    </div>
+  </div>
+
+  <h2 class="sec">Наши принципы</h2>
+  <ul class="lst">
+    <li><strong>Независимость</strong> — на нашу позицию не влияют рекламодатели или политические структуры</li>
+    <li><strong>Прозрачность</strong> — все источники указаны, Trust Score виден каждому читателю</li>
+    <li><strong>Оригинальность</strong> — мы пишем собственные тексты, а не копируем чужие</li>
+    <li><strong>Исправления</strong> — ошибки исправляются открыто, с датой и описанием изменения</li>
+  </ul>
+
+  <h2 class="sec">Связаться с нами</h2>
+  <p class="txt">Новости и сообщения: <strong>news@aera.md</strong><br/>
+  Сотрудничество: <strong>partners@aera.md</strong><br/>
+  Исправления: <strong>editors@aera.md</strong></p>
+</div>
+<div class="foot">
+  <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
+  <div class="flinks">
+    <a class="flink" href="about.html">О нас</a>
+    <a class="flink" href="verification.html">Как мы проверяем факты</a>
+    <a class="flink" href="privacy.html">Конфиденциальность</a>
+    <a class="flink" href="terms.html">Условия</a>
+    <a class="flink" href="cookies.html">Cookies</a>
+    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="rss.xml">RSS</a>
+  </div>
+  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+</div>
+<script>
+function toggleTheme(){document.body.classList.toggle('dark');}
+function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+function setLang(el){document.querySelectorAll('.lb').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+</script>
+</body>
+</html>

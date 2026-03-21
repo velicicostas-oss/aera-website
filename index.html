@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AERA — Știri verificate · Moldova & World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#efede8;
+  --text:#0d0d0d;--text2:#5c5a56;--text3:#9a9896;
+  --border:#e4e2dc;--border2:#ccc9c2;
+  --accent:#c0392b;
+  --tg-bg:#f0faf3;--tg-txt:#1a7a3c;--tg-b:#b3dfc0;
+  --ty-bg:#fdf8ec;--ty-txt:#8a6000;--ty-b:#e8d49a;
+  --tr-bg:#fdf0ee;--tr-txt:#b03020;--tr-b:#f0bfba;
+  --md-bg:#f3f5fd;--md-b:#c5cff0;--md-txt:#2a3a8a;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
+}
+body.dark{
+  --bg:#0c0c0e;--bg2:#141417;--bg3:#1c1c22;
+  --text:#f0ede8;--text2:#8a8784;--text3:#55534f;
+  --border:#222228;--border2:#2e2e38;--accent:#e84030;
+  --tg-bg:#071410;--tg-txt:#4ecb71;--tg-b:#1a5c2a;
+  --ty-bg:#140e02;--ty-txt:#f0b429;--ty-b:#5c4a1a;
+  --tr-bg:#140505;--tr-txt:#e05252;--tr-b:#5c1a1a;
+  --md-bg:#090c1c;--md-b:#1c2850;--md-txt:#8090d0;
+  --shadow:0 4px 24px rgba(0,0,0,.3);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;transition:background .3s,color .3s;font-size:15px;min-height:100vh;}
+.deck, .md-text, #ctxt { white-space: pre-line; }
+
+/* ── NAV ── */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 40px;height:56px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);position:sticky;top:0;z-index:200;
+  transition:background .3s;
+}
+.logo{display:flex;align-items:flex-start;gap:3px;cursor:default;user-select:none;text-decoration:none;}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--text);line-height:1;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+.nav-mid{display:flex;gap:2px;}
+.ni{padding:5px 14px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-radius:20px;transition:all .15s;letter-spacing:.02em;white-space:nowrap;}
+.ni:hover,.ni.on{color:var(--text);background:var(--bg2);}
+.nav-r{display:flex;align-items:center;gap:12px;}
+.lang-row{display:flex;gap:2px;}
+.lb{padding:4px 9px;font-size:11px;font-weight:500;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+.lb.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.tbtn{width:42px;height:22px;border-radius:11px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+.tth{width:16px;height:16px;border-radius:50%;background:var(--text2);position:absolute;top:2px;left:2px;transition:left .3s,background .3s;}
+body.dark .tth{left:22px;background:var(--text);}
+
+/* ── HERO ── */
+.hero{display:grid;grid-template-columns:1fr 360px;border-bottom:1px solid var(--border);}
+.hero-l{border-right:1px solid var(--border);}
+.hero-img-wrap{position:relative;height:300px;overflow:hidden;}
+.hero-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
+.hero-img-wrap:hover .hero-img{transform:scale(1.03);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.06) 0%,rgba(0,0,0,.65) 100%);}
+.hero-badges{position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:8px;}
+.live-tag{display:flex;align-items:center;gap:5px;background:var(--accent);padding:4px 11px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;text-transform:uppercase;}
+.pip{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.12}}
+.over-tag{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:4px 11px;font-size:11px;color:rgba(255,255,255,.88);}
+.hero-body{padding:28px 32px;}
+.eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.ecat{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);}
+.esep{width:1px;height:10px;background:var(--border2);}
+.etime{font-size:11px;color:var(--text3);}
+.h1{font-family:'Playfair Display',serif;font-size:36px;line-height:1.13;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:-.3px;}
+.deck{font-size:14px;color:var(--text2);line-height:1.7;max-width:540px;margin-bottom:20px;}
+
+/* ── TRUST SCORE ── */
+.trust-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;position:relative;}
+.trust{display:inline-flex;align-items:center;gap:8px;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;border:1px solid;cursor:pointer;transition:opacity .15s;}
+.trust:hover{opacity:.8;}
+.tg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
+.ty{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
+.tr{background:var(--tr-bg);border-color:var(--tr-b);color:var(--tr-txt);}
+.tbar{width:50px;height:3px;border-radius:2px;background:var(--border);overflow:hidden;}
+.tfill{height:100%;border-radius:2px;}
+
+/* TRUST TOOLTIP */
+.trust-tooltip{
+  display:none;position:absolute;top:calc(100% + 10px);left:0;
+  width:300px;background:var(--bg);border:1px solid var(--border);
+  border-radius:10px;box-shadow:var(--shadow);padding:0;z-index:300;
+  overflow:hidden;
+}
+.trust-tooltip.show{display:block;}
+.tt-header{background:var(--tg-bg);border-bottom:1px solid var(--tg-b);padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.tt-score-big{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--tg-txt);}
+.tt-score-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tg-txt);opacity:.8;}
+.tt-body{padding:14px 16px;}
+.tt-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+.tt-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tt-bar-wrap{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.tt-bar-fill{height:100%;border-radius:2px;}
+.tt-row-label{font-size:11px;color:var(--text2);width:90px;flex-shrink:0;}
+.tt-row-val{font-size:11px;font-weight:600;color:var(--text);width:32px;text-align:right;flex-shrink:0;}
+.tt-divider{height:1px;background:var(--border);margin:12px 0;}
+.tt-scale{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.tt-scale-item{padding:7px 8px;border-radius:6px;border:1px solid;text-align:center;}
+.tt-scale-num{font-size:12px;font-weight:700;}
+.tt-scale-lbl{font-size:10px;margin-top:2px;opacity:.8;}
+.tt-close{position:absolute;top:10px;right:12px;font-size:16px;cursor:pointer;color:var(--text3);line-height:1;background:none;border:none;font-family:inherit;}
+
+/* READ MODES */
+.read-row{display:flex;gap:5px;margin:16px 0;}
+.rm{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
+.rm:hover{border-color:var(--border2);color:var(--text);}
+.rm.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+.listen-btn{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .2s;}
+.listen-btn:hover{background:var(--bg3);border-color:var(--border2);}
+.lico{width:28px;height:28px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.llabel{font-size:13px;font-weight:500;color:var(--text);}
+.lsub{font-size:10px;color:var(--text3);}
+.lbar-wrap{width:80px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:none;}
+.lbar-fill{height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width .1s linear;}
+
+/* MOLDOVA */
+.md-box{border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:20px 0 16px;}
+.md-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--accent);}
+.md-flag{display:flex;flex-shrink:0;width:26px;height:18px;border-radius:2px;overflow:hidden;}
+.md-flag-b{flex:1;background:#003DA5;}
+.md-flag-y{flex:1;background:#FFD100;}
+.md-flag-r{flex:1;background:#C8102E;}
+.md-header-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;}
+.md-body{padding:14px 16px;background:var(--bg2);}
+.md-text{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:12px;}
+.md-stats{display:flex;gap:8px;}
+.md-stat{flex:1;padding:10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);text-align:center;}
+.md-stat-val{font-size:18px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
+.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;}
+
+/* ASK */
+.ask-wrap{margin-top:14px;}
+.ask-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
+.ask-row{display:flex;gap:8px;align-items:center;}
+.ask-field{position:relative;flex:1;min-width:0;}
+.ask-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.ask-in{width:100%;padding:10px 14px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;}
+.ask-in:focus{border-color:var(--border2);}
+.ask-in::placeholder{color:var(--text3);}
+.ask-send{flex-shrink:0;width:38px;height:38px;border-radius:8px;background:var(--text);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:opacity .15s;}
+.ask-send:hover{opacity:.8;}
+
+.sources{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
+.stag{font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);}
+
+/* ── SIDEBAR ── */
+.sb{background:var(--bg2);}
+.sb-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+.sb-ttl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
+.sb-refresh{font-size:10px;color:var(--accent);}
+.sb-item{display:grid;grid-template-columns:72px 1fr;gap:10px;padding:13px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.sb-item:hover{background:var(--bg3);}
+.sb-item:last-child{border-bottom:none;}
+.sb-thumb{width:72px;height:54px;object-fit:cover;border-radius:5px;}
+.sb-thumb-ph{width:72px;height:54px;border-radius:5px;background:var(--bg3);}
+.sb-cat{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:600;margin-bottom:4px;}
+.sb-hed{font-family:'Playfair Display',serif;font-size:13px;line-height:1.3;color:var(--text);margin-bottom:5px;}
+.sb-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.sb-time{font-size:10px;color:var(--text3);}
+.mt{font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;border:1px solid;cursor:pointer;}
+.mtg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
+.mty{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
+.mtr{background:var(--tr-bg);border-color:var(--tr-b);color:var(--tr-txt);}
+
+/* ── SECTION ── */
+.sec{max-width:1200px;margin:0 auto;padding:0 40px;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:22px 0 14px;border-bottom:1px solid var(--border);}
+.stabs{display:flex;}
+.st{padding:6px 16px;font-size:12px;font-weight:500;color:var(--text3);border-bottom:2px solid transparent;cursor:pointer;transition:all .15s;}
+.st:hover{color:var(--text);}
+.st.on{color:var(--text);border-bottom-color:var(--text);}
+.see-all{font-size:12px;color:var(--text3);cursor:pointer;}
+.see-all:hover{color:var(--text);}
+
+/* CARD GRID */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
+.card{background:var(--bg);cursor:pointer;transition:background .15s;display:flex;flex-direction:column;height:100%;}
+.card:hover{background:var(--bg2);}
+.card-img-wrap{overflow:hidden;height:170px;}
+.card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s;}
+.card:hover .card-img{transform:scale(1.05);}
+.card-body{padding:20px;display:flex;flex-direction:column;flex:1;}
+.cdeck{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
+.cfoot{margin-top:auto;}
+.see-all{display:inline-flex;align-items:center;text-decoration:none;}
+.ccat{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:8px;}
+.ched{font-family:'Playfair Display',serif;font-size:18px;line-height:1.3;color:var(--text);margin-bottom:8px;}
+.cdeck{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;}
+.cfoot{display:flex;align-items:center;justify-content:space-between;}
+.ctime{font-size:11px;color:var(--text3);}
+.infog{display:flex;align-items:center;gap:8px;margin-top:12px;padding:8px 10px;border-radius:5px;background:var(--bg2);border:1px solid var(--border);cursor:pointer;}
+.infog:hover{background:var(--bg3);}
+.mc{display:flex;align-items:flex-end;gap:2px;height:20px;}
+.mb{width:5px;border-radius:1px 1px 0 0;background:var(--border2);opacity:.25;}
+.mb.hi{opacity:.9;background:var(--accent);}
+.itxt{font-size:11px;color:var(--text2);}
+.bs{display:flex;align-items:center;gap:7px;margin-top:12px;padding:7px 10px;border-radius:5px;background:var(--ty-bg);border:1px solid var(--ty-b);}
+.bsl{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ty-txt);}
+.bst{font-size:11px;color:var(--ty-txt);opacity:.8;}
+
+/* ── FOOTER ── */
+.foot{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-top:1px solid var(--border);margin-top:0;flex-wrap:wrap;gap:12px;}
+.flogo{display:flex;align-items:flex-start;gap:3px;}
+.flogo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;letter-spacing:-1px;color:var(--text3);line-height:1;}
+.flogo-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:4px;}
+.flinks{display:flex;gap:20px;flex-wrap:wrap;}
+.flink{font-size:11px;color:var(--text3);cursor:pointer;text-decoration:none;}
+.flink:hover{color:var(--text);}
+.fnote{font-size:11px;color:var(--text3);}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  .nav{padding:0 16px;}
+  .nav-mid{display:none;}
+  .hero{grid-template-columns:1fr;}
+  .hero-l{border-right:none;}
+  .hero-img-wrap{height:240px;}
+  .h1{font-size:26px;}
+  .hero-body{padding:20px 18px;}
+  .sb{border-top:1px solid var(--border);}
+  .sec{padding:0 16px;}
+  .grid{grid-template-columns:1fr;}
+  .foot{padding:16px 18px;flex-direction:column;align-items:flex-start;}
+  .trust-tooltip{width:260px;}
+  .md-stats{flex-direction:column;}
+}
+@media(max-width:480px){
+  .h1{font-size:22px;}
+  .read-row{flex-wrap:wrap;}
+}
+
+/* COOKIE BANNER */
+.cookie-bar{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;color:#e8e6e2;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:13px;line-height:1.6;flex-wrap:wrap;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
+.cookie-bar a{color:#f0a898;text-decoration:underline;}
+.cookie-bar a:hover{opacity:.8;}
+.cookie-bar strong{color:#fff;}
+.cookie-bar-actions{display:flex;gap:10px;flex-shrink:0;}
+.cookie-bar-btn{padding:8px 22px;border-radius:5px;background:var(--accent);border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.cookie-bar-btn:hover{opacity:.9;}
+.cookie-bar-decline{padding:8px 16px;border-radius:5px;background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.cookie-bar-decline:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+
+/* BREAKING BAR */
+.breaking-bar{display:flex;align-items:center;height:34px;background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden;}
+.breaking-label{flex-shrink:0;background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;}
+.breaking-overflow{flex:1;overflow:hidden;position:relative;}
+.breaking-track{display:flex;gap:40px;white-space:nowrap;animation:scroll-breaking 30s linear infinite;}
+.breaking-track:hover{animation-play-state:paused;}
+.breaking-item{font-size:12px;color:var(--text2);cursor:pointer;text-decoration:none;flex-shrink:0;}
+.breaking-item:hover{color:var(--accent);}
+@keyframes scroll-breaking{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* BOTTOM TICKER */
+.news-ticker{background:var(--bg2);border-top:1px solid var(--border);height:34px;overflow:hidden;display:flex;align-items:center;}
+.ticker-track{display:flex;gap:48px;white-space:nowrap;animation:ticker-scroll 40s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{font-size:11px;color:var(--text2);cursor:pointer;text-decoration:none;flex-shrink:0;}
+.ticker-item:hover{color:var(--accent);}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <div class="logo-text">AERA</div>
+    <div class="logo-dot"></div>
+  </a>
+  <div class="nav-mid">
+    <div class="ni on" data-section="moldova" onclick="setNav(this)">Молдова</div>
+    <div class="ni" data-section="world" onclick="setNav(this)">Мир</div>
+    <div class="ni" data-section="economy" onclick="setNav(this)">Экономика</div>
+    <div class="ni" data-section="politics" onclick="setNav(this)">Политика</div>
+    <div class="ni" data-section="security" onclick="setNav(this)">Безопасность</div>
+    <div class="ni" data-section="technology" onclick="setNav(this)">Технологии</div>
+    <div class="ni" style="color:var(--text3)">+ Все темы</div>
+  </div>
+  <div class="nav-r">
+    <div class="lang-row">
+      <button class="lb" onclick="setLang(this)">RO</button>
+      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">EN</button>
+    </div>
+    <button class="tbtn" onclick="toggleTheme()" title="Тёмная / светлая тема"><div class="tth"></div></button>
+  </div>
+</nav>
+
+<!-- BREAKING NEWS BAR -->
+<div class="breaking-bar">
+  <div class="breaking-label" id="breaking-label">LIVE</div>
+  <div class="breaking-overflow">
+    <div class="breaking-track" id="breaking-track">
+      <a class="breaking-item" href="index.html">AERA · Știri verificate · Moldova & World · Jurnalism independent ·</a>
+      <a class="breaking-item" href="index.html">AERA · Știri verificate · Moldova & World · Jurnalism independent ·</a>
+    </div>
+  </div>
+</div>
+
+<div style="max-width:1200px;margin:0 auto;">
+<div class="hero">
+  <div class="hero-l">
+    <div class="hero-img-wrap">
+      <img class="hero-img" src="https://images.unsplash.com/photo-1523867574998-1a336b6ded04?w=900&q=80" alt="Военный корабль"/>
+      <div class="hero-overlay"></div>
+      <div class="hero-badges">
+        <div class="live-tag"><div class="pip"></div>Live</div>
+        <div class="over-tag">Безопасность · Международное</div>
+      </div>
+    </div>
+    <div class="hero-body">
+      <div class="eyebrow">
+        <div class="ecat">Персидский залив</div>
+        <div class="esep"></div>
+        <div class="etime">Обновлено 14:32 · 8 мин назад</div>
+      </div>
+      <h1 class="h1">Иранские дроны блокируют Ормузский пролив — США перебрасывают авианосец</h1>
+      <p class="deck">Пентагон подтверждает переброску USS Eisenhower в Персидский залив. Нефть подорожала на 6% за первые 20 минут торгов. Турция вызвала послов.</p>
+
+      <!-- TRUST SCORE с тултипом -->
+      <div class="trust-wrap" id="trust-wrap">
+        <div class="trust tg" onclick="toggleTooltip()" title="Нажмите, чтобы узнать, как считается рейтинг">
+          <div class="tbar"><div class="tfill" style="width:94%;background:#1a7a3c;"></div></div>
+          Проверено · 94/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>
+        </div>
+        <div class="trust" style="background:var(--bg2);border-color:var(--border);color:var(--text2);font-size:11px;padding:4px 10px;cursor:default;">3 источника</div>
+
+        <!-- TOOLTIP -->
+        <div class="trust-tooltip" id="trust-tooltip">
+          <button class="tt-close" onclick="toggleTooltip()">×</button>
+          <div class="tt-header">
+            <div>
+              <div class="tt-score-big">94</div>
+              <div class="tt-score-label">из 100 — Рейтинг доверия</div>
+            </div>
+          </div>
+          <div class="tt-body">
+            <div class="tt-desc">
+              Каждая новость автоматически получает оценку от 0 до 100 на основе четырёх факторов. Чем выше балл — тем надёжнее информация.
+            </div>
+            <div class="tt-row">
+              <div class="tt-row-label" style="font-size:10px;">Кол-во источников</div>
+              <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:100%;background:#1a7a3c;"></div></div>
+              <div class="tt-row-val">30/30</div>
+            </div>
+            <div class="tt-row">
+              <div class="tt-row-label" style="font-size:10px;">Качество источников</div>
+              <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:93%;background:#1a7a3c;"></div></div>
+              <div class="tt-row-val">28/30</div>
+            </div>
+            <div class="tt-row">
+              <div class="tt-row-label" style="font-size:10px;">Согласованность</div>
+              <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:93%;background:#1a7a3c;"></div></div>
+              <div class="tt-row-val">28/30</div>
+            </div>
+            <div class="tt-row">
+              <div class="tt-row-label" style="font-size:10px;">Актуальность</div>
+              <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:80%;background:#f0b429;"></div></div>
+              <div class="tt-row-val">8/10</div>
+            </div>
+            <div class="tt-divider"></div>
+            <div class="tt-scale">
+              <div class="tt-scale-item" style="background:var(--tg-bg);border-color:var(--tg-b);">
+                <div class="tt-scale-num" style="color:var(--tg-txt);">80–100</div>
+                <div class="tt-scale-lbl" style="color:var(--tg-txt);">Проверено</div>
+              </div>
+              <div class="tt-scale-item" style="background:var(--ty-bg);border-color:var(--ty-b);">
+                <div class="tt-scale-num" style="color:var(--ty-txt);">50–79</div>
+                <div class="tt-scale-lbl" style="color:var(--ty-txt);">Частично</div>
+              </div>
+              <div class="tt-scale-item" style="background:var(--tr-bg);border-color:var(--tr-b);">
+                <div class="tt-scale-num" style="color:var(--tr-txt);">0–49</div>
+                <div class="tt-scale-lbl" style="color:var(--tr-txt);">Непроверено</div>
+              </div>
+            </div>
+            <div style="font-size:10px;color:var(--text3);margin-top:10px;line-height:1.5;">Рейтинг обновляется в реальном времени по мере появления новых источников.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="read-row">
+        <button class="rm on" onclick="setMode(this,'10s')">10 сек</button>
+        <button class="rm" onclick="setMode(this,'1min')">1 минута</button>
+        <button class="rm" onclick="setMode(this,'full')">Полностью</button>
+      </div>
+      <p id="ctxt" style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;">США и Иран на пороге прямого столкновения в Персидском заливе.</p>
+
+      <div class="listen-btn" onclick="startPlay(this)">
+        <div class="lico"><svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg></div>
+        <div style="flex:1;">
+          <div class="llabel" id="play-label">Слушать</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+            <div class="lbar-wrap" id="lbar-wrap"><div class="lbar-fill" id="lbar"></div></div>
+            <div class="lsub" id="ldur">1 мин 24 сек</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOLDOVA -->
+      <div class="md-box">
+        <div class="md-header">
+          <div class="md-flag"><div class="md-flag-b"></div><div class="md-flag-y"></div><div class="md-flag-r"></div></div>
+          <div class="md-header-label">Что это значит для Молдовы</div>
+        </div>
+        <div class="md-body">
+          <div class="md-text">Цены на топливо могут вырасти на 8–12% в течение двух недель. Молдова импортирует 40% нефти через маршруты, проходящие через Турцию — косвенный, но ощутимый удар по перевозчикам и домохозяйствам.</div>
+          <div class="md-stats">
+            <div class="md-stat"><div class="md-stat-val">+10%</div><div class="md-stat-lbl">Прогноз роста цен на топливо</div></div>
+            <div class="md-stat"><div class="md-stat-val">40%</div><div class="md-stat-lbl">Нефти через турецкие маршруты</div></div>
+            <div class="md-stat"><div class="md-stat-val">2 нед</div><div class="md-stat-lbl">Ожидаемый срок эффекта</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ASK -->
+      <div class="ask-wrap">
+        <div class="ask-label">Вопрос редакции</div>
+        <div class="ask-row">
+          <div class="ask-field">
+            <svg class="ask-ico" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <circle cx="6" cy="6" r="4.5" stroke="var(--text3)" stroke-width="1.2"/>
+              <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="var(--text3)" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            <input class="ask-in" type="text" placeholder="Задайте вопрос по теме..."/>
+          </div>
+          <button class="ask-send">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <line x1="1" y1="7" x2="13" y2="7" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+              <polyline points="8,2 13,7 8,12" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sources">
+        <span style="font-size:11px;color:var(--text3);">Источники:</span>
+        <span class="stag">Reuters</span><span class="stag">AP News</span>
+        <span class="stag">BBC</span><span class="stag">Пентагон</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sb">
+    <div class="sb-hdr">
+      <div class="sb-ttl">Последние новости</div>
+      <div class="sb-refresh">↻ 3 мин назад</div>
+    </div>
+    <div class="sb-item">
+      <img class="sb-thumb" src="https://images.unsplash.com/photo-1555848962-6e79363ec58f?w=200&q=70" alt=""/>
+      <div><div class="sb-cat">Молдова · Политика</div><div class="sb-hed">Санду подписала налоговый декрет — оппозиция объявила протест</div><div class="sb-meta"><span class="sb-time">14:18</span><span class="mt mtg" onclick="showTrustInfo(91,'green')">91</span></div></div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-thumb-ph"></div>
+      <div><div class="sb-cat">Экономика</div><div class="sb-hed">Лей достиг минимума за 6 месяцев к евро</div><div class="sb-meta"><span class="sb-time">13:55</span><span class="mt mty" onclick="showTrustInfo(67,'yellow')">67</span><span class="mt mty" style="font-size:9px;">1 источник</span></div></div>
+    </div>
+    <div class="sb-item">
+      <img class="sb-thumb" src="https://images.unsplash.com/photo-1569025743873-ea3a9ade89f9?w=200&q=70" alt=""/>
+      <div><div class="sb-cat">Европа</div><div class="sb-hed">Брюссель откладывает голосование по энергетике</div><div class="sb-meta"><span class="sb-time">13:40</span><span class="mt mtg" onclick="showTrustInfo(88,'green')">88</span></div></div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-thumb-ph"></div>
+      <div><div class="sb-cat">Безопасность</div><div class="sb-hed">Кибератака на энергосеть Эстонии — след ГРУ</div><div class="sb-meta"><span class="sb-time">13:11</span><span class="mt mtr" onclick="showTrustInfo(41,'red')">41</span><span class="mt mtr" style="font-size:9px;">Непроверено</span></div></div>
+    </div>
+    <div class="sb-item">
+      <img class="sb-thumb" src="https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=200&q=70" alt=""/>
+      <div><div class="sb-cat">Технологии</div><div class="sb-hed">OpenAI выпустила GPT-5 с расширенным рассуждением</div><div class="sb-meta"><span class="sb-time">12:50</span><span class="mt mtg" onclick="showTrustInfo(96,'green')">96</span></div></div>
+    </div>
+    <div class="sb-item">
+      <div class="sb-thumb-ph"></div>
+      <div><div class="sb-cat">Молдова · Общество</div><div class="sb-hed">Перепись 2026: население Молдовы сократилось на 180 тыс.</div><div class="sb-meta"><span class="sb-time">12:20</span><span class="mt mtg" onclick="showTrustInfo(99,'green')">99</span></div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="stabs">
+      <div class="st on" data-tab="all" onclick="setSt(this)">Все</div>
+      <div class="st" data-tab="moldova" onclick="setSt(this)">Молдова</div>
+      <div class="st" data-tab="world" onclick="setSt(this)">Мир</div>
+      <div class="st" data-tab="economy" onclick="setSt(this)">Экономика</div>
+      <div class="st" data-tab="conflicts" onclick="setSt(this)">Конфликты</div>
+    </div>
+    <a class="see-all" href="news.html">Все материалы →</a>
+  </div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?w=600&q=75" alt=""/></div>
+      <div class="card-body">
+        <div class="ccat">Молдова · Политика</div>
+        <div class="ched">Избирательный кодекс — ЦИК формирует комиссию по мониторингу</div>
+        <div class="cdeck">ЦИК объявил состав технической комиссии по надзору за внеочередными местными выборами.</div>
+        <div class="cfoot"><span class="ctime">1 час назад</span><div class="trust tg" style="font-size:10px;padding:3px 9px;cursor:pointer;" onclick="alert('89/100 — Проверено. Reuters + deschide.md + RISE Moldova')">89/100 ⓘ</div></div>
+        <div class="infog"><div class="mc"><div class="mb" style="height:8px;"></div><div class="mb" style="height:12px;"></div><div class="mb" style="height:10px;"></div><div class="mb hi" style="height:17px;"></div><div class="mb" style="height:13px;"></div></div><span class="itxt">Явка 2010–2024 → инфографика</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1547483238-2cbf881a559f?w=600&q=75" alt=""/></div>
+      <div class="card-body">
+        <div class="ccat">Конфликт · Украина</div>
+        <div class="ched">12 дронов сбиты над Одессой — пожар в порту, жертв нет</div>
+        <div class="cdeck">Украинская армия подтверждает ночную атаку. Судоходство приостановлено на 6 часов.</div>
+        <div class="cfoot"><span class="ctime">2 часа назад</span><div class="trust ty" style="font-size:10px;padding:3px 9px;cursor:pointer;" onclick="alert('72/100 — Частично проверено. Данные расходятся между источниками.')">72/100 ⓘ</div></div>
+        <div class="bs"><svg width="11" height="11" viewBox="0 0 11 11"><circle cx="5.5" cy="5.5" r="4.5" fill="none" stroke="var(--ty-txt)" stroke-width="1.2"/><text x="5.5" y="9" text-anchor="middle" fill="var(--ty-txt)" font-size="6.5" font-weight="600">!</text></svg><span class="bsl">Проверка:</span><span class="bst">Данные расходятся ±3 между источниками</span></div>
+      </div>
+    </div>
+    <a class="card" href="news.html" style="text-decoration:none;">
+      <div class="card-img-wrap"><img class="card-img" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=600&q=75" alt=""/></div>
+      <div class="card-body">
+        <div class="ccat">Экономика · Глобальное</div>
+        <div class="ched">МВФ повышает прогноз для Молдовы — рост 3.8% в 2026 году</div>
+        <div class="cdeck">Налоговые реформы и рост денежных переводов — ключевые факторы Фонда.</div>
+        <div class="cfoot"><span class="ctime">3 часа назад</span><div class="trust tg" style="font-size:10px;padding:3px 9px;cursor:pointer;">97/100 ⓘ</div></div>
+        <div class="infog"><div class="mc"><div class="mb" style="height:9px;"></div><div class="mb" style="height:11px;"></div><div class="mb" style="height:14px;"></div><div class="mb" style="height:16px;"></div><div class="mb hi" style="height:20px;"></div></div><span class="itxt">ВВП Молдовы 2022–2026 → инфографика</span></div>
+      </div>
+    </a>
+  </div>
+</div>
+
+
+<!-- BOTTOM NEWS TICKER -->
+<div class="news-ticker">
+  <div class="ticker-track" id="ticker-track">
+    <a class="ticker-item" href="index.html">● AERA · Știri verificate</a>
+    <a class="ticker-item" href="index.html">● Moldova & World</a>
+    <a class="ticker-item" href="index.html">● Verificat de jurnaliști</a>
+    <a class="ticker-item" href="index.html">● AERA · Știri verificate</a>
+    <a class="ticker-item" href="index.html">● Moldova & World</a>
+    <a class="ticker-item" href="index.html">● Verificat de jurnaliști</a>
+  </div>
+</div>
+<div class="foot">
+  <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
+  <div class="flinks">
+    <a class="flink" href="about.html">О редакции</a>
+    <a class="flink" href="verification.html">Политика верификации</a>
+    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="privacy.html">Конфиденциальность</a>
+    <a class="flink" href="terms.html">Условия</a>
+    <a class="flink" href="cookies.html">Cookies</a>
+  </div>
+  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+</div>
+
+<script>
+// ─── Supabase config ───────────────────────────────────────────────────────
+const SUPABASE_URL = 'https://araqepkymkxktvhseeas.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_WX5Bkpcd92hY-aYmkwAJqA_-ugBJu6N';
+
+// Текущий язык
+let currentLang = 'ru';
+// Текущий режим чтения
+let currentMode = '10s';
+// Данные главной статьи
+let heroArticle = null;
+// Все статьи для сетки
+let allArticles = [];
+let activeSection = 'all';
+let playing = false;
+
+const UI = {
+  ru: {
+    nav: {moldova:'Молдова', world:'Мир', economy:'Экономика', politics:'Политика', security:'Безопасность', technology:'Технологии', allTopics:'+ Все темы'},
+    tabs: {all:'Все', moldova:'Молдова', world:'Мир', economy:'Экономика', conflicts:'Конфликты'},
+    latest:'Последние новости', refresh:'↻ 3 мин назад', sources:'Источники:', seeAll:'Все материалы →', updated:'Обновлено',
+    read10:'10 сек', read1:'1 минута', readFull:'Полностью',
+    listen:'Слушать', playing:'Воспроизводится...', askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
+    moldovaImpact:'Что это значит для Молдовы', verified:'Проверено', partial:'Частично', unverified:'Непроверено',
+    footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀'
+  },
+  en: {
+    nav: {moldova:'Moldova', world:'World', economy:'Economy', politics:'Politics', security:'Security', technology:'Technology', allTopics:'+ All topics'},
+    tabs: {all:'All', moldova:'Moldova', world:'World', economy:'Economy', conflicts:'Conflicts'},
+    latest:'Latest news', refresh:'↻ 3 min ago', sources:'Sources:', seeAll:'All stories →', updated:'Updated',
+    read10:'10 sec', read1:'1 minute', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
+    moldovaImpact:'What this means for Moldova', verified:'Verified', partial:'Partial', unverified:'Unverified',
+    footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀'
+  },
+  ro: {
+    nav: {moldova:'Moldova', world:'Lume', economy:'Economie', politics:'Politică', security:'Securitate', technology:'Tehnologie', allTopics:'+ Toate temele'},
+    tabs: {all:'Toate', moldova:'Moldova', world:'Lume', economy:'Economie', conflicts:'Conflicte'},
+    latest:'Ultimele știri', refresh:'↻ acum 3 min', sources:'Surse:', seeAll:'Toate materialele →', updated:'Actualizat',
+    read10:'10 sec', read1:'1 minut', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
+    moldovaImpact:'Ce înseamnă asta pentru Moldova', verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
+    footerNote:'Știri verificate · Actualizare la fiecare 15 minute', empty:'Articolele vor apărea aici imediat ce agenții publică primele materiale 🚀'
+  }
+};
+
+function safeText(v){ return typeof v === 'string' ? v : ''; }
+function field(article, base){
+  return safeText(article?.[`${base}_${currentLang}`])
+    || safeText(article?.[`${base}_ro`])
+    || safeText(article?.[`${base}_en`])
+    || safeText(article?.[`${base}_ru`])
+    || (base === 'title' ? safeText(article?.title) : '');
+}
+function translateCategory(cat){
+  const value = (cat || '').toString().toLowerCase();
+  const map = {
+    general:{ru:'Общее',en:'General',ro:'General'}, world:{ru:'Мир',en:'World',ro:'Lume'}, moldova:{ru:'Молдова',en:'Moldova',ro:'Moldova'},
+    economy:{ru:'Экономика',en:'Economy',ro:'Economie'}, politics:{ru:'Политика',en:'Politics',ro:'Politică'}, security:{ru:'Безопасность',en:'Security',ro:'Securitate'},
+    technology:{ru:'Технологии',en:'Technology',ro:'Tehnologie'}, conflict:{ru:'Конфликт',en:'Conflict',ro:'Conflict'}, conflicts:{ru:'Конфликты',en:'Conflicts',ro:'Conflicte'},
+    international:{ru:'Международное',en:'International',ro:'Internațional'}, society:{ru:'Общество',en:'Society',ro:'Societate'}, investigation:{ru:'Расследование',en:'Investigation',ro:'Investigație'}
+  };
+  return map[value]?.[currentLang] || cat || '';
+}
+function formatTime(dateStr){
+  if (!dateStr) return '';
+  const locale = currentLang === 'ro' ? 'ro-RO' : currentLang === 'en' ? 'en-GB' : 'ru-RU';
+  return new Date(dateStr).toLocaleTimeString(locale, {hour:'2-digit', minute:'2-digit'});
+}
+function escapeHtml(text){
+  return (text || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m] || m));
+}
+function articleMatchesSection(article, section){
+  if (section === 'all') return true;
+  const cat = (article.category || '').toLowerCase();
+  const title = [article.title_ro, article.title_ru, article.title_en].filter(Boolean).join(' ').toLowerCase();
+  const summary = [article.summary1min_ro, article.summary1min_ru, article.summary1min_en].filter(Boolean).join(' ').toLowerCase();
+  if (section === 'world') return cat.includes('world') || cat.includes('international') || cat.includes('general');
+  if (section === 'moldova') return cat.includes('moldova') || title.includes('молд') || summary.includes('молд');
+  if (section === 'economy') return cat.includes('econom') || title.includes('эконом') || summary.includes('эконом');
+  if (section === 'politics') return cat.includes('polit');
+  if (section === 'security') return cat.includes('secur') || cat.includes('conflict');
+  if (section === 'technology') return cat.includes('tech');
+  if (section === 'conflicts') return cat.includes('conflict') || title.includes('войн') || title.includes('украин') || summary.includes('войн');
+  return true;
+}
+function applyUiTranslations(){
+  const t = UI[currentLang];
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('.ni[data-section]').forEach(el => el.textContent = t.nav[el.dataset.section] || el.textContent);
+  const allTopics = document.querySelector('.ni[style]'); if (allTopics) allTopics.textContent = t.nav.allTopics;
+  document.querySelectorAll('.st[data-tab]').forEach(el => el.textContent = t.tabs[el.dataset.tab] || el.textContent);
+  const sbTitle = document.querySelector('.sb-ttl'); if (sbTitle) sbTitle.textContent = t.latest;
+  const sbRefresh = document.querySelector('.sb-refresh'); if (sbRefresh) sbRefresh.textContent = t.refresh;
+  const seeAll = document.querySelector('.see-all'); if (seeAll) seeAll.textContent = t.seeAll;
+  const askLabel = document.querySelector('.ask-label'); if (askLabel) askLabel.textContent = t.askLabel;
+  const askIn = document.querySelector('.ask-in'); if (askIn) askIn.placeholder = t.askPlaceholder;
+  const mdLabel = document.querySelector('.md-header-label'); if (mdLabel) mdLabel.textContent = t.moldovaImpact;
+  const footerNote = document.querySelector('.fnote'); if (footerNote) footerNote.textContent = t.footerNote;
+  const btn10 = document.querySelector('.rm[onclick*="10s"]'); if (btn10) btn10.textContent = t.read10;
+  const btn1 = document.querySelector('.rm[onclick*="1min"]'); if (btn1) btn1.textContent = t.read1;
+  const btnF = document.querySelector('.rm[onclick*="full"]'); if (btnF) btnF.textContent = t.readFull;
+  if (!playing) { const playLabel = document.getElementById('play-label'); if (playLabel) playLabel.textContent = t.listen; }
+}
+
+async function loadArticles() {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?status=eq.published&order=created_at.desc&limit=18`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      allArticles = data;
+  populateBreakingBar(allArticles);
+  populateTicker(allArticles);
+      renderPage();
+    }
+  } catch(e) {
+    console.log('DB not ready yet, showing demo content');
+  }
+}
+
+function renderPage(){
+  applyUiTranslations();
+  const filtered = allArticles.filter(a => articleMatchesSection(a, activeSection));
+  heroArticle = filtered[0] || allArticles[0] || null;
+  if (heroArticle) renderHero(heroArticle);
+  const rest = filtered.filter(a => !heroArticle || a.id !== heroArticle.id);
+  renderSidebar(rest.slice(0,6));
+  renderGrid(rest.slice(0,6));
+}
+
+function renderHero(article) {
+  if (!article) return;
+  const t = UI[currentLang];
+  const title = field(article,'title');
+  const deck = field(article,'summary1min') || field(article,'summary10s') || '';
+  document.querySelector('.h1').textContent = title;
+  document.querySelector('.deck').textContent = deck;
+  const score = Math.round(article.trust_score || 0);
+  const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
+  const scoreLabel = score >= 80 ? t.verified : score >= 50 ? t.partial : t.unverified;
+  const trust = document.querySelector('.trust-wrap .trust');
+  trust.className = `trust ${scoreClass}`;
+  trust.innerHTML = `<div class="tbar"><div class="tfill" style="width:${score}%;background:${score>=80?'#1a7a3c':score>=50?'#8a6000':'#b03020'};"></div></div>${scoreLabel} · ${score}/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>`;
+  updateHeroText();
+  document.querySelector('.ecat').textContent = translateCategory(article.category || 'general');
+  document.querySelector('.etime').textContent = `${t.updated} ${formatTime(article.created_at)}`;
+  if (article.photo_url) document.querySelector('.hero-img').src = article.photo_url;
+  let sourceNames = [];
+  try { sourceNames = JSON.parse(article.source_names || '[]'); } catch(e) {}
+  const srcContainer = document.querySelector('.sources');
+  srcContainer.innerHTML = `<span style="font-size:11px;color:var(--text3);">${t.sources}</span>` + sourceNames.slice(0,4).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
+  let ctx = {};
+  try { ctx = typeof article.moldova_context === 'string' ? JSON.parse(article.moldova_context) : (article.moldova_context || {}); } catch(e) {}
+  if (ctx.economy_impact || ctx.economy) {
+    document.querySelector('.md-text').textContent = ctx.economy_impact || ctx.economy || '';
+    const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
+    const stats = document.querySelectorAll('.md-stat');
+    figures.slice(0,3).forEach((fig, i) => {
+      if (stats[i]) {
+        const parts = String(fig).split('—');
+        stats[i].querySelector('.md-stat-val').textContent = parts[0]?.trim() || fig;
+        stats[i].querySelector('.md-stat-lbl').textContent = parts[1]?.trim() || '';
+      }
+    });
+  }
+}
+
+function updateHeroText() {
+  if (!heroArticle) return;
+  const texts = { '10s': field(heroArticle,'summary10s'), '1min': field(heroArticle,'summary1min'), 'full': field(heroArticle,'body') };
+  document.getElementById('ctxt').textContent = texts[currentMode] || '';
+}
+
+function renderSidebar(articles) {
+  const sb = document.querySelector('.sb');
+  sb.querySelectorAll('.sb-item').forEach(el => el.remove());
+  articles.forEach(article => {
+    const title = field(article,'title');
+    const score = Math.round(article.trust_score || 0);
+    const scoreClass = score >= 80 ? 'mtg' : score >= 50 ? 'mty' : 'mtr';
+    const time = formatTime(article.created_at);
+    const cat = translateCategory(article.category || 'general');
+    const item = document.createElement('div');
+    item.className = 'sb-item';
+    item.onclick = () => window.location.href = `news.html?id=${article.id}`;
+    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + `<div><div class="sb-cat">${escapeHtml(cat)}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span><span class="mt ${scoreClass}">${score}</span></div></div>`;
+    sb.appendChild(item);
+  });
+}
+
+function renderGrid(articles) {
+  const grid = document.querySelector('.grid');
+  grid.innerHTML = '';
+  articles.forEach(article => {
+    const title = field(article,'title');
+    const summary = field(article,'summary1min') || field(article,'summary10s');
+    const score = Math.round(article.trust_score || 0);
+    const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
+    const time = formatTime(article.created_at);
+    const cat = translateCategory(article.category || 'general');
+    const card = document.createElement('a');
+    card.className = 'card';
+    card.href = `news.html?id=${article.id}`;
+    card.style.textDecoration = 'none';
+    card.innerHTML = `<div class="card-img-wrap">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div><div class="card-body"><div class="ccat">${escapeHtml(cat)}</div><div class="ched">${escapeHtml(title)}</div><div class="cdeck">${escapeHtml(summary)}</div><div class="cfoot"><span class="ctime">${time}</span><div class="trust ${scoreClass}" style="font-size:10px;padding:3px 9px;">${score}/100 ⓘ</div></div></div>`;
+    grid.appendChild(card);
+  });
+  if (articles.length === 0) grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);">${UI[currentLang].empty}</div>`;
+}
+
+function setLang(el) {
+  document.querySelectorAll('.lb').forEach(x => x.classList.remove('on'));
+  el.classList.add('on');
+  currentLang = el.textContent.toLowerCase();
+  updateCookieBanner();
+  updateBreakingLabel();
+  renderPage();
+}
+
+function setMode(b, m) {
+  document.querySelectorAll('.rm').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  currentMode = m;
+  updateHeroText();
+}
+
+function toggleTheme() { document.body.classList.toggle('dark'); }
+function setNav(el) {
+  document.querySelectorAll('.ni').forEach(x => x.classList.remove('on'));
+  el.classList.add('on');
+  activeSection = el.dataset.section || 'all';
+  renderPage();
+}
+function setSt(el) {
+  document.querySelectorAll('.st').forEach(x => x.classList.remove('on'));
+  el.classList.add('on');
+  activeSection = el.dataset.tab || 'all';
+  renderPage();
+}
+// ─── Запуск ───────────────────────────────────────────────────────────────
+const qp = new URLSearchParams(window.location.search);
+const sectionParam = qp.get('section');
+if (sectionParam) {
+  activeSection = sectionParam;
+  const targetNav = document.querySelector(`.ni[data-section="${sectionParam}"]`);
+  const targetTab = document.querySelector(`.st[data-tab="${sectionParam}"]`);
+  if (targetNav) { document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on')); targetNav.classList.add('on'); }
+  if (targetTab) { document.querySelectorAll('.st').forEach(x=>x.classList.remove('on')); targetTab.classList.add('on'); }
+}
+applyUiTranslations();
+loadArticles();
+setInterval(loadArticles, 5 * 60 * 1000);
+
+// ── COOKIE BANNER ──
+const COOKIE_TEXTS = {
+  ru: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>. Вы можете отказаться, закрыв это уведомление.',
+  en: '🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance and content personalisation. By clicking "Accept" you agree to our <a href="cookies.html">cookie policy</a>. You may decline by closing this notice.',
+  ro: '🍪 <strong>Folosim cookie-uri.</strong> Acest site utilizează cookie-uri pentru analiză, performanță și personalizarea conținutului. Apăsând „Accept" sunteți de acord cu <a href="cookies.html">politica noastră de cookie-uri</a>. Puteți refuza închizând acest mesaj.'
+};
+function updateCookieBanner(){
+  const el = document.getElementById('cookie-text');
+  if(el) el.innerHTML = COOKIE_TEXTS[currentLang] || COOKIE_TEXTS.ru;
+}
+function acceptCookies(){
+  localStorage.setItem('aera_cookies_ok','1');
+  const bar = document.getElementById('cookie-bar');
+  if(bar){ bar.style.opacity='0'; bar.style.transition='opacity .3s'; setTimeout(()=>bar.style.display='none',300); }
+}
+// Запускаем после загрузки DOM
+document.addEventListener('DOMContentLoaded', function(){
+  if(localStorage.getItem('aera_cookies_ok')){
+    const bar = document.getElementById('cookie-bar');
+    if(bar) bar.style.display = 'none';
+  } else {
+    updateCookieBanner();
+  }
+});
+
+// ── BREAKING BAR ──
+const BREAKING_LABELS = {ru:'В ЭФИРЕ', en:'LIVE', ro:'ÎN DIRECT'};
+function updateBreakingLabel(){
+  const el = document.getElementById('breaking-label');
+  if(el) el.textContent = BREAKING_LABELS[currentLang] || 'LIVE';
+}
+function populateBreakingBar(articles){
+  const track = document.getElementById('breaking-track');
+  if(!track || !articles || !articles.length) return;
+  const items = articles.slice(0,8).map(a => {
+    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const href = `news.html?id=${a.id}`;
+    return `<a class="breaking-item" href="${href}">${title} ·</a>`;
+  });
+  const joined = items.join('') + items.join('');
+  track.innerHTML = joined;
+}
+
+// ── BOTTOM TICKER ──
+function populateTicker(articles){
+  const track = document.getElementById('ticker-track');
+  if(!track || !articles || !articles.length) return;
+  const items = articles.slice(0,10).map(a => {
+    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const href = `news.html?id=${a.id}`;
+    return `<a class="ticker-item" href="${href}">● ${title}</a>`;
+  });
+  const joined = items.join('') + items.join('');
+  track.innerHTML = joined;
+}
+
+</script>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-bar" id="cookie-bar">
+  <span id="cookie-text">🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.</span>
+  <div class="cookie-bar-actions">
+    <button class="cookie-bar-decline" onclick="acceptCookies()">Отклонить</button>
+    <button class="cookie-bar-btn" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+</body>
+</html>

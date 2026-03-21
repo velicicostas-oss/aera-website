@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>МВФ повышает прогноз для Молдовы — рост 3.8% в 2026 году · AERA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#ffffff;--bg2:#f7f6f3;--bg3:#efede8;
+  --text:#0d0d0d;--text2:#5c5a56;--text3:#9a9896;
+  --border:#e4e2dc;--border2:#ccc9c2;
+  --accent:#c0392b;
+  --tg-bg:#f0faf3;--tg-txt:#1a7a3c;--tg-b:#b3dfc0;
+  --ty-bg:#fdf8ec;--ty-txt:#8a6000;--ty-b:#e8d49a;
+  --tr-bg:#fdf0ee;--tr-txt:#b03020;--tr-b:#f0bfba;
+  --shadow:0 4px 24px rgba(0,0,0,.08);
+}
+body.dark{
+  --bg:#0c0c0e;--bg2:#141417;--bg3:#1c1c22;
+  --text:#f0ede8;--text2:#8a8784;--text3:#55534f;
+  --border:#222228;--border2:#2e2e38;--accent:#e84030;
+  --tg-bg:#071410;--tg-txt:#4ecb71;--tg-b:#1a5c2a;
+  --ty-bg:#140e02;--ty-txt:#f0b429;--ty-b:#5c4a1a;
+  --tr-bg:#140505;--tr-txt:#e05252;--tr-b:#5c1a1a;
+  --shadow:0 4px 24px rgba(0,0,0,.3);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;transition:background .3s,color .3s;font-size:15px;min-height:100vh;}
+.art-body, .art-deck, .md-text { white-space: pre-line; }
+
+/* ── NAV ── */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:200;transition:background .3s;}
+.logo{display:flex;align-items:flex-start;gap:3px;cursor:pointer;user-select:none;text-decoration:none;}
+.logo-text{font-family:'Playfair Display',serif;font-size:24px;font-weight:900;letter-spacing:-1px;color:var(--text);line-height:1;}
+.logo-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+.nav-mid{display:flex;gap:2px;}
+.ni{padding:5px 14px;font-size:12px;font-weight:500;color:var(--text3);cursor:pointer;border-radius:20px;transition:all .15s;letter-spacing:.02em;white-space:nowrap;}
+.ni:hover,.ni.on{color:var(--text);background:var(--bg2);}
+.nav-r{display:flex;align-items:center;gap:12px;}
+.lang-row{display:flex;gap:2px;}
+.lb{padding:4px 9px;font-size:11px;font-weight:500;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .15s;}
+.lb.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.tbtn{width:42px;height:22px;border-radius:11px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+.tth{width:16px;height:16px;border-radius:50%;background:var(--text2);position:absolute;top:2px;left:2px;transition:left .3s,background .3s;}
+body.dark .tth{left:22px;background:var(--text);}
+
+/* ── BREADCRUMB ── */
+.breadcrumb{max-width:1200px;margin:0 auto;padding:14px 40px 0;display:flex;align-items:center;gap:6px;}
+.bc-link{font-size:12px;color:var(--text3);cursor:pointer;text-decoration:none;transition:color .15s;}
+.bc-link:hover{color:var(--text);}
+.bc-sep{font-size:12px;color:var(--border2);}
+.bc-cur{font-size:12px;color:var(--text2);}
+
+/* ── ARTICLE LAYOUT ── */
+.article-wrap{max-width:1200px;margin:0 auto;padding:0 40px;display:grid;grid-template-columns:1fr 300px;gap:48px;align-items:start;}
+
+/* ── ARTICLE MAIN ── */
+.article-main{min-width:0;}
+
+/* HEADER */
+.art-eyebrow{display:flex;align-items:center;gap:8px;margin:22px 0 14px;}
+.art-cat{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);}
+.art-sep{width:1px;height:10px;background:var(--border2);}
+.art-time{font-size:11px;color:var(--text3);}
+.art-h1{font-family:'Playfair Display',serif;font-size:40px;line-height:1.1;font-weight:700;color:var(--text);margin-bottom:16px;letter-spacing:-.4px;}
+.art-deck{font-size:16px;color:var(--text2);line-height:1.7;margin-bottom:22px;border-left:3px solid var(--accent);padding-left:16px;}
+
+/* HERO IMAGE */
+.art-img-wrap{position:relative;height:420px;overflow:hidden;border-radius:8px;margin-top:20px;margin-bottom:24px;}
+.art-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s;}
+.art-img-wrap:hover .art-img{transform:scale(1.02);}
+.art-img-caption{margin-top:8px;font-size:11px;color:var(--text3);text-align:right;}
+
+/* TRUST SCORE */
+.trust-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;position:relative;}
+.trust{display:inline-flex;align-items:center;gap:8px;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:500;border:1px solid;cursor:pointer;transition:opacity .15s;}
+.trust:hover{opacity:.8;}
+.tg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
+.tbar{width:50px;height:3px;border-radius:2px;background:var(--border);overflow:hidden;}
+.tfill{height:100%;border-radius:2px;}
+.trust-tooltip{display:none;position:absolute;top:calc(100% + 10px);left:0;width:300px;background:var(--bg);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:0;z-index:300;overflow:hidden;}
+.trust-tooltip.show{display:block;}
+.tt-header{background:var(--tg-bg);border-bottom:1px solid var(--tg-b);padding:12px 16px;display:flex;align-items:center;gap:10px;}
+.tt-score-big{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--tg-txt);}
+.tt-score-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--tg-txt);opacity:.8;}
+.tt-body{padding:14px 16px;}
+.tt-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:12px;}
+.tt-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.tt-bar-wrap{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.tt-bar-fill{height:100%;border-radius:2px;}
+.tt-row-label{font-size:11px;color:var(--text2);width:90px;flex-shrink:0;}
+.tt-row-val{font-size:11px;font-weight:600;color:var(--text);width:32px;text-align:right;flex-shrink:0;}
+.tt-divider{height:1px;background:var(--border);margin:12px 0;}
+.tt-scale{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+.tt-scale-item{padding:7px 8px;border-radius:6px;border:1px solid;text-align:center;}
+.tt-scale-num{font-size:12px;font-weight:700;}
+.tt-scale-lbl{font-size:10px;margin-top:2px;opacity:.8;}
+.tt-close{position:absolute;top:10px;right:12px;font-size:16px;cursor:pointer;color:var(--text3);line-height:1;background:none;border:none;font-family:inherit;}
+
+/* READ MODES */
+.read-row{display:flex;gap:5px;margin-bottom:20px;}
+.rm{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:500;border:1px solid var(--border);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;}
+.rm:hover{border-color:var(--border2);color:var(--text);}
+.rm.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+
+/* AUDIO */
+.listen-btn{display:inline-flex;align-items:center;gap:10px;padding:8px 18px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .2s;margin-bottom:24px;}
+.listen-btn:hover{background:var(--bg3);border-color:var(--border2);}
+.lico{width:28px;height:28px;border-radius:50%;background:var(--text);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.llabel{font-size:13px;font-weight:500;color:var(--text);}
+.lsub{font-size:10px;color:var(--text3);}
+.lbar-wrap{width:80px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;display:none;}
+.lbar-fill{height:100%;width:0%;background:var(--accent);border-radius:2px;transition:width .1s linear;}
+
+/* ARTICLE BODY */
+.art-body{font-size:16px;color:var(--text);line-height:1.8;}
+.art-body p{margin-bottom:20px;}
+.art-body h2{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--text);margin:32px 0 14px;letter-spacing:-.2px;}
+.art-body blockquote{border-left:3px solid var(--accent);padding:12px 18px;margin:24px 0;background:var(--bg2);border-radius:0 6px 6px 0;}
+.art-body blockquote p{font-style:italic;color:var(--text2);margin:0;font-size:15px;}
+.art-body blockquote cite{display:block;font-size:12px;color:var(--text3);margin-top:8px;font-style:normal;}
+
+/* CONTENT MODES */
+.mode-10s,.mode-1min,.mode-full{display:none;}
+.mode-10s.active,.mode-1min.active,.mode-full.active{display:block;}
+
+/* INFOGRAPHIC */
+.infographic{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:28px 0;}
+.infog-header{padding:14px 20px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;}
+.infog-title{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text2);}
+.infog-sub{font-size:11px;color:var(--text3);}
+.infog-body{padding:20px 20px 14px;}
+.chart-area{display:flex;align-items:flex-end;gap:10px;height:120px;margin-bottom:8px;}
+.bar-group{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.bar-col{width:100%;border-radius:3px 3px 0 0;transition:opacity .2s;cursor:default;position:relative;}
+.bar-col:hover{opacity:.8;}
+.bar-col::after{content:attr(data-val);position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:600;color:var(--text2);white-space:nowrap;}
+.bar-year{font-size:11px;color:var(--text3);text-align:center;}
+.bar-val{font-size:10px;color:var(--text2);text-align:center;}
+.chart-legend{display:flex;align-items:center;gap:16px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+.legend-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);}
+.legend-dot{width:8px;height:8px;border-radius:2px;}
+
+/* MOLDOVA BOX */
+.md-box{border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:28px 0;}
+.md-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--accent);}
+.md-flag{display:flex;flex-shrink:0;width:26px;height:18px;border-radius:2px;overflow:hidden;}
+.md-flag-b{flex:1;background:#003DA5;}
+.md-flag-y{flex:1;background:#FFD100;}
+.md-flag-r{flex:1;background:#C8102E;}
+.md-header-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;}
+.md-body{padding:16px 18px;background:var(--bg2);}
+.md-text{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
+.md-stats{display:flex;gap:8px;}
+.md-stat{flex:1;padding:12px;border-radius:6px;background:var(--bg);border:1px solid var(--border);text-align:center;}
+.md-stat-val{font-size:22px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
+.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;}
+
+/* ASK */
+.ask-wrap{margin:24px 0;}
+.ask-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
+.ask-row{display:flex;gap:8px;align-items:center;}
+.ask-field{position:relative;flex:1;min-width:0;}
+.ask-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;}
+.ask-in{width:100%;padding:10px 14px 10px 36px;border-radius:8px;border:1px solid var(--border);background:var(--bg2);font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border .2s;}
+.ask-in:focus{border-color:var(--border2);}
+.ask-in::placeholder{color:var(--text3);}
+.ask-send{flex-shrink:0;width:38px;height:38px;border-radius:8px;background:var(--text);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:opacity .15s;}
+.ask-send:hover{opacity:.8;}
+
+/* SOURCES BAR */
+.sources-bar{display:flex;align-items:center;gap:8px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:24px 0;flex-wrap:wrap;}
+.sources-label{font-size:11px;color:var(--text3);font-weight:500;}
+.stag{font-size:11px;padding:3px 10px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);}
+
+/* SHARE ROW */
+.share-row{display:flex;align-items:center;gap:8px;margin:20px 0 32px;flex-wrap:wrap;}
+.share-label{font-size:11px;color:var(--text3);}
+.share-btn{padding:5px 14px;border-radius:5px;border:1px solid var(--border);background:var(--bg2);font-size:11px;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;}
+.share-btn:hover{background:var(--bg3);color:var(--text);}
+
+/* ── SIDEBAR ── */
+.article-sidebar{position:sticky;top:72px;}
+.sb-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px;}
+.sb-block-hdr{padding:12px 16px;border-bottom:1px solid var(--border);background:var(--bg2);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);}
+.sb-item{display:grid;grid-template-columns:64px 1fr;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;text-decoration:none;}
+.sb-item:hover{background:var(--bg2);}
+.sb-item:last-child{border-bottom:none;}
+.sb-thumb{width:64px;height:48px;object-fit:cover;border-radius:4px;}
+.sb-thumb-ph{width:64px;height:48px;border-radius:4px;background:var(--bg3);}
+.sb-cat{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:600;margin-bottom:3px;}
+.sb-hed{font-family:'Playfair Display',serif;font-size:12px;line-height:1.35;color:var(--text);}
+.sb-meta{display:flex;align-items:center;gap:5px;margin-top:5px;}
+.sb-time{font-size:10px;color:var(--text3);}
+.mt{font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;border:1px solid;}
+.mtg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
+.mty{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
+
+/* FACTS BLOCK */
+.facts-block{padding:16px;}
+.fact-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.fact-row:last-child{border-bottom:none;padding-bottom:0;}
+.fact-ico{width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.fact-text{font-size:12px;color:var(--text2);line-height:1.5;}
+.fact-val{font-size:14px;font-weight:700;color:var(--text);font-family:'Playfair Display',serif;}
+
+/* ── FOOTER ── */
+.foot{display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-top:1px solid var(--border);margin-top:48px;flex-wrap:wrap;gap:12px;}
+.flogo{display:flex;align-items:flex-start;gap:3px;}
+.flogo-text{font-family:'Playfair Display',serif;font-size:17px;font-weight:900;letter-spacing:-1px;color:var(--text3);line-height:1;}
+.flogo-dot{width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:4px;}
+.flinks{display:flex;gap:20px;flex-wrap:wrap;}
+.flink{font-size:11px;color:var(--text3);cursor:pointer;text-decoration:none;}
+.flink:hover{color:var(--text);}
+.fnote{font-size:11px;color:var(--text3);}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  .article-wrap{grid-template-columns:1fr;gap:0;padding:0 20px;}
+  .article-sidebar{position:static;margin-top:32px;}
+  .breadcrumb{padding:12px 20px 0;}
+  .art-h1{font-size:30px;}
+  .art-img-wrap{height:260px;}
+  .md-stats{flex-direction:column;}
+  .foot{padding:16px 20px;flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:480px){
+  .nav{padding:0 16px;}
+  .nav-mid{display:none;}
+  .art-h1{font-size:24px;}
+  .art-deck{font-size:14px;}
+  .art-body{font-size:15px;}
+}
+
+/* COOKIE BANNER */
+.cookie-bar{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#111;color:#e8e6e2;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:13px;line-height:1.6;flex-wrap:wrap;box-shadow:0 -4px 20px rgba(0,0,0,.3);}
+.cookie-bar a{color:#f0a898;text-decoration:underline;}
+.cookie-bar a:hover{opacity:.8;}
+.cookie-bar strong{color:#fff;}
+.cookie-bar-actions{display:flex;gap:10px;flex-shrink:0;}
+.cookie-bar-btn{padding:8px 22px;border-radius:5px;background:var(--accent);border:none;color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.cookie-bar-btn:hover{opacity:.9;}
+.cookie-bar-decline{padding:8px 16px;border-radius:5px;background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.6);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;}
+.cookie-bar-decline:hover{border-color:rgba(255,255,255,.5);color:#fff;}
+
+/* BREAKING BAR */
+.breaking-bar{display:flex;align-items:center;height:34px;background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden;}
+.breaking-label{flex-shrink:0;background:var(--accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:0 14px;height:100%;display:flex;align-items:center;white-space:nowrap;}
+.breaking-overflow{flex:1;overflow:hidden;position:relative;}
+.breaking-track{display:flex;gap:40px;white-space:nowrap;animation:scroll-breaking 30s linear infinite;}
+.breaking-track:hover{animation-play-state:paused;}
+.breaking-item{font-size:12px;color:var(--text2);cursor:pointer;text-decoration:none;flex-shrink:0;}
+.breaking-item:hover{color:var(--accent);}
+@keyframes scroll-breaking{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* BOTTOM TICKER */
+.news-ticker{background:var(--bg2);border-top:1px solid var(--border);height:34px;overflow:hidden;display:flex;align-items:center;}
+.ticker-track{display:flex;gap:48px;white-space:nowrap;animation:ticker-scroll 40s linear infinite;}
+.ticker-track:hover{animation-play-state:paused;}
+.ticker-item{font-size:11px;color:var(--text2);cursor:pointer;text-decoration:none;flex-shrink:0;}
+.ticker-item:hover{color:var(--accent);}
+@keyframes ticker-scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="logo" href="index.html">
+    <div class="logo-text">AERA</div>
+    <div class="logo-dot"></div>
+  </a>
+  <div class="nav-mid">
+    <div class="ni" data-section="moldova" onclick="setNav(this)">Молдова</div>
+    <div class="ni" data-section="world" onclick="setNav(this)">Мир</div>
+    <div class="ni on" data-section="economy" onclick="setNav(this)">Экономика</div>
+    <div class="ni" data-section="politics" onclick="setNav(this)">Политика</div>
+    <div class="ni" data-section="security" onclick="setNav(this)">Безопасность</div>
+    <div class="ni" data-section="technology" onclick="setNav(this)">Технологии</div>
+    <div class="ni" style="color:var(--text3)">+ Все темы</div>
+  </div>
+  <div class="nav-r">
+    <div class="lang-row">
+      <button class="lb" onclick="setLang(this)">RO</button>
+      <button class="lb on" onclick="setLang(this)">RU</button>
+      <button class="lb" onclick="setLang(this)">EN</button>
+    </div>
+    <button class="tbtn" onclick="toggleTheme()" title="Тёмная / светлая тема"><div class="tth"></div></button>
+  </div>
+</nav>
+
+<!-- BREAKING NEWS BAR -->
+<div class="breaking-bar">
+  <div class="breaking-label" id="breaking-label">LIVE</div>
+  <div class="breaking-overflow">
+    <div class="breaking-track" id="breaking-track">
+      <a class="breaking-item" href="index.html">AERA · Știri verificate · Moldova & World · Jurnalism independent ·</a>
+      <a class="breaking-item" href="index.html">AERA · Știri verificate · Moldova & World · Jurnalism independent ·</a>
+    </div>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a class="bc-link" href="index.html">Главная</a>
+  <span class="bc-sep">›</span>
+  <a class="bc-link" href="#">Экономика</a>
+  <span class="bc-sep">›</span>
+  <span class="bc-cur">МВФ повышает прогноз для Молдовы</span>
+</div>
+
+<!-- ARTICLE -->
+<div class="article-wrap">
+  <main class="article-main">
+
+    <!-- HERO IMAGE (вверху страницы) -->
+    <div class="art-img-wrap">
+      <img class="art-img" src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=1000&q=80" alt="МВФ и экономика Молдовы"/>
+    </div>
+    <div class="art-img-caption">Штаб-квартира МВФ, Вашингтон · © IMF / Unsplash</div>
+
+    <!-- EYEBROW -->
+    <div class="art-eyebrow">
+      <div class="art-cat">Экономика · Глобальное</div>
+      <div class="art-sep"></div>
+      <div class="art-time">12 марта 2026 · 3 часа назад · Обновлено 11:05</div>
+    </div>
+
+    <h1 class="art-h1">МВФ повышает прогноз для Молдовы — рост ВВП 3.8% в 2026 году</h1>
+    <p class="art-deck">Налоговые реформы и рост денежных переводов из ЕС стали ключевыми факторами пересмотра. Молдова опережает средний показатель по региону.</p>
+
+    <!-- TRUST SCORE -->
+    <div class="trust-wrap" id="trust-wrap">
+      <div class="trust tg" onclick="toggleTooltip()" title="Нажмите, чтобы узнать, как считается рейтинг">
+        <div class="tbar"><div class="tfill" style="width:97%;background:#1a7a3c;"></div></div>
+        Проверено · 97/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>
+      </div>
+      <div class="trust" style="background:var(--bg2);border-color:var(--border);color:var(--text2);font-size:11px;padding:4px 10px;cursor:default;">Официальный источник МВФ</div>
+      <!-- TOOLTIP -->
+      <div class="trust-tooltip" id="trust-tooltip">
+        <button class="tt-close" onclick="toggleTooltip()">×</button>
+        <div class="tt-header">
+          <div>
+            <div class="tt-score-big">97</div>
+            <div class="tt-score-label">из 100 — Рейтинг доверия</div>
+          </div>
+        </div>
+        <div class="tt-body">
+          <div class="tt-desc">Официальный пресс-релиз МВФ подтверждён Reuters и Bloomberg. Высшая степень достоверности.</div>
+          <div class="tt-row">
+            <div class="tt-row-label" style="font-size:10px;">Кол-во источников</div>
+            <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:100%;background:#1a7a3c;"></div></div>
+            <div class="tt-row-val">30/30</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-row-label" style="font-size:10px;">Качество источников</div>
+            <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:100%;background:#1a7a3c;"></div></div>
+            <div class="tt-row-val">30/30</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-row-label" style="font-size:10px;">Согласованность</div>
+            <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:97%;background:#1a7a3c;"></div></div>
+            <div class="tt-row-val">29/30</div>
+          </div>
+          <div class="tt-row">
+            <div class="tt-row-label" style="font-size:10px;">Актуальность</div>
+            <div class="tt-bar-wrap"><div class="tt-bar-fill" style="width:80%;background:#f0b429;"></div></div>
+            <div class="tt-row-val">8/10</div>
+          </div>
+          <div class="tt-divider"></div>
+          <div class="tt-scale">
+            <div class="tt-scale-item" style="background:var(--tg-bg);border-color:var(--tg-b);">
+              <div class="tt-scale-num" style="color:var(--tg-txt);">80–100</div>
+              <div class="tt-scale-lbl" style="color:var(--tg-txt);">Проверено</div>
+            </div>
+            <div class="tt-scale-item" style="background:var(--ty-bg);border-color:var(--ty-b);">
+              <div class="tt-scale-num" style="color:var(--ty-txt);">50–79</div>
+              <div class="tt-scale-lbl" style="color:var(--ty-txt);">Частично</div>
+            </div>
+            <div class="tt-scale-item" style="background:var(--tr-bg);border-color:var(--tr-b);">
+              <div class="tt-scale-num" style="color:var(--tr-txt);">0–49</div>
+              <div class="tt-scale-lbl" style="color:var(--tr-txt);">Непроверено</div>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--text3);margin-top:10px;line-height:1.5;">Рейтинг обновляется в реальном времени.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- READ MODES -->
+    <div class="read-row">
+      <button class="rm" onclick="setMode(this,'10s')">10 сек</button>
+      <button class="rm" onclick="setMode(this,'1min')">1 минута</button>
+      <button class="rm on" onclick="setMode(this,'full')">Полностью</button>
+    </div>
+
+    <!-- AUDIO -->
+    <div class="listen-btn" onclick="startPlay(this)">
+      <div class="lico"><svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg></div>
+      <div style="flex:1;">
+        <div class="llabel" id="play-label">Слушать</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+          <div class="lbar-wrap" id="lbar-wrap"><div class="lbar-fill" id="lbar"></div></div>
+          <div class="lsub" id="ldur">2 мин 10 сек</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARTICLE CONTENT -->
+    <div class="art-body">
+
+      <!-- 10 SEC MODE -->
+      <div class="mode-10s" id="mode-10s">
+        <p style="font-size:20px;font-family:'Playfair Display',serif;line-height:1.5;color:var(--text);">МВФ повысил прогноз роста ВВП Молдовы до <strong>3.8%</strong> в 2026 году — лучший показатель за последние четыре года.</p>
+      </div>
+
+      <!-- 1 MIN MODE -->
+      <div class="mode-1min" id="mode-1min">
+        <p>Международный валютный фонд пересмотрел в сторону повышения прогноз экономического роста Молдовы: по новым оценкам, ВВП страны вырастет на <strong>3.8%</strong> в 2026 году против прежних 2.9%.</p>
+        <p>Ключевые факторы роста — успешное проведение налоговой реформы, снижение инфляции до 4.2%, а также рекордный объём денежных переводов из ЕС, превысивший €2.1 млрд. Молдова опережает средний прогноз по региону Восточной Европы (2.4%).</p>
+        <p>МВФ также отметил прогресс в сближении с нормами ЕС и рекомендовал продолжить реструктуризацию государственных предприятий.</p>
+      </div>
+
+      <!-- FULL MODE -->
+      <div class="mode-full active" id="mode-full">
+        <p>Международный валютный фонд опубликовал обновлённый прогноз в рамках весеннего выпуска «World Economic Outlook», пересмотрев ожидания по Молдове в сторону существенного повышения. По новым оценкам Фонда, ВВП страны вырастет на <strong>3.8%</strong> в 2026 году — это лучший показатель с 2022 года и заметно выше прежнего прогноза в 2.9%.</p>
+
+        <h2>Что стоит за улучшением прогноза</h2>
+        <p>МВФ назвал три ключевых фактора, определивших пересмотр. Первый — налоговая реформа 2025 года, упростившая режим для малого и среднего бизнеса и расширившая налоговую базу. Второй — устойчивый приток денежных переводов от молдавской диаспоры в ЕС: по итогам 2025 года он превысил <strong>€2.1 млрд</strong>, что стало рекордом. Третий — снижение инфляции до <strong>4.2%</strong>, позволившее Национальному банку Молдовы смягчить денежно-кредитную политику.</p>
+
+        <blockquote>
+          <p>«Молдова демонстрирует устойчивость экономической политики в непростой региональной среде. Реформы создают основу для инклюзивного роста».</p>
+          <cite>— Пресс-релиз МВФ, 12 марта 2026</cite>
+        </blockquote>
+
+        <p>Аналитики также указывают на роль европейской интеграции: перестройка торговых потоков в сторону ЕС снизила зависимость от традиционных рынков и сформировала более стабильную экспортную базу. Доля европейского направления в экспорте Молдовы достигла 71% по итогам 2025 года.</p>
+
+        <h2>Сравнение с регионом</h2>
+        <p>Молдова опережает средний прогноз роста по Восточной Европе, который составляет <strong>2.4%</strong>. Среди стран-кандидатов на вступление в ЕС Молдова занимает второе место по ожидаемым темпам роста в 2026 году, уступая лишь Албании (4.1%).</p>
+
+        <p>МВФ, однако, указал на сохраняющиеся риски: высокую зависимость от внешних переводов, уязвимость энергетического сектора и необходимость продолжения реструктуризации государственных предприятий. Фонд рекомендовал ускорить приватизацию убыточных госкомпаний и продолжить реформу судебной системы как условие для привлечения прямых иностранных инвестиций.</p>
+
+        <h2>Реакция властей</h2>
+        <p>Министерство финансов Молдовы приветствовало пересмотр прогноза, назвав его «признанием последовательности реформ». Национальный банк заявил о намерении сохранить курс на снижение инфляции, удерживая базовую ставку на уровне 5.5% до конца года.</p>
+
+        <p>Оппозиционные партии отнеслись к новости сдержанно, указав, что рост ВВП не отражается на уровне жизни большинства граждан, а реальные доходы домохозяйств остаются ниже среднеевропейских.</p>
+      </div>
+    </div>
+
+    <!-- INFOGRAPHIC -->
+    <div class="infographic">
+      <div class="infog-header">
+        <div class="infog-title">ВВП Молдовы · Рост по годам, %</div>
+        <div class="infog-sub">Источник: МВФ World Economic Outlook</div>
+      </div>
+      <div class="infog-body">
+        <div class="chart-area" id="chart"></div>
+        <div class="chart-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:#c0392b;"></div>Фактический рост</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#aaa;opacity:.4;border:1px dashed #aaa;"></div>Прогноз МВФ</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOLDOVA BOX -->
+    <div class="md-box">
+      <div class="md-header">
+        <div class="md-flag"><div class="md-flag-b"></div><div class="md-flag-y"></div><div class="md-flag-r"></div></div>
+        <div class="md-header-label">Что это значит для Молдовы</div>
+      </div>
+      <div class="md-body">
+        <div class="md-text">Улучшение прогноза МВФ — сигнал для иностранных инвесторов и кредиторов. Это может снизить стоимость заимствований для государства и расширить доступ молдавских компаний к международному финансированию. Для граждан эффект будет постепенным: рост должен поддержать занятость и доходы, но неравенство между Кишинёвом и регионами остаётся высоким.</div>
+        <div class="md-stats">
+          <div class="md-stat"><div class="md-stat-val">+3.8%</div><div class="md-stat-lbl">Прогноз роста ВВП 2026</div></div>
+          <div class="md-stat"><div class="md-stat-val">€2.1 млрд</div><div class="md-stat-lbl">Денежные переводы из ЕС</div></div>
+          <div class="md-stat"><div class="md-stat-val">4.2%</div><div class="md-stat-lbl">Инфляция в 2025 году</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASK -->
+    <div class="ask-wrap">
+      <div class="ask-label">Вопрос редакции</div>
+      <div class="ask-row">
+        <div class="ask-field">
+          <svg class="ask-ico" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="6" cy="6" r="4.5" stroke="var(--text3)" stroke-width="1.2"/>
+            <line x1="9.5" y1="9.5" x2="13" y2="13" stroke="var(--text3)" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <input class="ask-in" type="text" placeholder="Спросите о прогнозе МВФ, реформах, ВВП..."/>
+        </div>
+        <button class="ask-send">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <line x1="1" y1="7" x2="13" y2="7" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+            <polyline points="8,2 13,7 8,12" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- SOURCES -->
+    <div class="sources-bar">
+      <span class="sources-label">Источники:</span>
+      <span class="stag">IMF World Economic Outlook</span>
+      <span class="stag">Reuters</span>
+      <span class="stag">Bloomberg</span>
+      <span class="stag">Banca Naţională a Moldovei</span>
+      <span class="stag">Министерство финансов РМ</span>
+    </div>
+
+    <!-- SHARE -->
+    <div class="share-row">
+      <span class="share-label">Поделиться:</span>
+      <button class="share-btn" onclick="shareTelegram()">Telegram</button>
+      <button class="share-btn" id="copy-btn" onclick="copyLink()">Скопировать ссылку</button>
+    </div>
+
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="article-sidebar">
+
+    <!-- KEY FACTS -->
+    <div class="sb-block">
+      <div class="sb-block-hdr">Ключевые цифры</div>
+      <div class="facts-block">
+        <div class="fact-row">
+          <div class="fact-ico">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="1,9 4,5 7,7 11,2" stroke="var(--tg-txt)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="fact-val">3.8%</div>
+            <div class="fact-text">Прогноз роста ВВП Молдовы на 2026 год (ранее: 2.9%)</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-ico">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="4.5" stroke="var(--accent)" stroke-width="1.2"/><line x1="6" y1="3.5" x2="6" y2="6.5" stroke="var(--accent)" stroke-width="1.2" stroke-linecap="round"/><circle cx="6" cy="8.2" r=".6" fill="var(--accent)"/></svg>
+          </div>
+          <div>
+            <div class="fact-val">€2.1 млрд</div>
+            <div class="fact-text">Денежные переводы диаспоры из ЕС в 2025 году — рекорд</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-ico">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="1,9 4,5 7,7 11,2" stroke="var(--tg-txt)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div>
+            <div class="fact-val">4.2%</div>
+            <div class="fact-text">Инфляция в 2025 году — снижение с 8.1% в 2024-м</div>
+          </div>
+        </div>
+        <div class="fact-row">
+          <div class="fact-ico">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1.5" y="4" width="9" height="6.5" rx="1" stroke="var(--text3)" stroke-width="1.2"/><path d="M4 4V3a2 2 0 0 1 4 0v1" stroke="var(--text3)" stroke-width="1.2"/></svg>
+          </div>
+          <div>
+            <div class="fact-val">71%</div>
+            <div class="fact-text">Доля ЕС в молдавском экспорте по итогам 2025 года</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATED NEWS -->
+    <div class="sb-block">
+      <div class="sb-block-hdr">По теме</div>
+      <a class="sb-item" href="#">
+        <div class="sb-thumb-ph"></div>
+        <div>
+          <div class="sb-cat">Молдова · Политика</div>
+          <div class="sb-hed">Санду подписала налоговый декрет — оппозиция объявила протест</div>
+          <div class="sb-meta"><span class="sb-time">14:18</span><span class="mt mtg">91</span></div>
+        </div>
+      </a>
+      <a class="sb-item" href="#">
+        <div class="sb-thumb-ph"></div>
+        <div>
+          <div class="sb-cat">Экономика</div>
+          <div class="sb-hed">Лей достиг минимума за 6 месяцев к евро</div>
+          <div class="sb-meta"><span class="sb-time">13:55</span><span class="mt mty">67</span></div>
+        </div>
+      </a>
+      <a class="sb-item" href="#">
+        <div class="sb-thumb-ph"></div>
+        <div>
+          <div class="sb-cat">Европа</div>
+          <div class="sb-hed">Брюссель откладывает голосование по энергетике</div>
+          <div class="sb-meta"><span class="sb-time">13:40</span><span class="mt mtg">88</span></div>
+        </div>
+      </a>
+    </div>
+
+    <!-- BACK LINK -->
+    <a href="index.html" style="display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--border);border-radius:8px;text-decoration:none;background:var(--bg2);transition:background .15s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg2)'">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="9,2 4,7 9,12" stroke="var(--text3)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span style="font-size:12px;color:var(--text2);">Все новости</span>
+    </a>
+
+  </aside>
+</div>
+
+<!-- FOOTER -->
+
+<!-- BOTTOM NEWS TICKER -->
+<div class="news-ticker">
+  <div class="ticker-track" id="ticker-track">
+    <a class="ticker-item" href="index.html">● AERA · Știri verificate</a>
+    <a class="ticker-item" href="index.html">● Moldova & World</a>
+    <a class="ticker-item" href="index.html">● Verificat de jurnaliști</a>
+    <a class="ticker-item" href="index.html">● AERA · Știri verificate</a>
+    <a class="ticker-item" href="index.html">● Moldova & World</a>
+    <a class="ticker-item" href="index.html">● Verificat de jurnaliști</a>
+  </div>
+</div>
+<div class="foot">
+  <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
+  <div class="flinks">
+    <a class="flink" href="about.html">О редакции</a>
+    <a class="flink" href="verification.html">Политика верификации</a>
+    <a class="flink" href="verification.html">Trust Score — как считается</a>
+    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="#">RSS</a>
+  </div>
+  <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
+</div>
+
+<script>
+// ── CHART ──
+const chartData=[
+  {year:'2022',val:1.9,forecast:false},
+  {year:'2023',val:0.7,forecast:false},
+  {year:'2024',val:2.4,forecast:false},
+  {year:'2025',val:3.1,forecast:false},
+  {year:'2026',val:3.8,forecast:true},
+];
+const maxVal=5;
+const chart=document.getElementById('chart');
+chartData.forEach(d=>{
+  const pct=Math.round((d.val/maxVal)*100);
+  const bg=d.forecast?'var(--border2)':'var(--accent)';
+  const opacity=d.forecast?'0.5':'1';
+  const g=document.createElement('div');
+  g.className='bar-group';
+  g.innerHTML=`
+    <div class="bar-col" data-val="${d.val>0?'+':''}${d.val}%"
+      style="height:${pct}%;background:${bg};opacity:${opacity};${d.forecast?'border:1px dashed var(--border2);background:var(--bg3);':''}"
+    ></div>
+    <div class="bar-year">${d.year}</div>
+  `;
+  chart.appendChild(g);
+});
+
+// ── READ MODES ──
+const modeContent={
+  '10s':'mode-10s',
+  '1min':'mode-1min',
+  'full':'mode-full'
+};
+function setMode(btn,m){
+  document.querySelectorAll('.rm').forEach(x=>x.classList.remove('on'));
+  btn.classList.add('on');
+  Object.values(modeContent).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.classList.remove('active');
+  });
+  const target=document.getElementById(modeContent[m]);
+  if(target) target.classList.add('active');
+}
+
+// ── AUDIO ──
+let playing=false;
+function startPlay(btn){
+  if(playing)return;playing=true;
+  document.getElementById('play-label').textContent='Воспроизводится...';
+  document.getElementById('lbar-wrap').style.display='block';
+  const bar=document.getElementById('lbar');let w=0;
+  const iv=setInterval(()=>{w+=0.3;bar.style.width=w+'%';
+    if(w>=100){clearInterval(iv);document.getElementById('play-label').textContent='Слушать';
+    document.getElementById('lbar-wrap').style.display='none';bar.style.width='0%';playing=false;}
+  },650);
+}
+
+// ── TRUST TOOLTIP ──
+function toggleTooltip(){
+  document.getElementById('trust-tooltip').classList.toggle('show');
+}
+document.addEventListener('click',function(e){
+  const wrap=document.getElementById('trust-wrap');
+  if(!wrap.contains(e.target)){document.getElementById('trust-tooltip').classList.remove('show');}
+});
+
+// ── UI ──
+function toggleTheme(){document.body.classList.toggle('dark');}
+function setNav(el){document.querySelectorAll('.ni').forEach(x=>x.classList.remove('on'));el.classList.add('on');}
+
+// ── SUPABASE + LANG ──
+const SUPABASE_URL = 'https://araqepkymkxktvhseeas.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_WX5Bkpcd92hY-aYmkwAJqA_-ugBJu6N';
+let currentLang = 'ru';
+let articleData = null;
+let relatedArticles = [];
+
+const NEWS_UI = {
+  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', read1:'1 минута', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут'},
+  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', read1:'1 minute', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes'},
+  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare pentru redacție', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', read1:'1 minut', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute'}
+};
+
+function translateCategory(cat){
+  const value=(cat||'').toLowerCase();
+  const map={general:{ru:'Общее',en:'General',ro:'General'},world:{ru:'Мир',en:'World',ro:'Lume'},moldova:{ru:'Молдова',en:'Moldova',ro:'Moldova'},economy:{ru:'Экономика',en:'Economy',ro:'Economie'},politics:{ru:'Политика',en:'Politics',ro:'Politică'},security:{ru:'Безопасность',en:'Security',ro:'Securitate'},technology:{ru:'Технологии',en:'Technology',ro:'Tehnologie'},conflict:{ru:'Конфликт',en:'Conflict',ro:'Conflict'},international:{ru:'Международное',en:'International',ro:'Internațional'}};
+  return map[value]?.[currentLang] || cat || '';
+}
+function field(article, base){ return article?.[`${base}_${currentLang}`] || article?.[`${base}_ro`] || article?.[`${base}_en`] || article?.[`${base}_ru`] || ''; }
+function formatTime(dateStr){ const locale=currentLang==='ro'?'ro-RO':currentLang==='en'?'en-GB':'ru-RU'; return dateStr?new Date(dateStr).toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'}):''; }
+function escapeHtml(text){ return (text || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[m] || m)); }
+
+const urlParams = new URLSearchParams(window.location.search);
+const articleId = urlParams.get('id');
+
+function applyNewsUi(){
+  const t=NEWS_UI[currentLang];
+  document.documentElement.lang=currentLang;
+  document.querySelectorAll('.ni[data-section]').forEach(el=>el.textContent=t.nav[el.dataset.section]||el.textContent);
+  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent=t.ask;
+  const askIn=document.querySelector('.ask-in'); if(askIn) askIn.placeholder=t.askPlaceholder;
+  const sourcesLabel=document.querySelector('.sources-label'); if(sourcesLabel) sourcesLabel.textContent=t.sources;
+  const shareLabel=document.querySelector('.share-label'); if(shareLabel) shareLabel.textContent=t.share;
+  const btns=document.querySelectorAll('.share-btn'); if(btns[0]) btns[0].textContent=t.telegram; if(btns[1]) btns[1].textContent=t.copy;
+  const md=document.querySelector('.md-header-label'); if(md) md.textContent=t.moldovaImpact;
+  const back=document.querySelector('a[href="index.html"] span'); if(back) back.textContent=t.allNews;
+  const footer=document.querySelector('.fnote'); if(footer) footer.textContent=t.footerNote;
+  const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent=t.read10; if(readBtns[1]) readBtns[1].textContent=t.read1; if(readBtns[2]) readBtns[2].textContent=t.readFull;
+  if(!playing){ const play=document.getElementById('play-label'); if(play) play.textContent=t.listen; }
+  const relatedHdr=document.querySelectorAll('.sb-block-hdr'); if(relatedHdr[0]) relatedHdr[0].textContent=t.keyFacts; if(relatedHdr[1]) relatedHdr[1].textContent=t.latest;
+}
+
+async function loadArticle() {
+  if (!articleId) return;
+  try {
+    const [res, rel] = await Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/articles?id=eq.${articleId}&limit=1`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }),
+      fetch(`${SUPABASE_URL}/rest/v1/articles?status=eq.published&order=created_at.desc&limit=6`, { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } })
+    ]);
+    const data = await res.json();
+    relatedArticles = await rel.json();
+    if (data && data.length > 0) { articleData = data[0]; renderArticle(articleData); }
+  } catch(e) { console.log('Could not load article:', e); }
+}
+
+function renderArticle(article) {
+  applyNewsUi();
+  const t=NEWS_UI[currentLang];
+  const title = field(article,'title');
+  const deck = field(article,'summary1min') || field(article,'summary10s');
+  const modes = { '10s': field(article,'summary10s'), '1min': field(article,'summary1min'), 'full': field(article,'body') };
+  const titleEl = document.querySelector('.art-h1'); if (titleEl) titleEl.textContent = title;
+  const deckEl = document.querySelector('.art-deck'); if (deckEl) deckEl.textContent = deck;
+  const catEl = document.querySelector('.art-cat'); if (catEl) catEl.textContent = translateCategory(article.category || 'general');
+  const timeEl = document.querySelector('.art-time'); if (timeEl) timeEl.textContent = `${t.updated} ${formatTime(article.created_at)}`;
+  const m10 = document.getElementById('mode-10s'); const m1m = document.getElementById('mode-1min'); const mfull = document.getElementById('mode-full');
+  if (m10) m10.textContent = modes['10s']; if (m1m) m1m.textContent = modes['1min']; if (mfull) mfull.textContent = modes['full'];
+  // фото всегда вверху статьи
+  if (article.photo_url) { const img = document.querySelector('.art-img'); if (img) img.src = article.photo_url; }
+  // обновляем подпись к фото (alt)
+  if (article.photo_url) { const img = document.querySelector('.art-img'); if (img) img.alt = title; }
+  let sourceNames=[]; try{ sourceNames=JSON.parse(article.source_names||'[]'); }catch(e){}
+  const srcBar=document.querySelector('.sources-bar'); if(srcBar){ srcBar.innerHTML = `<span class="sources-label">${t.sources}</span>` + sourceNames.slice(0,5).map(s=>`<span class="stag">${escapeHtml(s)}</span>`).join(''); }
+  let ctx={}; try{ ctx = typeof article.moldova_context==='string' ? JSON.parse(article.moldova_context) : (article.moldova_context||{}); }catch(e){}
+  if(ctx && Object.keys(ctx).length){
+    const mdText=document.querySelector('.md-text'); if(mdText && (ctx.economy_impact || ctx.economy || ctx.summary)) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary;
+    const figs=Array.isArray(ctx.figures)?ctx.figures:[]; const stats=document.querySelectorAll('.md-stat');
+    figs.slice(0,3).forEach((fig,i)=>{ if(stats[i]){ const parts=String(fig).split('—'); stats[i].querySelector('.md-stat-val').textContent=parts[0]?.trim()||fig; stats[i].querySelector('.md-stat-lbl').textContent=parts[1]?.trim()||''; } });
+  }
+  renderRelated(article.id);
+  populateBreakingBar(relatedArticles);
+  populateTicker(relatedArticles);
+}
+
+function renderRelated(currentId){
+  const container = document.querySelectorAll('.sb-block')[1];
+  if(!container) return;
+  const header = container.querySelector('.sb-block-hdr');
+  container.innerHTML = '';
+  container.appendChild(header);
+  relatedArticles.filter(a=>a.id!==currentId).slice(0,3).forEach(article=>{
+    const a=document.createElement('a');
+    a.className='sb-item';
+    a.href=`news.html?id=${article.id}`;
+    const title=field(article,'title');
+    const score=Math.round(article.trust_score||0);
+    a.innerHTML = `${article.photo_url?`<img class="sb-thumb" src="${article.photo_url}" alt=""/>`:`<div class="sb-thumb-ph"></div>`}<div><div class="sb-cat">${escapeHtml(translateCategory(article.category || 'general'))}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${formatTime(article.created_at)}</span><span class="mt ${score>=80?'mtg':'mty'}">${score}</span></div></div>`;
+    container.appendChild(a);
+  });
+}
+
+function setLang(el) { document.querySelectorAll('.lb').forEach(x => x.classList.remove('on')); el.classList.add('on'); currentLang = el.textContent.toLowerCase();
+  updateCookieBanner();
+  updateBreakingLabel(); if (articleData) renderArticle(articleData); else applyNewsUi(); }
+function setNav(el){ const section=el.dataset.section; window.location.href = `index.html?section=${section}`; }
+function copyLink(){
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    const btn=document.getElementById('copy-btn');
+    if(btn){const orig=btn.textContent;btn.textContent='✓ Скопировано';setTimeout(()=>btn.textContent=orig,1500);}
+function shareTelegram(){
+  const title=document.querySelector('.art-h1')?.textContent||document.title;
+  window.open('https://t.me/share/url?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent(title),'_blank');
+}
+
+  }).catch(()=>{const ta=document.createElement('textarea');ta.value=window.location.href;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);});
+}
+// Загружаем статью при открытии страницы
+applyNewsUi();
+loadArticle();
+document.querySelectorAll('.share-btn').forEach(btn => { if (btn.textContent.includes('Скопировать') || btn.textContent.includes('Copy') || btn.textContent.includes('Copiază')) btn.onclick = copyLink; });
+
+// ── COOKIE BANNER ──
+const COOKIE_TEXTS = {
+  ru: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>. Вы можете отказаться — это не повлияет на работу сайта.',
+  en: '🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance improvements, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>. You may decline — this will not affect your browsing experience.',
+  ro: '🍪 <strong>Folosim cookie-uri.</strong> Acest site folosește cookie-uri pentru analiză, îmbunătățirea performanței și personalizarea conținutului. Apăsând „Acceptă", ești de acord cu <a href="cookies.html">politica noastră privind cookie-urile</a>. Poți refuza fără a afecta navigarea.'
+};
+function updateCookieBanner(){
+  const el = document.getElementById('cookie-text');
+  if(el) el.innerHTML = COOKIE_TEXTS[currentLang] || COOKIE_TEXTS.ru;
+}
+function acceptCookies(){
+  localStorage.setItem('aera_cookies_ok','1');
+  const bar = document.getElementById('cookie-bar');
+  if(bar) bar.style.display = 'none';
+}
+function declineCookies(){
+  localStorage.setItem('aera_cookies_ok','0');
+  const bar = document.getElementById('cookie-bar');
+  if(bar) bar.style.display = 'none';
+}
+document.addEventListener('DOMContentLoaded', function(){
+  if(localStorage.getItem('aera_cookies_ok')){
+    const bar = document.getElementById('cookie-bar');
+    if(bar) bar.style.display = 'none';
+  } else {
+    updateCookieBanner();
+  }
+});
+
+// ── BREAKING BAR ──
+const BREAKING_LABELS = {ru:'В ЭФИРЕ', en:'LIVE', ro:'ÎN DIRECT'};
+function updateBreakingLabel(){
+  const el = document.getElementById('breaking-label');
+  if(el) el.textContent = BREAKING_LABELS[currentLang] || 'LIVE';
+}
+function populateBreakingBar(articles){
+  const track = document.getElementById('breaking-track');
+  if(!track || !articles || !articles.length) return;
+  const items = articles.slice(0,8).map(a => {
+    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const href = `news.html?id=${a.id}`;
+    return `<a class="breaking-item" href="${href}">${title} ·</a>`;
+  });
+  const joined = items.join('') + items.join('');
+  track.innerHTML = joined;
+}
+
+// ── BOTTOM TICKER ──
+function populateTicker(articles){
+  const track = document.getElementById('ticker-track');
+  if(!track || !articles || !articles.length) return;
+  const items = articles.slice(0,10).map(a => {
+    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const href = `news.html?id=${a.id}`;
+    return `<a class="ticker-item" href="${href}">● ${title}</a>`;
+  });
+  const joined = items.join('') + items.join('');
+  track.innerHTML = joined;
+}
+
+</script>
+
+<!-- COOKIE BANNER -->
+<div class="cookie-bar" id="cookie-bar">
+  <span id="cookie-text">🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>. Вы можете отказаться — это не повлияет на работу сайта.</span>
+  <div class="cookie-bar-actions">
+    <button class="cookie-bar-decline" onclick="declineCookies()">Отклонить</button>
+    <button class="cookie-bar-btn" onclick="acceptCookies()">Принять</button>
+  </div>
+</div>
+</body>
+</html>
