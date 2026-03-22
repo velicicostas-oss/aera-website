@@ -580,13 +580,18 @@ function translateCategory(cat){
 function field(article, base){
   const raw = article?.[base];
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
-    return raw[currentLang] || raw['ro'] || raw['ru'] || raw['en'] || '';
+    const val = raw[currentLang] || raw['ro'] || raw['ru'] || raw['en'];
+    if (val) return val;
+    // If it's an object but doesn't have lang keys, it might be the old format (figures, etc)
+    return raw; 
   }
   if (raw && typeof raw === 'string' && raw.trim().startsWith('{')) {
     try {
       const obj = JSON.parse(raw);
       if (obj && typeof obj === 'object') {
-        return obj[currentLang] || obj['ro'] || obj['ru'] || obj['en'] || '';
+        const val = obj[currentLang] || obj['ro'] || obj['ru'] || obj['en'];
+        if (val) return val;
+        return obj; 
       }
     } catch(e) {}
   }
@@ -694,17 +699,21 @@ function renderArticle(article) {
     srcBar.innerHTML = `<span class="sources-label">${t.sources}</span>` + sourceNames.slice(0, 6).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
   }
 
-  // Moldova Context & Stats
-  const mdBox = document.querySelector('.md-box');
-  const moldovaText = field(article, 'moldova_context');
-  
-  if (!moldovaText || (typeof moldovaText === 'string' && (moldovaText.includes('[HIDDEN]') || moldovaText.length < 5))) {
-    if (mdBox) mdBox.style.display = 'none';
-  } else {
-    if (mdBox) mdBox.style.display = 'block';
-    const mdText = document.querySelector('.md-text');
-    if (mdText) {
-      mdText.innerHTML = moldovaText.split(/\r?\n\s*\r?\n/).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
+    // Moldova Context & Stats
+    const mdBox = document.querySelector('.md-box');
+    
+    // Get text and stats with fallback
+    let moldovaTextRaw = field(article, 'moldova_context');
+    let moldovaText = '';
+    
+    if (typeof moldovaTextRaw === 'string') {
+      moldovaText = moldovaTextRaw;
+    } else if (moldovaTextRaw && typeof moldovaTextRaw === 'object') {
+      // It's the old object format (economy, politics, figures)
+      const parts = [];
+      if (moldovaTextRaw.economy) parts.push(moldovaTextRaw.economy);
+      if (moldovaTextRaw.politics) parts.push(moldovaTextRaw.politics);
+      moldovaText = parts.join('\n\n');
     }
     
     // Stats pills (JSON moldova_stats)
@@ -712,48 +721,61 @@ function renderArticle(article) {
     try {
       statsData = typeof article.moldova_stats === 'string' ? JSON.parse(article.moldova_stats) : (article.moldova_stats || []);
       
-      // Fallback: if statsData is empty but we have moldova_context in old JSON format (with "figures")
-      if ((!statsData || statsData.length === 0) && moldovaText && article.moldova_context) {
+      // Fallback for stats: check if article.moldova_context is the old object with "figures"
+      if ((!statsData || statsData.length === 0) && article.moldova_context) {
         const raw = article.moldova_context;
         const obj = typeof raw === 'object' ? raw : (typeof raw === 'string' && raw.trim().startsWith('{') ? JSON.parse(raw) : null);
         if (obj && obj.figures && Array.isArray(obj.figures)) {
           statsData = obj.figures.map(s => {
-            const parts = s.split(' — ');
+            if (typeof s === 'object' && s.value) return s; // already formatted
+            const parts = String(s).split(' — ');
             return { value: parts[0] || '', label: parts[1] || '' };
           });
         }
       }
     } catch(e) {}
     
-    const statElements = document.querySelectorAll('.md-stat');
-    statElements.forEach(s => s.style.display = 'none');
-    
-    if (Array.isArray(statsData) && statsData.length > 0) {
-      statsData.slice(0, 3).forEach((st, i) => {
-        if (statElements[i]) {
-          statElements[i].style.display = 'block';
-          const valEl = statElements[i].querySelector('.md-stat-val');
-          const lblEl = statElements[i].querySelector('.md-stat-lbl');
-          const barWrap = statElements[i].querySelector('.md-stat-bar');
-          const barFill = statElements[i].querySelector('.md-stat-fill');
-          
-          if (valEl) valEl.textContent = st.value || '';
-          if (lblEl) lblEl.textContent = st.label || '';
-          
-          // Progress bar if percentage
-          if (barWrap && barFill) {
-            const num = parseFloat(st.value);
-            if (!isNaN(num) && String(st.value).includes('%')) {
-              barWrap.style.display = 'block';
-              setTimeout(() => { barFill.style.width = Math.min(Math.max(num, 0), 100) + '%'; }, 100);
-            } else {
-              barWrap.style.display = 'none';
+    const hasText = moldovaText && !moldovaText.includes('[HIDDEN]') && moldovaText.length > 5;
+    const hasStats = Array.isArray(statsData) && statsData.length > 0;
+
+    if (!hasText && !hasStats) {
+      if (mdBox) mdBox.style.display = 'none';
+    } else {
+      if (mdBox) mdBox.style.display = 'block';
+      const mdText = document.querySelector('.md-text');
+      if (mdText) {
+        mdText.innerHTML = hasText ? moldovaText.split(/\r?\n\s*\r?\n/).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('') : '';
+      }
+      
+      const statElements = document.querySelectorAll('.md-stat');
+      statElements.forEach(s => s.style.display = 'none');
+      
+      if (hasStats) {
+        statsData.slice(0, 3).forEach((st, i) => {
+          if (statElements[i]) {
+            statElements[i].style.display = 'block';
+            const valEl = statElements[i].querySelector('.md-stat-val');
+            const lblEl = statElements[i].querySelector('.md-stat-lbl');
+            const barWrap = statElements[i].querySelector('.md-stat-bar');
+            const barFill = statElements[i].querySelector('.md-stat-fill');
+            
+            if (valEl) valEl.textContent = st.value || '';
+            if (lblEl) lblEl.textContent = st.label || '';
+            
+            // Progress bar if percentage
+            if (barWrap && barFill) {
+              const num = parseFloat(st.value);
+              if (!isNaN(num) && String(st.value).includes('%')) {
+                barWrap.style.display = 'block';
+                setTimeout(() => { barFill.style.width = Math.min(Math.max(num, 0), 100) + '%'; }, 100);
+              } else {
+                barWrap.style.display = 'none';
+              }
             }
           }
-        }
-      });
+        });
+      }
     }
-  }
 
   renderRelated(article.id);
   populateBreakingBar(relatedArticles);
