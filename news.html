@@ -711,6 +711,18 @@ function renderArticle(article) {
     let statsData = [];
     try {
       statsData = typeof article.moldova_stats === 'string' ? JSON.parse(article.moldova_stats) : (article.moldova_stats || []);
+      
+      // Fallback: if statsData is empty but we have moldova_context in old JSON format (with "figures")
+      if ((!statsData || statsData.length === 0) && moldovaText && article.moldova_context) {
+        const raw = article.moldova_context;
+        const obj = typeof raw === 'object' ? raw : (typeof raw === 'string' && raw.trim().startsWith('{') ? JSON.parse(raw) : null);
+        if (obj && obj.figures && Array.isArray(obj.figures)) {
+          statsData = obj.figures.map(s => {
+            const parts = s.split(' — ');
+            return { value: parts[0] || '', label: parts[1] || '' };
+          });
+        }
+      }
     } catch(e) {}
     
     const statElements = document.querySelectorAll('.md-stat');
