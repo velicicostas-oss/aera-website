@@ -125,8 +125,8 @@ body.dark .tth{left:22px;background:var(--text);}
 .art-body blockquote cite{display:block;font-size:12px;color:var(--text3);margin-top:8px;font-style:normal;}
 
 /* CONTENT MODES */
-.mode-10s,.mode-1min,.mode-full{display:none;}
-.mode-10s.active,.mode-1min.active,.mode-full.active{display:block;}
+.mode-10s,.mode-full{display:none;}
+.mode-10s.active,.mode-full.active{display:block;}
 
 /* INFOGRAPHIC */
 .infographic{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:28px 0;}
@@ -157,8 +157,10 @@ body.dark .tth{left:22px;background:var(--text);}
 .md-text{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
 .md-stats{display:flex;gap:8px;}
 .md-stat{flex:1;padding:12px;border-radius:6px;background:var(--bg);border:1px solid var(--border);text-align:center;}
-.md-stat-val{font-size:22px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
-.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;}
+.md-stat-val{font-size:20px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
+.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;font-weight:500;}
+.md-stat-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
+.md-stat-fill{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .6s ease-out;}
 
 /* ASK */
 .ask-wrap{margin:24px 0;}
@@ -372,7 +374,6 @@ body.dark .tth{left:22px;background:var(--text);}
     <!-- READ MODES -->
     <div class="read-row">
       <button class="rm" onclick="setMode(this,'10s')">10 сек</button>
-      <button class="rm" onclick="setMode(this,'1min')">1 минута</button>
       <button class="rm on" onclick="setMode(this,'full')">Полностью</button>
     </div>
 
@@ -391,7 +392,6 @@ body.dark .tth{left:22px;background:var(--text);}
     <!-- ARTICLE CONTENT -->
     <div class="art-body">
       <div class="mode-10s" id="mode-10s"></div>
-      <div class="mode-1min" id="mode-1min"></div>
       <div class="mode-full active" id="mode-full"></div>
     </div>
 
@@ -415,9 +415,9 @@ body.dark .tth{left:22px;background:var(--text);}
       <div class="md-body">
         <div class="md-text"></div>
         <div class="md-stats">
-          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div></div>
-          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div></div>
-          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div></div>
+          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
+          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
+          <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
         </div>
       </div>
     </div>
@@ -516,7 +516,7 @@ if (chart) {
 }
 
 // ── READ MODES ──
-const modeContent={ '10s':'mode-10s', '1min':'mode-1min', 'full':'mode-full' };
+const modeContent={ '10s':'mode-10s', 'full':'mode-full' };
 function setMode(btn,m){
   document.querySelectorAll('.rm').forEach(x=>x.classList.remove('on'));
   btn.classList.add('on');
@@ -565,9 +565,9 @@ let articleData = null;
 let relatedArticles = [];
 
 const NEWS_UI = {
-  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', read1:'1 минута', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут', verified:'Проверено', partial:'Частично', unverified:'Непроверено'},
-  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', read1:'1 minute', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes', verified:'Verified', partial:'Partial', unverified:'Unverified'},
-  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare pentru redacție', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', read1:'1 minut', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute', verified:'Verificat', partial:'Parțial', unverified:'Neverificat'}
+  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут', verified:'Проверено', partial:'Частично', unverified:'Непроверено'},
+  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes', verified:'Verified', partial:'Partial', unverified:'Unverified'},
+  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare для redacție', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute', verified:'Verificat', partial:'Parțial', unverified:'Neverificat'}
 };
 
 function translateCategory(cat){
@@ -600,7 +600,7 @@ function applyNewsUi(){
   const md=document.querySelector('.md-header-label'); if(md) md.textContent=t.moldovaImpact;
   const back=document.querySelector('a[href="index.html"] span'); if(back) back.textContent=t.allNews;
   const footer=document.querySelector('.fnote'); if(footer) footer.textContent=t.footerNote;
-  const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent=t.read10; if(readBtns[1]) readBtns[1].textContent=t.read1; if(readBtns[2]) readBtns[2].textContent=t.readFull;
+  const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent=t.read10; if(readBtns[1]) readBtns[1].textContent=t.readFull;
   if(!playing){ const play=document.getElementById('play-label'); if(play) play.textContent=t.listen; }
   const relatedHdr=document.querySelectorAll('.sb-block-hdr'); if(relatedHdr[0]) relatedHdr[0].textContent=t.keyFacts; if(relatedHdr[1]) relatedHdr[1].textContent=t.latest;
   
@@ -639,10 +639,8 @@ function renderArticle(article) {
   const timeEl = document.querySelector('.art-time'); if (timeEl) timeEl.textContent = `${t.updated} ${formatTime(article.created_at)}`;
   
   const m10 = document.getElementById('mode-10s'); 
-  const m1m = document.getElementById('mode-1min'); 
   const mfull = document.getElementById('mode-full');
   if (m10) m10.textContent = field(article, 'summary10s'); 
-  if (m1m) m1m.textContent = field(article, 'summary1min'); 
   if (mfull) mfull.textContent = field(article, 'body');
   
   const img = document.querySelector('.art-img'); 
@@ -681,40 +679,50 @@ function renderArticle(article) {
     srcBar.innerHTML = `<span class="sources-label">${t.sources}</span>` + sourceNames.slice(0, 6).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
   }
 
-  // Moldova Context
+  // Moldova Context & Stats
   const mdBox = document.querySelector('.md-box');
-  const moldovaRaw = article.moldova_context || '';
-  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.includes('[HIDDEN]'))) {
+  const moldovaText = field(article, 'moldova_context');
+  
+  if (!moldovaText || (typeof moldovaText === 'string' && (moldovaText.includes('[HIDDEN]') || moldovaText.length < 5))) {
     if (mdBox) mdBox.style.display = 'none';
   } else {
     if (mdBox) mdBox.style.display = 'block';
-    let ctx = {};
-    if (typeof moldovaRaw === 'string') {
-      if (moldovaRaw.trim().startsWith('{')) {
-        try { ctx = JSON.parse(moldovaRaw); } catch(e) {}
-      } else {
-        ctx = { summary: moldovaRaw };
-      }
-    } else { ctx = moldovaRaw; }
-    
     const mdText = document.querySelector('.md-text');
-    if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
-    const figs = Array.isArray(ctx.figures) ? ctx.figures : [];
-    const stats = document.querySelectorAll('.md-stat');
-    if (figs.length > 0) {
-      stats.forEach(s => s.style.display = 'none');
-      figs.slice(0, 3).forEach((fig, i) => {
-        if (stats[i]) {
-          stats[i].style.display = 'block';
-          const parts = String(fig).split('—');
-          const valEl = stats[i].querySelector('.md-stat-val');
-          const lblEl = stats[i].querySelector('.md-stat-lbl');
-          if (valEl) valEl.textContent = parts[0]?.trim() || fig;
-          if (lblEl) lblEl.textContent = parts[1]?.trim() || '';
+    if (mdText) mdText.textContent = moldovaText;
+    
+    // Stats pills (JSON moldova_stats)
+    let statsData = [];
+    try {
+      statsData = typeof article.moldova_stats === 'string' ? JSON.parse(article.moldova_stats) : (article.moldova_stats || []);
+    } catch(e) {}
+    
+    const statElements = document.querySelectorAll('.md-stat');
+    statElements.forEach(s => s.style.display = 'none');
+    
+    if (Array.isArray(statsData) && statsData.length > 0) {
+      statsData.slice(0, 3).forEach((st, i) => {
+        if (statElements[i]) {
+          statElements[i].style.display = 'block';
+          const valEl = statElements[i].querySelector('.md-stat-val');
+          const lblEl = statElements[i].querySelector('.md-stat-lbl');
+          const barWrap = statElements[i].querySelector('.md-stat-bar');
+          const barFill = statElements[i].querySelector('.md-stat-fill');
+          
+          if (valEl) valEl.textContent = st.value || '';
+          if (lblEl) lblEl.textContent = st.label || '';
+          
+          // Progress bar if percentage
+          if (barWrap && barFill) {
+            const num = parseFloat(st.value);
+            if (!isNaN(num) && String(st.value).includes('%')) {
+              barWrap.style.display = 'block';
+              setTimeout(() => { barFill.style.width = Math.min(Math.max(num, 0), 100) + '%'; }, 100);
+            } else {
+              barWrap.style.display = 'none';
+            }
+          }
         }
       });
-    } else {
-      stats.forEach(s => s.style.display = 'none');
     }
   }
 

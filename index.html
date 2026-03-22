@@ -138,7 +138,9 @@ body.dark .tth{left:22px;background:var(--text);}
 .md-stats{display:flex;gap:8px;}
 .md-stat{flex:1;padding:10px;border-radius:6px;background:var(--bg);border:1px solid var(--border);text-align:center;}
 .md-stat-val{font-size:18px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
-.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;}
+.md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;font-weight:500;}
+.md-stat-bar{height:2px;background:var(--border);border-radius:1px;margin-top:6px;overflow:hidden;display:none;}
+.md-stat-fill{height:100%;background:var(--accent);border-radius:1px;width:0%;transition:width .6s ease-out;}
 
 /* ASK */
 .ask-wrap{margin-top:14px;}
@@ -391,7 +393,6 @@ body.dark .tth{left:22px;background:var(--text);}
 
       <div class="read-row">
         <button class="rm on" onclick="setMode(this,'10s')">10 сек</button>
-        <button class="rm" onclick="setMode(this,'1min')">1 минута</button>
         <button class="rm" onclick="setMode(this,'full')">Полностью</button>
       </div>
       <p id="ctxt" style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;">США и Иран на пороге прямого столкновения в Персидском заливе.</p>
@@ -416,9 +417,9 @@ body.dark .tth{left:22px;background:var(--text);}
         <div class="md-body">
           <div class="md-text">Цены на топливо могут вырасти на 8–12% в течение двух недель. Молдова импортирует 40% нефти через маршруты, проходящие через Турцию — косвенный, но ощутимый удар по перевозчикам и домохозяйствам.</div>
           <div class="md-stats">
-            <div class="md-stat"><div class="md-stat-val">+10%</div><div class="md-stat-lbl">Прогноз роста цен на топливо</div></div>
-            <div class="md-stat"><div class="md-stat-val">40%</div><div class="md-stat-lbl">Нефти через турецкие маршруты</div></div>
-            <div class="md-stat"><div class="md-stat-val">2 нед</div><div class="md-stat-lbl">Ожидаемый срок эффекта</div></div>
+            <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
+            <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
+            <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
           </div>
         </div>
       </div>
@@ -577,7 +578,7 @@ const UI = {
     nav: {moldova:'Молдова', world:'Мир', economy:'Экономика', politics:'Политика', security:'Безопасность', technology:'Технологии', allTopics:'+ Все темы'},
     tabs: {all:'Все', moldova:'Молдова', world:'Мир', economy:'Экономика', conflicts:'Конфликты'},
     latest:'Последние новости', refresh:'↻ 3 мин назад', sources:'Источники:', seeAll:'Все материалы →', updated:'Обновлено',
-    read10:'10 сек', read1:'1 минута', readFull:'Полностью',
+    read10:'10 сек', readFull:'Полностью',
     listen:'Слушать', playing:'Воспроизводится...', askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
     moldovaImpact:'Что это значит для Молдовы', verified:'Проверено', partial:'Частично', unverified:'Непроверено',
     footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀'
@@ -586,7 +587,7 @@ const UI = {
     nav: {moldova:'Moldova', world:'World', economy:'Economy', politics:'Politics', security:'Security', technology:'Technology', allTopics:'+ All topics'},
     tabs: {all:'All', moldova:'Moldova', world:'World', economy:'Economy', conflicts:'Conflicts'},
     latest:'Latest news', refresh:'↻ 3 min ago', sources:'Sources:', seeAll:'All stories →', updated:'Updated',
-    read10:'10 sec', read1:'1 minute', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
+    read10:'10 sec', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
     moldovaImpact:'What this means for Moldova', verified:'Verified', partial:'Partial', unverified:'Unverified',
     footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀'
   },
@@ -594,7 +595,7 @@ const UI = {
     nav: {moldova:'Moldova', world:'Lume', economy:'Economie', politics:'Politică', security:'Securitate', technology:'Tehnologie', allTopics:'+ Toate temele'},
     tabs: {all:'Toate', moldova:'Moldova', world:'Lume', economy:'Economie', conflicts:'Conflicte'},
     latest:'Ultimele știri', refresh:'↻ acum 3 min', sources:'Surse:', seeAll:'Toate materialele →', updated:'Actualizat',
-    read10:'10 sec', read1:'1 minut', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
+    read10:'10 sec', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
     moldovaImpact:'Ce înseamnă asta pentru Moldova', verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
     footerNote:'Știri verificate · Actualizare la fiecare 15 minute', empty:'Articolele vor apărea aici imediat ce agenții publică primele materiale 🚀'
   }
@@ -653,7 +654,6 @@ function applyUiTranslations(){
   const mdLabel = document.querySelector('.md-header-label'); if (mdLabel) mdLabel.textContent = t.moldovaImpact;
   const footerNote = document.querySelector('.fnote'); if (footerNote) footerNote.textContent = t.footerNote;
   const btn10 = document.querySelector('.rm[onclick*="10s"]'); if (btn10) btn10.textContent = t.read10;
-  const btn1 = document.querySelector('.rm[onclick*="1min"]'); if (btn1) btn1.textContent = t.read1;
   const btnF = document.querySelector('.rm[onclick*="full"]'); if (btnF) btnF.textContent = t.readFull;
   if (!playing) { const playLabel = document.getElementById('play-label'); if (playLabel) playLabel.textContent = t.listen; }
 }
@@ -688,7 +688,7 @@ function renderHero(article) {
   if (!article) return;
   const t = UI[currentLang];
   const title = field(article,'title');
-  const deck = field(article,'summary1min') || field(article,'summary10s') || '';
+  const deck = field(article,'summary10s') || '';
   document.querySelector('.h1').textContent = title;
   document.querySelector('.deck').textContent = deck;
   
@@ -732,52 +732,57 @@ function renderHero(article) {
     srcContainer.innerHTML = `<span style="font-size:11px;color:var(--text3);">${t.sources}</span>` + sourceNames.slice(0,4).map(s => `<span class="stag">${escapeHtml(s)}</span>`).join('');
   }
 
-  // Dynamic Moldova Context
+  // Dynamic Moldova Context & Stats
   const mdBox = document.querySelector('.md-box');
-  const moldovaRaw = article.moldova_context || '';
-  if (!moldovaRaw || (typeof moldovaRaw === 'string' && moldovaRaw.includes('[HIDDEN]'))) {
+  const moldovaText = field(article, 'moldova_context');
+  
+  if (!moldovaText || (typeof moldovaText === 'string' && (moldovaText.includes('[HIDDEN]') || moldovaText.length < 5))) {
     if (mdBox) mdBox.style.display = 'none';
   } else {
     if (mdBox) mdBox.style.display = 'block';
-    let ctx = {};
-    if (typeof moldovaRaw === 'string') {
-      if (moldovaRaw.trim().startsWith('{')) {
-        try { ctx = JSON.parse(moldovaRaw); } catch(e) {}
-      } else {
-        ctx = { summary: moldovaRaw };
-      }
-    } else {
-       ctx = moldovaRaw;
-    }
-    
     const mdText = document.querySelector('.md-text');
-    if (mdText) mdText.textContent = ctx.economy_impact || ctx.economy || ctx.summary || '';
+    if (mdText) mdText.textContent = moldovaText;
     
-    const stats = document.querySelectorAll('.md-stat');
-    const figures = Array.isArray(ctx.figures) ? ctx.figures : [];
-    if (figures.length > 0) {
-      stats.forEach(s => s.style.display = 'none');
-      figures.slice(0,3).forEach((fig, i) => {
-        if (stats[i]) {
-          stats[i].style.display = 'block';
-          const parts = String(fig).split('—');
-          const valEl = stats[i].querySelector('.md-stat-val');
-          const lblEl = stats[i].querySelector('.md-stat-lbl');
-          if (valEl) valEl.textContent = parts[0]?.trim() || fig;
-          if (lblEl) lblEl.textContent = parts[1]?.trim() || '';
+    // Stats pills (JSON moldova_stats)
+    let statsData = [];
+    try {
+      statsData = typeof article.moldova_stats === 'string' ? JSON.parse(article.moldova_stats) : (article.moldova_stats || []);
+    } catch(e) {}
+    
+    const statElements = document.querySelectorAll('.md-stat');
+    statElements.forEach(s => s.style.display = 'none');
+    
+    if (Array.isArray(statsData) && statsData.length > 0) {
+      statsData.slice(0, 3).forEach((st, i) => {
+        if (statElements[i]) {
+          statElements[i].style.display = 'block';
+          const valEl = statElements[i].querySelector('.md-stat-val');
+          const lblEl = statElements[i].querySelector('.md-stat-lbl');
+          const barWrap = statElements[i].querySelector('.md-stat-bar');
+          const barFill = statElements[i].querySelector('.md-stat-fill');
+          
+          if (valEl) valEl.textContent = st.value || '';
+          if (lblEl) lblEl.textContent = st.label || '';
+          
+          // Progress bar if percentage
+          if (barWrap && barFill) {
+            const num = parseFloat(st.value);
+            if (!isNaN(num) && String(st.value).includes('%')) {
+              barWrap.style.display = 'block';
+              setTimeout(() => { barFill.style.width = Math.min(Math.max(num, 0), 100) + '%'; }, 100);
+            } else {
+              barWrap.style.display = 'none';
+            }
+          }
         }
       });
-    } else {
-      // If no figures, maybe hide the stats row or show defaults? 
-      // For now we keep them hidden if figures is empty but moldova_context exists as string
-      stats.forEach(s => s.style.display = 'none');
     }
   }
 }
 
 function updateHeroText() {
   if (!heroArticle) return;
-  const texts = { '10s': field(heroArticle,'summary10s'), '1min': field(heroArticle,'summary1min'), 'full': field(heroArticle,'body') };
+  const texts = { '10s': field(heroArticle,'summary10s'), 'full': field(heroArticle,'body') };
   const ctxt = document.getElementById('ctxt');
   if (ctxt) ctxt.textContent = texts[currentMode] || '';
 }
