@@ -603,6 +603,16 @@ const UI = {
 
 function safeText(v){ return typeof v === 'string' ? v : ''; }
 function field(article, base){
+  const raw = article?.[base];
+  if (raw && typeof raw === 'string' && raw.trim().startsWith('{')) {
+    try {
+      const obj = JSON.parse(raw);
+      if (obj && typeof obj === 'object') {
+        const res = obj[currentLang] || obj['ro'] || obj['ru'] || '';
+        return res;
+      }
+    } catch(e) {}
+  }
   return safeText(article?.[`${base}_${currentLang}`])
     || safeText(article?.[`${base}_ro`])
     || safeText(article?.[`${base}_en`])
