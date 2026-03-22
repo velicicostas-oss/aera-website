@@ -146,15 +146,16 @@ body.dark .tth{left:22px;background:var(--text);}
 .legend-dot{width:8px;height:8px;border-radius:2px;}
 
 /* MOLDOVA BOX */
-.md-box{border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:28px 0;}
+.md-box{border-radius:10px;overflow:hidden;border:1px solid var(--border);margin:28px 0;display:none;background:var(--bg2);}
 .md-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--accent);}
 .md-flag{display:flex;flex-shrink:0;width:26px;height:18px;border-radius:2px;overflow:hidden;}
 .md-flag-b{flex:1;background:#003DA5;}
 .md-flag-y{flex:1;background:#FFD100;}
 .md-flag-r{flex:1;background:#C8102E;}
 .md-header-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#fff;}
-.md-body{padding:16px 18px;background:var(--bg2);}
+.md-body-c{padding:16px 18px;background:var(--bg2);}
 .md-text{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
+.md-text p{margin-bottom:10px;}
 .md-stats{display:flex;gap:8px;}
 .md-stat{flex:1;padding:12px;border-radius:6px;background:var(--bg);border:1px solid var(--border);text-align:center;}
 .md-stat-val{font-size:20px;font-weight:700;color:var(--accent);font-family:'Playfair Display',serif;}
@@ -407,12 +408,12 @@ body.dark .tth{left:22px;background:var(--text);}
     </div>
 
     <!-- MOLDOVA BOX -->
-    <div class="md-box" style="display:none;">
+    <div class="md-box">
       <div class="md-header">
         <div class="md-flag"><div class="md-flag-b"></div><div class="md-flag-y"></div><div class="md-flag-r"></div></div>
         <div class="md-header-label">Что это значит для Молдовы</div>
       </div>
-      <div class="md-body">
+      <div class="md-body-c">
         <div class="md-text"></div>
         <div class="md-stats">
           <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
@@ -578,12 +579,14 @@ function translateCategory(cat){
 
 function field(article, base){
   const raw = article?.[base];
+  if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+    return raw[currentLang] || raw['ro'] || raw['ru'] || raw['en'] || '';
+  }
   if (raw && typeof raw === 'string' && raw.trim().startsWith('{')) {
     try {
       const obj = JSON.parse(raw);
       if (obj && typeof obj === 'object') {
-        const res = obj[currentLang] || obj['ro'] || obj['ru'] || '';
-        return res;
+        return obj[currentLang] || obj['ro'] || obj['ru'] || obj['en'] || '';
       }
     } catch(e) {}
   }
@@ -700,12 +703,26 @@ function renderArticle(article) {
   } else {
     if (mdBox) mdBox.style.display = 'block';
     const mdText = document.querySelector('.md-text');
-    if (mdText) mdText.textContent = moldovaText;
+    if (mdText) {
+      mdText.innerHTML = moldovaText.split(/\r?\n\s*\r?\n/).map(p => `<p>${escapeHtml(p.trim())}</p>`).join('');
+    }
     
     // Stats pills (JSON moldova_stats)
     let statsData = [];
     try {
       statsData = typeof article.moldova_stats === 'string' ? JSON.parse(article.moldova_stats) : (article.moldova_stats || []);
+      
+      // Fallback: if statsData is empty but we have moldova_context in old JSON format (with "figures")
+      if ((!statsData || statsData.length === 0) && moldovaText && article.moldova_context) {
+        const raw = article.moldova_context;
+        const obj = typeof raw === 'object' ? raw : (typeof raw === 'string' && raw.trim().startsWith('{') ? JSON.parse(raw) : null);
+        if (obj && obj.figures && Array.isArray(obj.figures)) {
+          statsData = obj.figures.map(s => {
+            const parts = s.split(' — ');
+            return { value: parts[0] || '', label: parts[1] || '' };
+          });
+        }
+      }
     } catch(e) {}
     
     const statElements = document.querySelectorAll('.md-stat');
