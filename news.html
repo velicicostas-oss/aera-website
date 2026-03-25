@@ -435,7 +435,7 @@ body.dark .tth{left:22px;background:var(--text);}
     <div class="md-box">
       <div class="md-header">
         <div class="md-flag"><div class="md-flag-b"></div><div class="md-flag-y"></div><div class="md-flag-r"></div></div>
-        <div class="md-header-label">Что это значит для Молдовы</div>
+        <div class="md-header-label" id="md-impact-label">Что это значит для Молдовы</div>
       </div>
       <div class="md-body-c">
         <div class="md-text"></div>
@@ -483,8 +483,8 @@ body.dark .tth{left:22px;background:var(--text);}
 
   <!-- SIDEBAR -->
   <aside class="article-sidebar">
-    <div class="sb-block">
-      <div class="sb-block-hdr">Ключевые цифры</div>
+    <div class="sb-block" id="kn-block" style="display:none;">
+      <div class="sb-block-hdr" id="kn-hdr">Ключевые цифры</div>
       <div class="facts-block" id="facts-container"></div>
     </div>
 
@@ -602,7 +602,8 @@ const NEWS_UI = {
     footerNote:'Проверенные новости · Обновление каждые 15 минут',
     verified:'Проверено', partial:'Частично', unverified:'Непроверено',
     whatMeansPrefix:'→ Что это значит:', explain10s:'Объяснить за 10 сек', askQuestion:'Задать вопрос',
-    cookies:{text:'🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.', accept:'Принять', decline:'Отклонить'}
+    cookies:{text:'🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.', accept:'Принять', decline:'Отклонить'},
+    statsLabels: { 'население': 'население', 'экспорт': 'экспорт', 'ВВП': 'ВВП', 'инфляция': 'инфляция', 'зарплата': 'зарплата', 'торговля': 'торговля' }
   },
   en:{
     nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'},
@@ -615,7 +616,8 @@ const NEWS_UI = {
     footerNote:'Verified news · Updated every 15 minutes',
     verified:'Verified', partial:'Partial', unverified:'Unverified',
     whatMeansPrefix:'→ What it means:', explain10s:'Explain in 10s', askQuestion:'Ask a question',
-    cookies:{text:'🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance improvements, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.', accept:'Accept', decline:'Decline'}
+    cookies:{text:'🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance improvements, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.', accept:'Accept', decline:'Decline'},
+    statsLabels: { 'население': 'population', 'экспорт': 'exports', 'ВВП': 'GDP', 'инфляция': 'inflation', 'зарплата': 'salary', 'торговля': 'trade' }
   },
   ro:{
     nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'},
@@ -628,7 +630,8 @@ const NEWS_UI = {
     footerNote:'Știri verificate · Actualizare la fiecare 15 minute',
     verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
     whatMeansPrefix:'→ Ce înseamnă:', explain10s:'Explică în 10 sec', askQuestion:'Pune o întrebare',
-    cookies:{text:'🍪 <strong>Folosim cookie-uri.</strong> Acest site folosește cookie-uri pentru analiză, îmbunătățirea performanței și personalizarea conținutului. Apăsând „Acceptă", ești de acord cu <a href="cookies.html">politica noastră privind cookie-urile</a>.', accept:'Acceptă', decline:'Refuză'}
+    cookies:{text:'🍪 <strong>Folosim cookie-uri.</strong> Acest site folosește cookie-uri pentru analiză, îmbunătățirea performanței și personalizarea conținutului. Apăsând „Acceptă", ești de acord cu <a href="cookies.html">politica noastră privind cookie-urile</a>.', accept:'Acceptă', decline:'Refuză'},
+    statsLabels: { 'население': 'populație', 'экспорт': 'exporturi', 'ВВП': 'PIB', 'инфляция': 'inflație', 'зарплата': 'salariu', 'торговля': 'comerț' }
   }
 };
 
@@ -863,7 +866,11 @@ function renderArticle(article) {
             const barFill = statElements[i].querySelector('.md-stat-fill');
             
             if (valEl) valEl.textContent = st.value || '';
-            if (lblEl) lblEl.textContent = st.label || '';
+            
+            // Translate label if possible
+            const rawLabel = (st.label || '').toLowerCase().trim();
+            const translatedLabel = t.statsLabels && t.statsLabels[rawLabel] ? t.statsLabels[rawLabel] : (st.label || '');
+            if (lblEl) lblEl.textContent = translatedLabel;
             
             // Progress bar if percentage
             if (barWrap && barFill) {
@@ -905,8 +912,10 @@ function setLang(el){
   el.classList.add('on');
   currentLang=el.textContent.toLowerCase();
   localStorage.setItem('aera_lang', currentLang);
-  if (articleData) renderArticle(articleData);
-  else applyNewsUi();
+  if (articleData) {
+    renderArticle(articleData);
+    loadKeyNumbers();
+  } else applyNewsUi();
   updateCookieBanner();
 }
 
@@ -939,6 +948,61 @@ function populateBreakingBar(articles){
   track.innerHTML = joined;
 }
 
+async function loadKeyNumbers() {
+  const container = document.getElementById('facts-container');
+  if (!container) return;
+
+  const knBlock = document.getElementById('kn-block');
+  if (knBlock) knBlock.style.display = 'none';
+
+  try {
+    // Fetch latest 6 articles to extract key numbers from
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?status=eq.published&order=created_at.desc&limit=6`, {
+      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
+    });
+    const articles = await res.json();
+    
+    let allNumbers = [];
+    articles.forEach(art => {
+      let nums = [];
+      try {
+        const kn = typeof art.key_numbers === 'string' ? JSON.parse(art.key_numbers) : art.key_numbers;
+        if (kn && kn[currentLang]) {
+          nums = kn[currentLang].map(n => ({ ...n, artId: art.id, priority: art.priority }));
+        }
+      } catch(e) {}
+      allNumbers = allNumbers.concat(nums);
+    });
+
+    // Sort by article priority and limit to 5
+    const priorityMap = { 'urgent': 0, 'important': 1, 'planned': 2, 'normal': 3, 'low': 4 };
+    allNumbers.sort((a, b) => (priorityMap[a.priority] || 9) - (priorityMap[b.priority] || 9));
+    
+    const displayNums = allNumbers.slice(0, 5);
+    
+    if (displayNums.length === 0) {
+      if (knBlock) knBlock.style.display = 'none';
+      return;
+    }
+
+    if (knBlock) knBlock.style.display = 'block';
+
+    container.innerHTML = displayNums.map(n => `
+      <a href="news.html?id=${n.artId}" class="fact-row" style="text-decoration:none; color:inherit;">
+        <div class="fact-ico">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <div class="fact-text">
+          <div class="fact-val">${escapeHtml(n.value)}</div>
+          <div>${escapeHtml(n.label)}</div>
+        </div>
+      </a>
+    `).join('');
+  } catch (e) {
+    console.error("Error loading key numbers:", e);
+  }
+}
+
 // Cookie Banner
 const COOKIE_TEXTS = {
   ru: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.',
@@ -963,6 +1027,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else btn.classList.remove('on');
   });
   loadArticle();
+  loadKeyNumbers();
   if (localStorage.getItem('aera_cookies_ok')) document.getElementById('cookie-bar').style.display = 'none';
   else updateCookieBanner();
 });
