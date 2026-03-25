@@ -602,6 +602,16 @@ function translateCategory(cat){
   return map[value]?.[currentLang] || cat || '';
 }
 
+function setLang(el) {
+  document.querySelectorAll('.lb').forEach(x => x.classList.remove('on'));
+  el.classList.add('on');
+  currentLang = el.textContent.toLowerCase();
+  localStorage.setItem('aera_lang', currentLang);
+  applyNewsUi();
+  if (articleData) renderArticle(articleData);
+  if (relatedArticles.length > 0) renderSidebar(relatedArticles);
+}
+
 function field(article, base){
   const raw = article?.[base];
   if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
@@ -678,7 +688,15 @@ async function loadArticle() {
 
 function renderArticle(article) {
   if (!article) return;
+  if (idParam) { articleId = idParam; }
+  
+  document.querySelectorAll('.lb').forEach(btn => {
+    if (btn.textContent.toLowerCase() === currentLang) btn.classList.add('on');
+    else btn.classList.remove('on');
+  });
+
   applyNewsUi();
+  loadArticle();
   const t = NEWS_UI[currentLang];
   const title = field(article, 'title');
   document.title = title + ' · AERA';

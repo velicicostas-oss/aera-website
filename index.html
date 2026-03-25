@@ -981,17 +981,51 @@ function renderPage(){
   
   if (activeFilters.length > 0) {
     filtered = filtered.filter(a => {
+      const cat = (a.category || '').toLowerCase();
+      const region = (a.region || '').toLowerCase();
+      const tags = (a.tags || []).map(t => t.toLowerCase());
+      const hoursAgo = (new Date() - new Date(a.published_at || a.created_at)) / (1000 * 60 * 60);
+
       // Meaning
-      if (activeFilters.includes('what-it-means') && !a.category.includes('means')) return false;
+      if (activeFilters.includes('what-it-means') && !cat.includes('means') && !tags.includes('explainer')) return false;
       if (activeFilters.includes('important-now') && !isImportantNow(a)) return false;
-      if (activeFilters.includes('money-impact') && !(a.category === 'money' || a.category === 'economy')) return false;
+      if (activeFilters.includes('money-impact') && !(cat === 'money' || cat === 'economy' || cat.includes('finan'))) return false;
       
+      // Region
+      if (activeFilters.includes('reg-moldova') && !region.includes('moldova') && !cat.includes('moldova')) return false;
+      if (activeFilters.includes('reg-world') && !cat.includes('world') && !cat.includes('мир')) return false;
+      if (activeFilters.includes('reg-europe') && !region.includes('europe') && !tags.includes('europe')) return false;
+      if (activeFilters.includes('reg-romania') && !region.includes('romania') && !tags.includes('romania')) return false;
+      if (activeFilters.includes('reg-ukraine') && !region.includes('ukraine') && !tags.includes('ukraine')) return false;
+
+      // Time
+      if (activeFilters.includes('time-2h') && hoursAgo > 2) return false;
+      if (activeFilters.includes('time-today')) {
+        const today = new Date().setHours(0,0,0,0);
+        if (new Date(a.published_at || a.created_at).getTime() < today) return false;
+      }
+      if (activeFilters.includes('time-yesterday')) {
+        const yesterday = new Date().setHours(0,0,0,0) - 86400000;
+        const pub = new Date(a.published_at || a.created_at).getTime();
+        if (pub < yesterday || pub >= (yesterday + 86400000)) return false;
+      }
+
       // Verification
       if (activeFilters.includes('verified-only') && (a.trust_score || 0) < 80) return false;
       
       // Content Type
-      if (activeFilters.includes('shortreads') && (a.summary10s_ro?.length > 500)) return false; // Rough check
-      
+      if (activeFilters.includes('shortreads') && (a.summary10s_ro?.length > 400)) return false;
+      if (activeFilters.includes('longreads') && (a.body_ro?.length < 1500)) return false;
+      if (activeFilters.includes('multimedia') && !a.photo_url) return false;
+
+      // Topics
+      if (activeFilters.includes('topic-economy') && !cat.includes('econom') && !cat.includes('money')) return false;
+      if (activeFilters.includes('topic-politics') && !cat.includes('polit')) return false;
+      if (activeFilters.includes('topic-security') && !cat.includes('secur') && !cat.includes('conflict')) return false;
+      if (activeFilters.includes('topic-tech') && !cat.includes('tech')) return false;
+      if (activeFilters.includes('topic-geopolitics') && !cat.includes('geo')) return false;
+      if (activeFilters.includes('topic-opinions') && !cat.includes('opin') && !cat.includes('analys')) return false;
+
       return true;
     });
   }
@@ -1161,6 +1195,8 @@ function setLang(el) {
   localStorage.setItem('aera_lang', currentLang);
   updateCookieBanner();
   updateBreakingLabel();
+  populateBreakingBar(allArticles);
+  populateTicker(allArticles);
   renderPage();
 }
 
