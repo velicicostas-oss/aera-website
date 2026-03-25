@@ -68,6 +68,11 @@ body.dark .tth{left:22px;background:var(--text);}
 .art-time{font-size:11px;color:var(--text3);}
 .art-h1{font-family:'Playfair Display',serif;font-size:36px;line-height:1.13;font-weight:700;color:var(--text);margin-bottom:16px;letter-spacing:-.4px;}
 .art-deck{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:22px;border-left:3px solid var(--accent);padding-left:16px;}
+.art-what-it-means{font-size:15px;font-weight:500;color:var(--text);line-height:1.6;margin-bottom:14px;display:none;}
+.art-what-prefix{color:var(--accent);font-weight:700;margin-right:6px;}
+.art-actions{display:flex;gap:8px;margin-bottom:24px;display:none;}
+.btn-act{padding:8px 18px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.btn-act:hover{border-color:var(--border2);color:var(--text);background:var(--bg3);}
 
 /* HERO IMAGE */
 .art-img-wrap{position:relative;height:420px;overflow:hidden;border-radius:8px;margin-top:20px;margin-bottom:24px;}
@@ -334,6 +339,25 @@ body.dark .tth{left:22px;background:var(--text);}
     </div>
 
     <h1 class="art-h1"></h1>
+    
+    <!-- WHAT IT MEANS BLOCK -->
+    <div class="art-what-it-means" id="art-what-it-means">
+      <span class="art-what-prefix" id="art-what-prefix">→ What it means:</span>
+      <span id="art-what-text"></span>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="art-actions" id="art-actions">
+      <button class="btn-act" onclick="setMode(document.querySelectorAll('.rm')[0],'10s')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span id="btn-10s-label">Explain in 10s</span>
+      </button>
+      <button class="btn-act" onclick="scrollToAsk()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span id="btn-ask-label">Ask a question</span>
+      </button>
+    </div>
+
     <p class="art-deck"></p>
 
     <!-- TRUST SCORE -->
@@ -557,6 +581,7 @@ document.addEventListener('click',function(e){
 
 // ── UI ──
 function toggleTheme(){document.body.classList.toggle('dark');}
+function scrollToAsk(){ const el = document.querySelector('.ask-wrap'); if(el) el.scrollIntoView({behavior:'smooth'}); }
 
 // ── SUPABASE + LANG ──
 const SUPABASE_URL = 'https://araqepkymkxktvhseeas.supabase.co';
@@ -566,9 +591,9 @@ let articleData = null;
 let relatedArticles = [];
 
 const NEWS_UI = {
-  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут', verified:'Проверено', partial:'Частично', unverified:'Непроверено'},
-  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes', verified:'Verified', partial:'Partial', unverified:'Unverified'},
-  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare для redacție', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute', verified:'Verificat', partial:'Parțial', unverified:'Neverificat'}
+  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askEditorial: 'Что-то не понятно? Спросите редакцию', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут', verified:'Проверено', partial:'Частично', unverified:'Непроверено', whatMeansPrefix:'→ Что это значит:', explain10s:'Объяснить за 10 сек', askQuestion:'Задать вопрос'},
+  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askEditorial: 'Didn’t understand something? Ask the editorial team', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes', verified:'Verified', partial:'Partial', unverified:'Unverified', whatMeansPrefix:'→ What it means:', explain10s:'Explain in 10s', askQuestion:'Ask a question'},
+  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare для redacție', askEditorial: 'Nu ai înțeles ceva? Întreabă redacția', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute', verified:'Verificat', partial:'Parțial', unverified:'Neverificat', whatMeansPrefix:'→ Ce înseamnă:', explain10s:'Explică în 10 sec', askQuestion:'Pune o întrebare'}
 };
 
 function translateCategory(cat){
@@ -608,8 +633,13 @@ function applyNewsUi(){
   if (!t) return;
   document.documentElement.lang=currentLang;
   document.querySelectorAll('.ni[data-section]').forEach(el=>el.textContent=t.nav[el.dataset.section]||el.textContent);
-  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent=t.ask;
+  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent=t.askEditorial;
   const askIn=document.querySelector('.ask-in'); if(askIn) askIn.placeholder=t.askPlaceholder;
+  
+  const whatPrefix = document.getElementById('art-what-prefix'); if(whatPrefix) whatPrefix.textContent = t.whatMeansPrefix;
+  const lab10s = document.getElementById('btn-10s-label'); if(lab10s) lab10s.textContent = t.explain10s;
+  const labAsk = document.getElementById('btn-ask-label'); if(labAsk) labAsk.textContent = t.askQuestion;
+
   const sourcesLabel=document.querySelector('.sources-label'); if(sourcesLabel) sourcesLabel.textContent=t.sources;
   const shareLabel=document.querySelector('.share-label'); if(shareLabel) shareLabel.textContent=t.share;
   const btns=document.querySelectorAll('.share-btn'); 
@@ -660,8 +690,20 @@ function renderArticle(article) {
   
   const m10 = document.getElementById('mode-10s'); 
   const mfull = document.getElementById('mode-full');
-  if (m10) m10.textContent = field(article, 'summary10s'); 
+  const summary = field(article, 'summary10s');
+  
+  if (m10) m10.textContent = summary; 
   if (mfull) mfull.textContent = field(article, 'body');
+
+  const whatMeansBlock = document.getElementById('art-what-it-means');
+  const whatMeansText = document.getElementById('art-what-text');
+  const artActions = document.getElementById('art-actions');
+  
+  if (summary && summary.length > 5) {
+    if (whatMeansBlock) whatMeansBlock.style.display = 'block';
+    if (whatMeansText) whatMeansText.textContent = summary;
+    if (artActions) artActions.style.display = 'flex';
+  }
   
   const img = document.querySelector('.art-img'); 
   if (img && article.photo_url) { img.src = article.photo_url; img.alt = title; }
