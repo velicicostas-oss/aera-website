@@ -726,33 +726,30 @@ function toggleAdvancedFilters() {
   if (adv) {
     const isShowing = adv.style.display === 'block';
     adv.style.display = isShowing ? 'none' : 'block';
-    if (btn) btn.textContent = isShowing ? 'Advanced Options +' : 'Simple View -';
+    if (btn) {
+      const t = UI[currentLang].filter;
+      btn.textContent = isShowing ? t.advanced : (currentLang === 'ro' ? 'Vizualizare simplă -' : currentLang === 'en' ? 'Simple View -' : 'Простой вид -');
+    }
   }
 }
 
 // Initializing Filters
 document.querySelectorAll('.f-opt').forEach(opt => {
-  opt.onclick = () => {
-    opt.classList.toggle('on');
-  };
+  opt.onclick = () => { opt.classList.toggle('on'); };
 });
 
 function applyFilters() {
-  const activeFilters = Array.from(document.querySelectorAll('.f-opt.on')).map(el => el.dataset.f);
-  // Filtering logic will be integrated into loadArticles/renderPage
   toggleFilter();
   renderPage();
 }
 
 function isImportantNow(article) {
-  // Logic: score > 90 + published in last 6h, or manually high priority
   const score = article.trust_score || 0;
   const hoursAgo = (new Date() - new Date(article.published_at || article.created_at)) / (1000 * 60 * 60);
   return (score > 90 && hoursAgo < 6) || article.priority === 'high' || article.priority === 'urgent';
 }
 
 function isTrending(article) {
-  // Logic: views > 100 + published in last 24h
   const views = article.views || 0;
   const hoursAgo = (new Date() - new Date(article.published_at || article.created_at)) / (1000 * 60 * 60);
   return (views > 100 && hoursAgo < 24);
@@ -761,30 +758,17 @@ function isTrending(article) {
 function getPriorityLabels(article) {
   const labels = [];
   const score = article.trust_score || 0;
-  
-  if (score >= 90) labels.push({ text: 'Verified', class: 'mtg' });
-  if (isImportantNow(article)) labels.push({ text: 'Important', class: 'mtr' });
-  if (isTrending(article)) labels.push({ text: 'Trending', class: 'mty' });
-  
-  if (article.category === 'money' || article.category === 'economy') labels.push({ text: 'Money', class: 'mt-money' });
-  if (article.moldova_context && article.moldova_context.length > 20) labels.push({ text: 'Explainer', class: 'mt-reg' });
-  
-  // Region label if not many labels
+  if (score >= 90) labels.push({ text: currentLang === 'ro' ? 'Verificat' : currentLang === 'en' ? 'Verified' : 'Проверено', class: 'mtg' });
+  if (isImportantNow(article)) labels.push({ text: currentLang === 'ro' ? 'Important' : currentLang === 'en' ? 'Important' : 'Важное', class: 'mtr' });
+  if (isTrending(article)) labels.push({ text: currentLang === 'ro' ? 'Trend' : currentLang === 'en' ? 'Trending' : 'Тренды', class: 'mty' });
+  if (article.category === 'money' || article.category === 'economy') labels.push({ text: currentLang === 'ro' ? 'Bani' : currentLang === 'en' ? 'Money' : 'Деньги', class: 'mt-money' });
+  if (article.moldova_context && article.moldova_context.length > 20) labels.push({ text: currentLang === 'ro' ? 'Context' : currentLang === 'en' ? 'Explainer' : 'Контекст', class: 'mt-reg' });
   if (labels.length < 2 && article.region) labels.push({ text: article.region, class: 'mt-reg' });
-  
   return labels.slice(0, 3);
 }
 
 function getCardPreview(article) {
-  const summary = field(article, 'summary10s') || '';
-  if (!summary) return '';
-  // Ensure we have a short, punchy 2-line preview
-  // If it's too long, the CSS will clamp it, but we can also truncate here
-  return summary;
-}
-
-function updateArticlePreview(article) {
-  return getCardPreview(article);
+  return field(article, 'summary10s') || '';
 }
 
 const UI = {
@@ -807,9 +791,15 @@ const UI = {
     tabs: {all:'Все', moldova:'Молдова', world:'Мир', money:'Деньги', conflicts:'Конфликты'},
     latest:'Последние новости', refresh:'↻ 3 мин назад', sources:'Источники:', seeAll:'Все материалы →', updated:'Обновлено',
     read10:'10 сек', readFull:'Полностью',
-    listen:'Слушать', playing:'Воспроизводится...', askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
+    listen:'Слушать', playing:'Воспроизводится...', listenDurSuffix: 'мин 24 сек',
+    askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
     moldovaImpact:'Что это значит для Молдовы', verified:'Проверено', partial:'Частично', unverified:'Непроверено',
-    footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀'
+    footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀',
+    cookies: {
+      text: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.',
+      accept: 'Принять',
+      decline: 'Отклонить'
+    }
   },
   en: {
     nav: {
@@ -829,9 +819,15 @@ const UI = {
     },
     tabs: {all:'All', moldova:'Moldova', world:'World', money:'Money', conflicts:'Conflicts'},
     latest:'Latest news', refresh:'↻ 3 min ago', sources:'Sources:', seeAll:'All stories →', updated:'Updated',
-    read10:'10 sec', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
+    read10:'10 sec', readFull:'Full', listen:'Listen', playing:'Playing...', listenDurSuffix: 'min 24 sec',
+    askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
     moldovaImpact:'What this means for Moldova', verified:'Verified', partial:'Partial', unverified:'Unverified',
-    footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀'
+    footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀',
+    cookies: {
+      text: '🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.',
+      accept: 'Accept',
+      decline: 'Decline'
+    }
   },
   ro: {
     nav: {
@@ -851,9 +847,15 @@ const UI = {
     },
     tabs: {all:'Toate', moldova:'Moldova', world:'Lume', money:'Bani', conflicts:'Conflicte'},
     latest:'Ultimele știri', refresh:'↻ acum 3 min', sources:'Surse:', seeAll:'Toate materialele →', updated:'Actualizat',
-    read10:'10 sec', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
+    read10:'10 sec', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', listenDurSuffix: 'min 24 sec',
+    askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
     moldovaImpact:'Ce înseamnă asta pentru Moldova', verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
-    footerNote:'Știri verificate · Actualizare la fiecare 15 minute', empty:'Articolele vor apărea aici imediat ce agenții publică primele materiale 🚀'
+    footerNote:'Știri verificate · Actualizare la fiecare 15 minute', empty:'Articolele vor apărea aici imediat ce agenții publică primele materiale 🚀',
+    cookies: {
+      text: '🍪 <strong>Folosim cookies.</strong> Acest site folosește module cookie pentru analiză, performanță și personalizarea conținutului. Apăsând "Accept", sunteți de acord cu <a href="cookies.html">politica noastră de cookies</a>.',
+      accept: 'Acceptă',
+      decline: 'Refuză'
+    }
   }
 };
 
@@ -931,9 +933,21 @@ function applyUiTranslations(){
   const askIn = document.querySelector('.ask-in'); if (askIn) askIn.placeholder = t.askPlaceholder;
   const mdLabel = document.querySelector('.md-header-label'); if (mdLabel) mdLabel.textContent = t.moldovaImpact;
   const footerNote = document.querySelector('.fnote'); if (footerNote) footerNote.textContent = t.footerNote;
+  
+  // Hero Buttons
   const btn10 = document.querySelector('.rm[onclick*="10s"]'); if (btn10) btn10.textContent = t.read10;
   const btnF = document.querySelector('.rm[onclick*="full"]'); if (btnF) btnF.textContent = t.readFull;
-  if (!playing) { const playLabel = document.getElementById('play-label'); if (playLabel) playLabel.textContent = t.listen; }
+  
+  // Audio
+  if (!playing) { 
+    const playLabel = document.getElementById('play-label'); 
+    if (playLabel) playLabel.textContent = t.listen; 
+  }
+  const durLabel = document.getElementById('ldur'); 
+  if (durLabel) durLabel.textContent = t.listenDurSuffix;
+
+  updateBreakingLabel();
+  updateCookieBanner();
   
   // Update Filter Panel Labels
   const f = t.filter;
@@ -950,9 +964,26 @@ function applyUiTranslations(){
   
   // Update Filter Options
   document.querySelectorAll('.f-opt[data-f]').forEach(el => {
-    const key = el.dataset.f.replace(/-./g, x => x[1].toUpperCase());
+    let key = el.dataset.f;
+    // Handle specific mappings
+    if (key === '1h') key = 'h1';
+    else if (key === '24h') key = 'h24';
+    else if (key === '7d') key = 'd7';
+    else if (key === 'verified-only') key = 'verifiedOnly';
+    else if (key === 'all-v') key = 'vAll';
+    else if (key === 'partial') key = 'vPartial';
+    else {
+      key = key.replace(/-./g, x => x[1].toUpperCase());
+    }
     if (f[key]) el.textContent = f[key];
   });
+}
+
+function updateCookieBanner() {
+  const t = UI[currentLang].cookies;
+  const txt = document.getElementById('cookie-text'); if (txt) txt.innerHTML = t.text;
+  const dec = document.querySelector('.cookie-bar-decline'); if (dec) dec.textContent = t.decline;
+  const acc = document.querySelector('.cookie-bar-btn[onclick*="accept"]'); if (acc) acc.textContent = t.accept;
 }
 
 async function loadArticles() {
@@ -1180,7 +1211,7 @@ function renderGrid(articles) {
         <div class="cdeck">${escapeHtml(preview)}</div>
         <div class="cfoot">
           <span class="ctime">${time}</span>
-          <button class="rm" style="padding:4px 8px;font-size:10px;border-radius:4px;" onclick="event.stopPropagation(); alert('Quick Summary: '+field(allArticles.find(a=>a.id==${article.id}),'summary10s'))">10s Explain</button>
+          <button class="rm" style="padding:4px 8px;font-size:10px;border-radius:4px;" onclick="event.stopPropagation(); alert('${currentLang === 'ro' ? 'Rezumat rapid' : currentLang === 'en' ? 'Quick Summary' : 'Краткое содержание'}: ' + field(allArticles.find(item => item.id == ${article.id}), 'summary10s'))">${UI[currentLang].read10}</button>
         </div>
       </div>`;
     grid.appendChild(card);
@@ -1238,14 +1269,13 @@ loadArticles();
 setInterval(loadArticles, 5 * 60 * 1000);
 
 // ── COOKIE BANNER ──
-const COOKIE_TEXTS = {
-  ru: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>. Вы можете отказаться, закрыв это уведомление.',
-  en: '🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance and content personalisation. By clicking "Accept" you agree to our <a href="cookies.html">cookie policy</a>. You may decline by closing this notice.',
-  ro: '🍪 <strong>Folosim cookie-uri.</strong> Acest site utilizează cookie-uri pentru analiză, performanță și personalizarea conținutului. Apăsând „Accept" sunteți de acord cu <a href="cookies.html">politica noastră de cookie-uri</a>. Puteți refuza închizând acest mesaj.'
-};
 function updateCookieBanner(){
   const el = document.getElementById('cookie-text');
-  if(el) el.innerHTML = COOKIE_TEXTS[currentLang] || COOKIE_TEXTS.ru;
+  if(!el) return;
+  const t = UI[currentLang].cookies;
+  el.innerHTML = t.text;
+  const dec = document.querySelector('.cookie-bar-decline'); if(dec) dec.textContent = t.decline;
+  const acc = document.querySelector('.cookie-bar-btn[onclick*="accept"]'); if(acc) acc.textContent = t.accept;
 }
 function acceptCookies(){
   localStorage.setItem('aera_cookies_ok','1');
@@ -1257,40 +1287,28 @@ function declineCookies(){
   const bar = document.getElementById('cookie-bar');
   if(bar){ bar.style.opacity='0'; bar.style.transition='opacity .3s'; setTimeout(()=>bar.style.display='none',300); }
 }
-// Запускаем после загрузки DOM
-document.addEventListener('DOMContentLoaded', function(){
-  if(localStorage.getItem('aera_cookies_ok')){
-    const bar = document.getElementById('cookie-bar');
-    if(bar) bar.style.display = 'none';
-  } else {
-    updateCookieBanner();
-  }
-});
-
 // ── BREAKING BAR ──
-const BREAKING_LABELS = {ru:'В ЭФИРЕ', en:'LIVE', ro:'ÎN DIRECT'};
 function updateBreakingLabel(){
   const el = document.getElementById('breaking-label');
-  if(el) el.textContent = BREAKING_LABELS[currentLang] || 'LIVE';
+  if(el) el.textContent = (currentLang === 'ro' ? 'ÎN DIRECT' : currentLang === 'en' ? 'LIVE' : 'В ЭФИРЕ');
 }
 function populateBreakingBar(articles){
   const track = document.getElementById('breaking-track');
   if(!track || !articles || !articles.length) return;
   const items = articles.slice(0,8).map(a => {
-    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const title = field(a, 'title');
     const href = `news.html?id=${a.id}`;
     return `<a class="breaking-item" href="${href}">${title} ·</a>`;
   });
   const joined = items.join('') + items.join('');
   track.innerHTML = joined;
 }
-
 // ── BOTTOM TICKER ──
 function populateTicker(articles){
   const track = document.getElementById('ticker-track');
   if(!track || !articles || !articles.length) return;
   const items = articles.slice(0,10).map(a => {
-    const title = a[`title_${currentLang}`] || a.title_ro || a.title_ru || a.title_en || '';
+    const title = field(a, 'title');
     const href = `news.html?id=${a.id}`;
     return `<a class="ticker-item" href="${href}">● ${title}</a>`;
   });

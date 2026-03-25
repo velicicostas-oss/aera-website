@@ -314,11 +314,11 @@ body.dark .tth{left:22px;background:var(--text);}
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
-  <a class="bc-link" href="index.html">Главная</a>
+  <a class="bc-link" href="index.html" id="bc-home">Home</a>
   <span class="bc-sep">›</span>
-  <a class="bc-link" href="#">Новости</a>
+  <a class="bc-link" href="#" id="bc-news">News</a>
   <span class="bc-sep">›</span>
-  <span class="bc-cur">Статья</span>
+  <span class="bc-cur" id="bc-cur">Article</span>
 </div>
 
 <!-- ARTICLE -->
@@ -591,9 +591,45 @@ let articleData = null;
 let relatedArticles = [];
 
 const NEWS_UI = {
-  ru:{nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'}, updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры', ask:'Вопрос редакции', askEditorial: 'Что-то не понятно? Спросите редакцию', askPlaceholder:'Спросите по теме статьи...', sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы', listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью', footerNote:'Проверенные новости · Обновление каждые 15 минут', verified:'Проверено', partial:'Частично', unverified:'Непроверено', whatMeansPrefix:'→ Что это значит:', explain10s:'Объяснить за 10 сек', askQuestion:'Задать вопрос'},
-  en:{nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'}, updated:'Updated', latest:'Related', keyFacts:'Key numbers', ask:'Ask the newsroom', askEditorial: 'Didn’t understand something? Ask the editorial team', askPlaceholder:'Ask about this story...', sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', allNews:'All news', moldovaImpact:'What this means for Moldova', listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full', footerNote:'Verified news · Updated every 15 minutes', verified:'Verified', partial:'Partial', unverified:'Unverified', whatMeansPrefix:'→ What it means:', explain10s:'Explain in 10s', askQuestion:'Ask a question'},
-  ro:{nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'}, updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie', ask:'Întrebare для redacție', askEditorial: 'Nu ai înțeles ceva? Întreabă redacția', askPlaceholder:'Întreabă despre acest articol...', sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova', listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet', footerNote:'Știri verificate · Actualizare la fiecare 15 minute', verified:'Verificat', partial:'Parțial', unverified:'Neverificat', whatMeansPrefix:'→ Ce înseamnă:', explain10s:'Explică în 10 sec', askQuestion:'Pune o întrebare'}
+  ru:{
+    nav:{moldova:'Молдова',world:'Мир',economy:'Экономика',politics:'Политика',security:'Безопасность',technology:'Технологии'},
+    bc:{home:'Главная',news:'Новости',article:'Статья'},
+    updated:'Обновлено', latest:'По теме', keyFacts:'Ключевые цифры',
+    ask:'Вопрос редакции', askEditorial: 'Что-то не понятно? Спросите редакцию', askPlaceholder:'Спросите по теме статьи...',
+    sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', copied:'✓ Скопировано',
+    allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы',
+    listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью',
+    footerNote:'Проверенные новости · Обновление каждые 15 минут',
+    verified:'Проверено', partial:'Частично', unverified:'Непроверено',
+    whatMeansPrefix:'→ Что это значит:', explain10s:'Объяснить за 10 сек', askQuestion:'Задать вопрос',
+    cookies:{text:'🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.', accept:'Принять', decline:'Отклонить'}
+  },
+  en:{
+    nav:{moldova:'Moldova',world:'World',economy:'Economy',politics:'Politics',security:'Security',technology:'Technology'},
+    bc:{home:'Home',news:'News',article:'Article'},
+    updated:'Updated', latest:'Related', keyFacts:'Key numbers',
+    ask:'Ask the newsroom', askEditorial: 'Didn’t understand something? Ask the editorial team', askPlaceholder:'Ask about this story...',
+    sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', copied:'✓ Copied',
+    allNews:'All news', moldovaImpact:'What this means for Moldova',
+    listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full',
+    footerNote:'Verified news · Updated every 15 minutes',
+    verified:'Verified', partial:'Partial', unverified:'Unverified',
+    whatMeansPrefix:'→ What it means:', explain10s:'Explain in 10s', askQuestion:'Ask a question',
+    cookies:{text:'🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance improvements, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.', accept:'Accept', decline:'Decline'}
+  },
+  ro:{
+    nav:{moldova:'Moldova',world:'Lume',economy:'Economie',politics:'Politică',security:'Securitate',technology:'Tehnologie'},
+    bc:{home:'Acasă',news:'Știri',article:'Articol'},
+    updated:'Actualizat', latest:'Pe subiect', keyFacts:'Cifre-cheie',
+    ask:'Întrebare pentru redacție', askEditorial: 'Nu ai înțeles ceva? Întreabă redacția', askPlaceholder:'Întreabă despre acest articol...',
+    sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', copied:'✓ Copiat',
+    allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova',
+    listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet',
+    footerNote:'Știri verificate · Actualizare la fiecare 15 minute',
+    verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
+    whatMeansPrefix:'→ Ce înseamnă:', explain10s:'Explică în 10 sec', askQuestion:'Pune o întrebare',
+    cookies:{text:'🍪 <strong>Folosim cookie-uri.</strong> Acest site folosește cookie-uri pentru analiză, îmbunătățirea performanței și personalizarea conținutului. Apăsând „Acceptă", ești de acord cu <a href="cookies.html">politica noastră privind cookie-urile</a>.', accept:'Acceptă', decline:'Refuză'}
+  }
 };
 
 function translateCategory(cat){
@@ -643,26 +679,40 @@ function applyNewsUi(){
   if (!t) return;
   document.documentElement.lang=currentLang;
   document.querySelectorAll('.ni[data-section]').forEach(el=>el.textContent=t.nav[el.dataset.section]||el.textContent);
-  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent=t.askEditorial;
-  const askIn=document.querySelector('.ask-in'); if(askIn) askIn.placeholder=t.askPlaceholder;
+  
+  // Breadcrumbs
+  const bcHome = document.getElementById('bc-home'); if(bcHome) bcHome.textContent = t.bc.home;
+  const bcNews = document.getElementById('bc-news'); if(bcNews) bcNews.textContent = t.bc.news;
+  const bcCur = document.getElementById('bc-cur'); if(bcCur) bcCur.textContent = t.bc.article;
+
+  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent = t.askEditorial;
+  const askIn=document.querySelector('.ask-in'); if(askIn) askIn.placeholder = t.askPlaceholder;
   
   const whatPrefix = document.getElementById('art-what-prefix'); if(whatPrefix) whatPrefix.textContent = t.whatMeansPrefix;
   const lab10s = document.getElementById('btn-10s-label'); if(lab10s) lab10s.textContent = t.explain10s;
   const labAsk = document.getElementById('btn-ask-label'); if(labAsk) labAsk.textContent = t.askQuestion;
 
-  const sourcesLabel=document.querySelector('.sources-label'); if(sourcesLabel) sourcesLabel.textContent=t.sources;
-  const shareLabel=document.querySelector('.share-label'); if(shareLabel) shareLabel.textContent=t.share;
+  const sourcesLabel=document.querySelector('.sources-label'); if(sourcesLabel) sourcesLabel.textContent = t.sources;
+  const shareLabel=document.querySelector('.share-label'); if(shareLabel) shareLabel.textContent = t.share;
   const btns=document.querySelectorAll('.share-btn'); 
   btns.forEach(btn => {
-    if (btn.textContent.includes('Telegram')) btn.textContent = t.telegram;
-    if (btn.textContent.includes('Скопировать') || btn.textContent.includes('Copy') || btn.textContent.includes('Copiază')) btn.textContent = t.copy;
+    if (btn.id === 'copy-btn') btn.textContent = t.copy;
+    else if (btn.textContent.includes('Telegram')) btn.textContent = t.telegram;
   });
-  const md=document.querySelector('.md-header-label'); if(md) md.textContent=t.moldovaImpact;
-  const back=document.querySelector('a[href="index.html"] span'); if(back) back.textContent=t.allNews;
-  const footer=document.querySelector('.fnote'); if(footer) footer.textContent=t.footerNote;
-  const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent=t.read10; if(readBtns[1]) readBtns[1].textContent=t.readFull;
-  if(!playing){ const play=document.getElementById('play-label'); if(play) play.textContent=t.listen; }
-  const relatedHdr=document.querySelectorAll('.sb-block-hdr'); if(relatedHdr[0]) relatedHdr[0].textContent=t.keyFacts; if(relatedHdr[1]) relatedHdr[1].textContent=t.latest;
+
+  const md=document.querySelector('.md-header-label'); if(md) md.textContent = t.moldovaImpact;
+  const back=document.querySelector('a[href="index.html"] span'); if(back) back.textContent = t.allNews;
+  const footer=document.querySelector('.fnote'); if(footer) footer.textContent = t.footerNote;
+  const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent = t.read10; if(readBtns[1]) readBtns[1].textContent = t.readFull;
+  
+  if(!playing){ 
+    const play=document.getElementById('play-label'); 
+    if(play) play.textContent = t.listen; 
+  }
+  
+  const sbHeaders = document.querySelectorAll('.sb-block-hdr');
+  if(sbHeaders[0]) sbHeaders[0].textContent = t.keyFacts;
+  if(sbHeaders[1]) sbHeaders[1].textContent = t.latest;
   
   const breakingLabel = document.getElementById('breaking-label');
   if (breakingLabel) breakingLabel.textContent = (currentLang === 'ro' ? 'ÎN DIRECT' : currentLang === 'en' ? 'LIVE' : 'В ЭФИРЕ');
@@ -688,15 +738,8 @@ async function loadArticle() {
 
 function renderArticle(article) {
   if (!article) return;
-  if (idParam) { articleId = idParam; }
   
-  document.querySelectorAll('.lb').forEach(btn => {
-    if (btn.textContent.toLowerCase() === currentLang) btn.classList.add('on');
-    else btn.classList.remove('on');
-  });
-
   applyNewsUi();
-  loadArticle();
   const t = NEWS_UI[currentLang];
   const title = field(article, 'title');
   document.title = title + ' · AERA';
@@ -870,9 +913,10 @@ function setLang(el){
 function setNav(el){ const section=el.dataset.section; window.location.href = `index.html?section=${section}`; }
 
 function copyLink(){
+  const t = NEWS_UI[currentLang];
   navigator.clipboard.writeText(window.location.href).then(()=>{
     const btn=document.getElementById('copy-btn');
-    if(btn){const orig=btn.textContent;btn.textContent='✓ Скопировано';setTimeout(()=>btn.textContent=orig,1500);}
+    if(btn){const orig=btn.textContent;btn.textContent=t.copied;setTimeout(()=>btn.textContent=orig,1500);}
   }).catch(()=>{
     const ta=document.createElement('textarea');ta.value=window.location.href;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
   });
@@ -903,7 +947,10 @@ const COOKIE_TEXTS = {
 };
 function updateCookieBanner(){
   const el = document.getElementById('cookie-text');
-  if(el) el.innerHTML = COOKIE_TEXTS[currentLang] || COOKIE_TEXTS.ru;
+  const t = NEWS_UI[currentLang].cookies;
+  if(el) el.innerHTML = t.text;
+  const dec = document.querySelector('.cookie-bar-decline'); if(dec) dec.textContent = t.decline;
+  const acc = document.querySelector('.cookie-bar-btn'); if(acc) acc.textContent = t.accept;
 }
 function acceptCookies(){ localStorage.setItem('aera_cookies_ok','1'); document.getElementById('cookie-bar').style.display='none'; }
 function declineCookies(){ localStorage.setItem('aera_cookies_ok','0'); document.getElementById('cookie-bar').style.display='none'; }
