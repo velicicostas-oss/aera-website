@@ -56,6 +56,49 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;tra
 .tth{width:16px;height:16px;border-radius:50%;background:var(--text2);position:absolute;top:2px;left:2px;transition:left .3s,background .3s;}
 body.dark .tth{left:22px;background:var(--text);}
 
+/* MORE MENU */
+.more-menu{
+  display:none;position:absolute;top:100%;right:0;width:180px;
+  background:var(--bg);border:1px solid var(--border);border-radius:12px;
+  box-shadow:var(--shadow);z-index:300;padding:8px 0;margin-top:8px;
+}
+.more-menu.show{display:block;}
+.mi{padding:10px 16px;font-size:13px;color:var(--text2);cursor:pointer;transition:all .15s;}
+.mi:hover{background:var(--bg2);color:var(--text);}
+.nav-mid{position:relative;}
+
+/* FILTER PANEL */
+.filt-btn{
+  display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;
+  border:1px solid var(--border);background:var(--bg2);font-size:12px;font-weight:600;
+  color:var(--text2);cursor:pointer;transition:all .2s;
+}
+.filt-btn:hover{border-color:var(--border2);color:var(--text);}
+.filt-panel{
+  position:fixed;top:0;right:-400px;width:400px;height:100vh;
+  background:var(--bg);border-left:1px solid var(--border);
+  box-shadow:var(--shadow);z-index:1000;transition:right .4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding:40px;display:flex;flex-direction:column;
+}
+.filt-panel.on{right:0;}
+.filt-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;}
+.filt-ttl{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;}
+.filt-close{font-size:24px;cursor:pointer;color:var(--text3);background:none;border:none;}
+.filt-scrolly{flex:1;overflow-y:auto;padding-right:10px;}
+.filt-scrolly::-webkit-scrollbar{width:4px;}
+.filt-scrolly::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.f-grp{margin-bottom:28px;}
+.f-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:12px;}
+.f-opts{display:flex;flex-wrap:wrap;gap:8px;}
+.f-opt{
+  padding:7px 14px;border-radius:18px;border:1px solid var(--border);
+  font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s;
+}
+.f-opt:hover{border-color:var(--border2);}
+.f-opt.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.f-advanced{margin-top:20px;padding-top:20px;border-top:1px solid var(--border);display:none;}
+.f-adv-toggle{font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;display:inline-block;margin-top:10px;}
+
 /* ── HERO ── */
 .hero{display:grid;grid-template-columns:1fr 360px;border-bottom:1px solid var(--border);}
 .hero-l{border-right:1px solid var(--border);}
@@ -175,6 +218,9 @@ body.dark .tth{left:22px;background:var(--text);}
 .mtg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
 .mty{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
 .mtr{background:var(--tr-bg);border-color:var(--tr-b);color:var(--tr-txt);}
+.mt-money{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
+.mt-reg{background:var(--bg3);border-color:var(--border);color:var(--text3);}
+.ccat-row{display:flex;gap:4px;flex-wrap:wrap;}
 
 /* ── SECTION ── */
 .sec{max-width:1200px;margin:0 auto;padding:0 40px;}
@@ -194,7 +240,7 @@ body.dark .tth{left:22px;background:var(--text);}
 .card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s;}
 .card:hover .card-img{transform:scale(1.05);}
 .card-body{padding:20px;display:flex;flex-direction:column;flex:1;}
-.cdeck{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;overflow:hidden;}
+.cdeck{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;line-clamp:6;overflow:hidden;}
 .cfoot{margin-top:auto;}
 .see-all{display:inline-flex;align-items:center;text-decoration:none;}
 .ccat{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:8px;}
@@ -281,15 +327,37 @@ body.dark .tth{left:22px;background:var(--text);}
     <div class="logo-dot"></div>
   </a>
   <div class="nav-mid">
-    <div class="ni on" data-section="moldova" onclick="setNav(this)">Молдова</div>
+    <div class="ni on" data-section="all" onclick="setNav(this)">Все</div>
+    <div class="ni" data-section="important" onclick="setNav(this)">Важное</div>
+    <div class="ni" data-section="moldova" onclick="setNav(this)">Молдова</div>
     <div class="ni" data-section="world" onclick="setNav(this)">Мир</div>
-    <div class="ni" data-section="economy" onclick="setNav(this)">Экономика</div>
     <div class="ni" data-section="politics" onclick="setNav(this)">Политика</div>
+    <div class="ni" data-section="money" onclick="setNav(this)">Деньги</div>
     <div class="ni" data-section="security" onclick="setNav(this)">Безопасность</div>
     <div class="ni" data-section="technology" onclick="setNav(this)">Технологии</div>
-    <div class="ni" style="color:var(--text3)">+ Все темы</div>
+    <div class="ni" data-section="whatMeans" onclick="setNav(this)">Что это значит</div>
+    <div class="ni" id="nav-more-btn" onclick="toggleMoreMenu()">+ Ещё</div>
+    
+    <!-- More Menu Dropdown -->
+    <div id="more-menu" class="more-menu">
+      <div class="mi" data-section="geopolitics" onclick="setNav(this)">Геополитика</div>
+      <div class="mi" data-section="shortreads" onclick="setNav(this)">Коротко</div>
+      <div class="mi" data-section="trends" onclick="setNav(this)">Тренды</div>
+      <div class="mi" data-section="verified" onclick="setNav(this)">Проверено</div>
+      <div class="mi" data-section="opinions" onclick="setNav(this)">Мнения</div>
+      <div class="mi" data-section="analysis" onclick="setNav(this)">Анализ</div>
+    </div>
   </div>
   <div class="nav-r">
+    <button class="filt-btn" onclick="toggleFilter()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <line x1="2" y1="4" x2="12" y2="4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="2" y1="10" x2="12" y2="10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <circle cx="5" cy="4" r="1.5" fill="var(--bg)" stroke="currentColor" stroke-width="1.2"/>
+        <circle cx="9" cy="10" r="1.5" fill="var(--bg)" stroke="currentColor" stroke-width="1.2"/>
+      </svg>
+      <span id="filt-label">Настроить поток</span>
+    </button>
     <div class="lang-row">
       <button class="lb" onclick="setLang(this)">RO</button>
       <button class="lb on" onclick="setLang(this)">RU</button>
@@ -298,6 +366,76 @@ body.dark .tth{left:22px;background:var(--text);}
     <button class="tbtn" onclick="toggleTheme()" title="Тёмная / светлая тема"><div class="tth"></div></button>
   </div>
 </nav>
+
+<!-- FILTER PANEL -->
+<div class="filt-panel" id="filt-panel">
+  <div class="filt-hdr">
+    <div class="filt-ttl" id="filt-ttl">Customize Feed</div>
+    <button class="filt-close" onclick="toggleFilter()">×</button>
+  </div>
+  <div class="filt-scrolly">
+    <div class="f-grp">
+      <div class="f-label" id="f-lab-meaning">Meaning</div>
+      <div class="f-opts">
+        <div class="f-opt" data-f="what-it-means">What It Means</div>
+        <div class="f-opt" data-f="important-now">Important Now</div>
+        <div class="f-opt" data-f="money-impact">Money Impact</div>
+        <div class="f-opt" data-f="world-impact">World Impact</div>
+        <div class="f-opt" data-f="plain-news">Plain News</div>
+      </div>
+    </div>
+    <div class="f-grp">
+      <div class="f-label" id="f-lab-region">Region</div>
+      <div class="f-opts">
+        <div class="f-opt" data-f="moldova">Moldova</div>
+        <div class="f-opt" data-f="world">World</div>
+        <div class="f-opt" data-f="geopolitics">Geopolitics</div>
+      </div>
+    </div>
+    
+    <div class="f-adv-toggle" id="f-adv-toggle" onclick="toggleAdvancedFilters()">Advanced Options +</div>
+    
+    <div class="f-advanced" id="f-advanced">
+      <div class="f-grp">
+        <div class="f-label" id="f-lab-time">Time</div>
+        <div class="f-opts">
+          <div class="f-opt" data-f="live">Live</div>
+          <div class="f-opt" data-f="1h">1 hour</div>
+          <div class="f-opt" data-f="24h">24 hours</div>
+          <div class="f-opt" data-f="7d">7 days</div>
+        </div>
+      </div>
+      <div class="f-grp">
+        <div class="f-label" id="f-lab-content">Content Type</div>
+        <div class="f-opts">
+          <div class="f-opt" data-f="shortreads">Short Reads</div>
+          <div class="f-opt" data-f="analysis">Analysis</div>
+          <div class="f-opt" data-f="opinions">Opinions</div>
+          <div class="f-opt" data-f="verified">Verified</div>
+          <div class="f-opt" data-f="video">Video</div>
+        </div>
+      </div>
+      <div class="f-grp">
+        <div class="f-label" id="f-lab-importance">Importance</div>
+        <div class="f-opts">
+          <div class="f-opt" data-f="critical">Critical</div>
+          <div class="f-opt" data-f="important">Important</div>
+          <div class="f-opt" data-f="standard">Standard</div>
+          <div class="f-opt" data-f="background">Background</div>
+        </div>
+      </div>
+      <div class="f-grp">
+        <div class="f-label" id="f-lab-verification">Verification</div>
+        <div class="f-opts">
+          <div class="f-opt" data-f="verified-only">Verified only</div>
+          <div class="f-opt" data-f="partial">Partially verified</div>
+          <div class="f-opt" data-f="all-v">All</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button class="cookie-bar-btn" style="margin-top:20px;width:100%;" onclick="applyFilters()">Show Matches</button>
+</div>
 
 <!-- BREAKING NEWS BAR -->
 <div class="breaking-bar">
@@ -573,10 +711,87 @@ let allArticles = [];
 let activeSection = 'all';
 let playing = false;
 
+// ─── UI State & Logic ────────────────────────────────────────────────────────
+function toggleMoreMenu() {
+  const menu = document.getElementById('more-menu');
+  if (menu) menu.classList.toggle('show');
+}
+function toggleFilter() {
+  const panel = document.getElementById('filt-panel');
+  if (panel) panel.classList.toggle('on');
+}
+function toggleAdvancedFilters() {
+  const adv = document.getElementById('f-advanced');
+  const btn = document.getElementById('f-adv-toggle');
+  if (adv) {
+    const isShowing = adv.style.display === 'block';
+    adv.style.display = isShowing ? 'none' : 'block';
+    if (btn) btn.textContent = isShowing ? 'Advanced Options +' : 'Simple View -';
+  }
+}
+
+// Initializing Filters
+document.querySelectorAll('.f-opt').forEach(opt => {
+  opt.onclick = () => {
+    opt.classList.toggle('on');
+  };
+});
+
+function applyFilters() {
+  const activeFilters = Array.from(document.querySelectorAll('.f-opt.on')).map(el => el.dataset.f);
+  // Filtering logic will be integrated into loadArticles/renderPage
+  toggleFilter();
+  renderPage();
+}
+
+function isImportantNow(article) {
+  // Logic: score > 90 + published in last 6h, or manually high priority
+  const score = article.trust_score || 0;
+  const hoursAgo = (new Date() - new Date(article.published_at || article.created_at)) / (1000 * 60 * 60);
+  return (score > 90 && hoursAgo < 6) || article.priority === 'high' || article.priority === 'urgent';
+}
+
+function isTrending(article) {
+  // Logic: views > 100 + published in last 24h
+  const views = article.views || 0;
+  const hoursAgo = (new Date() - new Date(article.published_at || article.created_at)) / (1000 * 60 * 60);
+  return (views > 100 && hoursAgo < 24);
+}
+
+function getPriorityLabels(article) {
+  const labels = [];
+  const score = article.trust_score || 0;
+  
+  if (score >= 90) labels.push({ text: 'Verified', class: 'mtg' });
+  if (isImportantNow(article)) labels.push({ text: 'Important', class: 'mtr' });
+  if (isTrending(article)) labels.push({ text: 'Trending', class: 'mty' });
+  
+  if (article.category === 'money' || article.category === 'economy') labels.push({ text: 'Money', class: 'mt-money' });
+  if (article.moldova_context && article.moldova_context.length > 20) labels.push({ text: 'Explainer', class: 'mt-reg' });
+  
+  // Region label if not many labels
+  if (labels.length < 2 && article.region) labels.push({ text: article.region, class: 'mt-reg' });
+  
+  return labels.slice(0, 3);
+}
+
+function updateArticlePreview(article) {
+  const what = field(article, 'title');
+  const summary = field(article, 'summary10s') || field(article, 'summary1min') || '';
+  
+  // Sharper editorial logic: What happened, Why it matters, What it affects
+  // For now we use the summary, but in a real app we'd split the source text
+  return summary;
+}
+
 const UI = {
   ru: {
-    nav: {moldova:'Молдова', world:'Мир', economy:'Экономика', politics:'Политика', security:'Безопасность', technology:'Технологии', allTopics:'+ Все темы'},
-    tabs: {all:'Все', moldova:'Молдова', world:'Мир', economy:'Экономика', conflicts:'Конфликты'},
+    nav: {
+      all:'Все', moldova:'Молдова', world:'Мир', economy:'Экономика', politics:'Политика', security:'Безопасность', 
+      technology:'Технологии', important:'Важное', whatMeans:'Что это значит', money:'Деньги', 
+      geopolitics:'Геополитика', shortreads:'Коротко', trends:'Тренды', verified:'Проверено', opinions:'Мнения', analysis:'Анализ', more:'+ Ещё'
+    },
+    tabs: {all:'Все', moldova:'Молдова', world:'Мир', money:'Деньги', conflicts:'Конфликты'},
     latest:'Последние новости', refresh:'↻ 3 мин назад', sources:'Источники:', seeAll:'Все материалы →', updated:'Обновлено',
     read10:'10 сек', readFull:'Полностью',
     listen:'Слушать', playing:'Воспроизводится...', askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
@@ -584,16 +799,24 @@ const UI = {
     footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀'
   },
   en: {
-    nav: {moldova:'Moldova', world:'World', economy:'Economy', politics:'Politics', security:'Security', technology:'Technology', allTopics:'+ All topics'},
-    tabs: {all:'All', moldova:'Moldova', world:'World', economy:'Economy', conflicts:'Conflicts'},
+    nav: {
+      all:'All', moldova:'Moldova', world:'World', economy:'Economy', politics:'Politics', security:'Security', 
+      technology:'Technology', important:'Important', whatMeans:'What It Means', money:'Money',
+      geopolitics:'Geopolitics', shortreads:'Short Reads', trends:'Trends', verified:'Verified', opinions:'Opinions', analysis:'Analysis', more:'+ More'
+    },
+    tabs: {all:'All', moldova:'Moldova', world:'World', money:'Money', conflicts:'Conflicts'},
     latest:'Latest news', refresh:'↻ 3 min ago', sources:'Sources:', seeAll:'All stories →', updated:'Updated',
     read10:'10 sec', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
     moldovaImpact:'What this means for Moldova', verified:'Verified', partial:'Partial', unverified:'Unverified',
     footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀'
   },
   ro: {
-    nav: {moldova:'Moldova', world:'Lume', economy:'Economie', politics:'Politică', security:'Securitate', technology:'Tehnologie', allTopics:'+ Toate temele'},
-    tabs: {all:'Toate', moldova:'Moldova', world:'Lume', economy:'Economie', conflicts:'Conflicte'},
+    nav: {
+      all:'Toate', moldova:'Moldova', world:'Lume', economy:'Economie', politics:'Politică', security:'Securitate', 
+      technology:'Tehnologie', important:'Important', whatMeans:'Ce înseamnă', money:'Bani',
+      geopolitics:'Geopolitică', shortreads:'Pe scurt', trends:'Trenduri', verified:'Verificat', opinions:'Opinii', analysis:'Analiză', more:'+ Mai mult'
+    },
+    tabs: {all:'Toate', moldova:'Moldova', world:'Lume', money:'Bani', conflicts:'Conflicte'},
     latest:'Ultimele știri', refresh:'↻ acum 3 min', sources:'Surse:', seeAll:'Toate materialele →', updated:'Actualizat',
     read10:'10 sec', readFull:'Complet', listen:'Ascultă', playing:'Se redă...', askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
     moldovaImpact:'Ce înseamnă asta pentru Moldova', verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
@@ -641,19 +864,31 @@ function articleMatchesSection(article, section){
   const s = (section || 'all').toLowerCase();
   if (s === 'all') return true;
   const cat = (article.category || '').toLowerCase();
+  const region = (article.region || '').toLowerCase();
+  const tags = (article.tags || []).map(t => t.toLowerCase());
+  
   if (s === 'world') return cat.includes('world') || cat.includes('мир') || cat.includes('inter');
-  if (s === 'moldova') return cat.includes('moldova') || cat.includes('молдов');
-  if (s === 'economy') return cat.includes('econom') || cat.includes('эконом');
-  if (s === 'politics') return cat.includes('polit') || cat.includes('полит');
-  if (s === 'security') return cat.includes('secur') || cat.includes('безоп') || cat.includes('conflict');
-  if (s === 'technology') return cat.includes('tech') || cat.includes('техно');
-  if (s === 'conflicts') return cat.includes('conflict') || cat.includes('конфликт');
+  if (s === 'moldova') return region.includes('moldova') || cat.includes('moldova');
+  if (s === 'money' || s === 'economy') return cat.includes('money') || cat.includes('econom');
+  if (s === 'politics') return cat.includes('polit');
+  if (s === 'security') return cat.includes('secur') || cat.includes('conflict');
+  if (s === 'technology') return cat.includes('tech');
+  
+  if (s === 'important') return isImportantNow(article);
+  if (s === 'whatmeans') return cat.includes('means') || tags.includes('explainer');
+  if (s === 'trends') return isTrending(article);
+  if (s === 'shortreads') return (article.summary10s_ro?.length < 500);
+  if (s === 'verified') return (article.trust_score || 0) >= 90;
+  if (s === 'geopolitics') return cat.includes('geo') || tags.includes('geopolit');
+  if (s === 'opinions') return cat.includes('opin') || tags.includes('opinion');
+  if (s === 'analysis') return cat.includes('analys') || tags.includes('analysis');
+  
   return true;
 }
 function applyUiTranslations(){
   const t = UI[currentLang];
   document.documentElement.lang = currentLang;
-  document.querySelectorAll('.ni[data-section]').forEach(el => el.textContent = t.nav[el.dataset.section] || el.textContent);
+  document.querySelectorAll('.ni[data-section], .mi[data-section]').forEach(el => el.textContent = t.nav[el.dataset.section] || el.textContent);
   const allTopics = document.querySelector('.ni[style]'); if (allTopics) allTopics.textContent = t.nav.allTopics;
   document.querySelectorAll('.st[data-tab]').forEach(el => el.textContent = t.tabs[el.dataset.tab] || el.textContent);
   const sbTitle = document.querySelector('.sb-ttl'); if (sbTitle) sbTitle.textContent = t.latest;
@@ -666,6 +901,12 @@ function applyUiTranslations(){
   const btn10 = document.querySelector('.rm[onclick*="10s"]'); if (btn10) btn10.textContent = t.read10;
   const btnF = document.querySelector('.rm[onclick*="full"]'); if (btnF) btnF.textContent = t.readFull;
   if (!playing) { const playLabel = document.getElementById('play-label'); if (playLabel) playLabel.textContent = t.listen; }
+  
+  // Update Filter Panel Labels
+  const fTtl = document.getElementById('filt-ttl'); if (fTtl) fTtl.textContent = t.nav.more.replace('+ ', '');
+  const fBtn = document.getElementById('filt-label'); if (fBtn) fBtn.textContent = t.nav.more.replace('+ ', '');
+  
+  // Custom filter labels could be added here
 }
 
 async function loadArticles() {
@@ -686,7 +927,29 @@ async function loadArticles() {
 
 function renderPage(){
   applyUiTranslations();
-  const filtered = allArticles.filter(a => articleMatchesSection(a, activeSection));
+  
+  // Filter Logic Integration
+  const activeFilters = Array.from(document.querySelectorAll('.f-opt.on')).map(el => el.dataset.f);
+  
+  let filtered = allArticles.filter(a => articleMatchesSection(a, activeSection));
+  
+  if (activeFilters.length > 0) {
+    filtered = filtered.filter(a => {
+      // Meaning
+      if (activeFilters.includes('what-it-means') && !a.category.includes('means')) return false;
+      if (activeFilters.includes('important-now') && !isImportantNow(a)) return false;
+      if (activeFilters.includes('money-impact') && !(a.category === 'money' || a.category === 'economy')) return false;
+      
+      // Verification
+      if (activeFilters.includes('verified-only') && (a.trust_score || 0) < 80) return false;
+      
+      // Content Type
+      if (activeFilters.includes('shortreads') && (a.summary10s_ro?.length > 500)) return false; // Rough check
+      
+      return true;
+    });
+  }
+
   heroArticle = filtered[0] || allArticles[0] || null;
   if (heroArticle) renderHero(heroArticle);
   const rest = filtered.filter(a => !heroArticle || a.id !== heroArticle.id);
@@ -803,14 +1066,15 @@ function renderSidebar(articles) {
   sb.querySelectorAll('.sb-item').forEach(el => el.remove());
   articles.forEach(article => {
     const title = field(article,'title');
-    const score = Math.round(article.trust_score || 0);
-    const scoreClass = score >= 80 ? 'mtg' : score >= 50 ? 'mty' : 'mtr';
     const time = formatTime(article.created_at);
-    const cat = translateCategory(article.category || 'general');
+    const labels = getPriorityLabels(article);
+    const labelHtml = labels.map(l => `<span class="mt ${l.class}">${l.text}</span>`).join('');
+    
     const item = document.createElement('div');
     item.className = 'sb-item';
     item.onclick = () => window.location.href = `news.html?id=${article.id}`;
-    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + `<div><div class="sb-cat">${escapeHtml(cat)}</div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span><span class="mt ${scoreClass}">${score < 0 ? '?' : score}</span></div></div>`;
+    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + 
+      `<div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span>${labelHtml}</div></div>`;
     sb.appendChild(item);
   });
 }
@@ -821,16 +1085,24 @@ function renderGrid(articles) {
   grid.innerHTML = '';
   articles.forEach(article => {
     const title = field(article,'title');
-    const summary = field(article,'summary1min') || field(article,'summary10s');
-    const score = Math.round(article.trust_score || 0);
-    const scoreClass = score >= 80 ? 'tg' : score >= 50 ? 'ty' : 'tr';
+    const preview = updateArticlePreview(article);
     const time = formatTime(article.created_at);
-    const cat = translateCategory(article.category || 'general');
-    const card = document.createElement('a');
+    const labels = getPriorityLabels(article);
+    const labelHtml = labels.map(l => `<span class="mt ${l.class}" style="margin-right:4px;">${l.text}</span>`).join('');
+    
+    const card = document.createElement('div');
     card.className = 'card';
-    card.href = `news.html?id=${article.id}`;
-    card.style.textDecoration = 'none';
-    card.innerHTML = `<div class="card-img-wrap">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div><div class="card-body"><div class="ccat">${escapeHtml(cat)}</div><div class="ched">${escapeHtml(title)}</div><div class="cdeck">${escapeHtml(summary)}</div><div class="cfoot"><span class="ctime">${time}</span><div class="trust ${scoreClass}" style="font-size:10px;padding:3px 9px;">${score < 0 ? '?' : score + '/100'} ⓘ</div></div></div>`;
+    card.innerHTML = `
+      <div class="card-img-wrap" onclick="window.location.href='news.html?id=${article.id}'">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div>
+      <div class="card-body">
+        <div class="ccat-row" style="margin-bottom:8px;">${labelHtml}</div>
+        <div class="ched" onclick="window.location.href='news.html?id=${article.id}'">${escapeHtml(title)}</div>
+        <div class="cdeck">${escapeHtml(preview)}</div>
+        <div class="cfoot">
+          <span class="ctime">${time}</span>
+          <button class="rm" style="padding:4px 8px;font-size:10px;border-radius:4px;" onclick="event.stopPropagation(); alert('Quick Summary: '+field(allArticles.find(a=>a.id==${article.id}),'summary10s'))">10s Explain</button>
+        </div>
+      </div>`;
     grid.appendChild(card);
   });
   if (articles.length === 0) grid.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--text3);">${UI[currentLang].empty}</div>`;
