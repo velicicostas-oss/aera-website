@@ -46,6 +46,10 @@ const STATIC_TRANSLATIONS = {
     navOpinions: 'Opinii',
     navAnalysis: 'Analiză',
     navMore: 'Mai mult',
+    whatItMeansPrefix: '→ Ce înseamnă:',
+    explain10s: 'Explică în 10 sec',
+    askQuestion: 'Pune o întrebare',
+    askEditorial: 'Nu ai înțeles ceva? Întreabă redacția',
 
     // About page
     aboutTitle: 'Despre noi',
@@ -249,6 +253,10 @@ const STATIC_TRANSLATIONS = {
     navOpinions: 'Opinions',
     navAnalysis: 'Analysis',
     navMore: 'More',
+    whatItMeansPrefix: '→ What it means:',
+    explain10s: 'Explain in 10 sec',
+    askQuestion: 'Ask a question',
+    askEditorial: 'Didn’t understand something? Ask the editorial team',
 
     // About page
     aboutTitle: 'About Us',
@@ -452,6 +460,10 @@ const STATIC_TRANSLATIONS = {
     navOpinions: 'Мнения',
     navAnalysis: 'Анализ',
     navMore: 'Ещё',
+    whatItMeansPrefix: '→ Что это значит:',
+    explain10s: 'Объяснить за 10 сек',
+    askQuestion: 'Задать вопрос',
+    askEditorial: 'Что-то не понятно? Спросите редакцию',
 
     // About page
     aboutTitle: 'О нас',

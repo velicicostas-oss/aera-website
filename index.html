@@ -240,7 +240,7 @@ body.dark .tth{left:22px;background:var(--text);}
 .card-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .45s;}
 .card:hover .card-img{transform:scale(1.05);}
 .card-body{padding:20px;display:flex;flex-direction:column;flex:1;}
-.cdeck{display:-webkit-box;-webkit-line-clamp:6;-webkit-box-orient:vertical;line-clamp:6;overflow:hidden;}
+.cdeck{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-clamp:2;overflow:hidden;}
 .cfoot{margin-top:auto;}
 .see-all{display:inline-flex;align-items:center;text-decoration:none;}
 .ccat{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);font-weight:600;margin-bottom:8px;}
@@ -775,13 +775,16 @@ function getPriorityLabels(article) {
   return labels.slice(0, 3);
 }
 
-function updateArticlePreview(article) {
-  const what = field(article, 'title');
-  const summary = field(article, 'summary10s') || field(article, 'summary1min') || '';
-  
-  // Sharper editorial logic: What happened, Why it matters, What it affects
-  // For now we use the summary, but in a real app we'd split the source text
+function getCardPreview(article) {
+  const summary = field(article, 'summary10s') || '';
+  if (!summary) return '';
+  // Ensure we have a short, punchy 2-line preview
+  // If it's too long, the CSS will clamp it, but we can also truncate here
   return summary;
+}
+
+function updateArticlePreview(article) {
+  return getCardPreview(article);
 }
 
 const UI = {
