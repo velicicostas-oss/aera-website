@@ -791,6 +791,16 @@ const UI = {
       technology:'Технологии', important:'Важное', whatMeans:'Что это значит', money:'Деньги', 
       geopolitics:'Геополитика', shortreads:'Коротко', trends:'Тренды', verified:'Проверено', opinions:'Мнения', analysis:'Анализ', more:'+ Ещё'
     },
+    filter: {
+      title:'Настроить поток', meaning:'Смысл', region:'Регион', time:'Время', content:'Тип контента', importance:'Важность', verification:'Верификация',
+      whatMeans:'Что это значит', importantNow:'Важное сейчас', moneyImpact:'Денежный эффект', worldImpact:'Мировой эффект', plainNews:'Просто новости',
+      moldova:'Молдова', world:'Весь мир', geopolitics:'Геополитика',
+      live:'В эфире', h1:'1 час', h24:'24 часа', d7:'7 дней',
+      shortreads:'Коротко', analysis:'Анализ', opinions:'Мнения', verifiedOnly:'Только проверено', video:'Видео',
+      critical:'Критическое', important:'Важное', standard:'Стандарт', background:'Контекст',
+      vOnly:'Только проверено', vPartial:'Частично', vAll:'Все',
+      advanced:'Расширенные настройки +', showMatches:'Показать результаты'
+    },
     tabs: {all:'Все', moldova:'Молдова', world:'Мир', money:'Деньги', conflicts:'Конфликты'},
     latest:'Последние новости', refresh:'↻ 3 мин назад', sources:'Источники:', seeAll:'Все материалы →', updated:'Обновлено',
     read10:'10 сек', readFull:'Полностью',
@@ -804,6 +814,16 @@ const UI = {
       technology:'Technology', important:'Important', whatMeans:'What It Means', money:'Money',
       geopolitics:'Geopolitics', shortreads:'Short Reads', trends:'Trends', verified:'Verified', opinions:'Opinions', analysis:'Analysis', more:'+ More'
     },
+    filter: {
+      title:'Customize Feed', meaning:'Meaning', region:'Region', time:'Time', content:'Content Type', importance:'Importance', verification:'Verification',
+      whatMeans:'What It Means', importantNow:'Important Now', moneyImpact:'Money Impact', worldImpact:'World Impact', plainNews:'Plain News',
+      moldova:'Moldova', world:'World', geopolitics:'Geopolitics',
+      live:'Live', h1:'1 hour', h24:'24 hours', d7:'7 days',
+      shortreads:'Short Reads', analysis:'Analysis', opinions:'Opinions', verifiedOnly:'Verified only', video:'Video',
+      critical:'Critical', important:'Important', standard:'Standard', background:'Background',
+      vOnly:'Verified only', vPartial:'Partially verified', vAll:'All',
+      advanced:'Advanced Options +', showMatches:'Show Matches'
+    },
     tabs: {all:'All', moldova:'Moldova', world:'World', money:'Money', conflicts:'Conflicts'},
     latest:'Latest news', refresh:'↻ 3 min ago', sources:'Sources:', seeAll:'All stories →', updated:'Updated',
     read10:'10 sec', readFull:'Full', listen:'Listen', playing:'Playing...', askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
@@ -815,6 +835,16 @@ const UI = {
       all:'Toate', moldova:'Moldova', world:'Lume', economy:'Economie', politics:'Politică', security:'Securitate', 
       technology:'Tehnologie', important:'Important', whatMeans:'Ce înseamnă', money:'Bani',
       geopolitics:'Geopolitică', shortreads:'Pe scurt', trends:'Trenduri', verified:'Verificat', opinions:'Opinii', analysis:'Analiză', more:'+ Mai mult'
+    },
+    filter: {
+      title:'Personalizare Flux', meaning:'Sens', region:'Regiune', time:'Timp', content:'Tip conținut', importance:'Importanță', verification:'Verificare',
+      whatMeans:'Ce înseamnă', importantNow:'Important acum', moneyImpact:'Impact financiar', worldImpact:'Impact mondial', plainNews:'Știri simple',
+      moldova:'Moldova', world:'Lume', geopolitics:'Geopolitică',
+      live:'Live', h1:'1 oră', h24:'24 ore', d7:'7 zile',
+      shortreads:'Pe scurt', analysis:'Analiză', opinions:'Opinii', verifiedOnly:'Doar verificate', video:'Video',
+      critical:'Critic', important:'Important', standard:'Standard', background:'Context',
+      vOnly:'Doar verificate', vPartial:'Parțial verificate', vAll:'Toate',
+      advanced:'Opțiuni avansate +', showMatches:'Afișează rezultate'
     },
     tabs: {all:'Toate', moldova:'Moldova', world:'Lume', money:'Bani', conflicts:'Conflicte'},
     latest:'Ultimele știri', refresh:'↻ acum 3 min', sources:'Surse:', seeAll:'Toate materialele →', updated:'Actualizat',
@@ -903,10 +933,23 @@ function applyUiTranslations(){
   if (!playing) { const playLabel = document.getElementById('play-label'); if (playLabel) playLabel.textContent = t.listen; }
   
   // Update Filter Panel Labels
-  const fTtl = document.getElementById('filt-ttl'); if (fTtl) fTtl.textContent = t.nav.more.replace('+ ', '');
-  const fBtn = document.getElementById('filt-label'); if (fBtn) fBtn.textContent = t.nav.more.replace('+ ', '');
+  const f = t.filter;
+  const fTtl = document.getElementById('filt-ttl'); if (fTtl) fTtl.textContent = f.title;
+  const fLabM = document.getElementById('f-lab-meaning'); if (fLabM) fLabM.textContent = f.meaning;
+  const fLabR = document.getElementById('f-lab-region'); if (fLabR) fLabR.textContent = f.region;
+  const fLabT = document.getElementById('f-lab-time'); if (fLabT) fLabT.textContent = f.time;
+  const fLabC = document.getElementById('f-lab-content'); if (fLabC) fLabC.textContent = f.content;
+  const fLabI = document.getElementById('f-lab-importance'); if (fLabI) fLabI.textContent = f.importance;
+  const fLabV = document.getElementById('f-lab-verification'); if (fLabV) fLabV.textContent = f.verification;
   
-  // Custom filter labels could be added here
+  const fAdv = document.getElementById('f-adv-toggle'); if (fAdv) fAdv.textContent = f.advanced;
+  const fShow = document.querySelector('.filt-panel .cookie-bar-btn'); if (fShow) fShow.textContent = f.showMatches;
+  
+  // Update Filter Options
+  document.querySelectorAll('.f-opt[data-f]').forEach(el => {
+    const key = el.dataset.f.replace(/-./g, x => x[1].toUpperCase());
+    if (f[key]) el.textContent = f[key];
+  });
 }
 
 async function loadArticles() {
