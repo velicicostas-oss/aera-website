@@ -214,6 +214,28 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
 .ask-ans-body{padding:12px 15px;}
 .ask-ans-txt{font-size:13px;color:var(--text2);line-height:1.75;white-space:pre-line;}
 
+/* ── CONTENT UNIT BLOCKS ── */
+.cu-bullets{margin:10px 0 14px;padding:0;list-style:none;display:flex;flex-direction:column;gap:6px;}
+.cu-bullet{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text2);line-height:1.6;}
+.cu-bullet::before{content:'•';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px;}
+.cu-block{margin-top:16px;padding:12px 14px;border-radius:8px;background:var(--bg2);border-left:3px solid var(--accent);}
+.cu-block-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
+.cu-block-txt{font-size:13px;color:var(--text2);line-height:1.7;}
+.cu-impact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px;}
+.cu-impact-item{padding:10px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);}
+.cu-impact-ico{font-size:14px;margin-bottom:4px;}
+.cu-impact-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:3px;}
+.cu-impact-txt{font-size:12px;color:var(--text2);line-height:1.5;}
+.cu-next{margin-top:16px;padding:12px 14px;border-radius:8px;background:var(--ty-bg);border:1px solid var(--ty-b);}
+.cu-next-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ty-txt);margin-bottom:6px;}
+.cu-next-list{padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;}
+.cu-next-item{display:flex;gap:7px;align-items:flex-start;font-size:12px;color:var(--ty-txt);line-height:1.5;}
+.cu-next-item::before{content:'→';flex-shrink:0;}
+.cu-status{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-left:8px;}
+.cu-status.live{background:#fee;color:#c0392b;}
+.cu-status.developing{background:var(--ty-bg);color:var(--ty-txt);}
+.cu-status.verified{background:var(--tg-bg);color:var(--tg-txt);}
+
 .sources{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
 .stag{font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);}
 
@@ -484,6 +506,37 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
       </div>
       <h1 class="h1">Иранские дроны блокируют Ормузский пролив — США перебрасывают авианосец</h1>
       <p class="deck">Пентагон подтверждает переброску USS Eisenhower в Персидский залив. Нефть подорожала на 6% за первые 20 минут торгов. Турция вызвала послов.</p>
+
+      <!-- AERA Content Unit: bullets -->
+      <ul class="cu-bullets" id="cu-bullets" style="display:none;"></ul>
+      <!-- AERA Content Unit: what means -->
+      <div class="cu-block" id="cu-what-means" style="display:none;">
+        <div class="cu-block-lbl" id="cu-what-means-lbl">Что это значит</div>
+        <div class="cu-block-txt" id="cu-what-means-txt"></div>
+      </div>
+      <!-- AERA Content Unit: impact -->
+      <div class="cu-impact" id="cu-impact" style="display:none;">
+        <div class="cu-impact-item">
+          <div class="cu-impact-ico">👥</div>
+          <div class="cu-impact-lbl" id="cu-impact-people-lbl">Люди</div>
+          <div class="cu-impact-txt" id="cu-impact-people-txt"></div>
+        </div>
+        <div class="cu-impact-item">
+          <div class="cu-impact-ico">💰</div>
+          <div class="cu-impact-lbl" id="cu-impact-economy-lbl">Экономика</div>
+          <div class="cu-impact-txt" id="cu-impact-economy-txt"></div>
+        </div>
+        <div class="cu-impact-item" id="cu-impact-moldova-wrap">
+          <div class="cu-impact-ico">🇲🇩</div>
+          <div class="cu-impact-lbl">Молдова</div>
+          <div class="cu-impact-txt" id="cu-impact-moldova-txt"></div>
+        </div>
+      </div>
+      <!-- AERA Content Unit: next steps -->
+      <div class="cu-next" id="cu-next" style="display:none;">
+        <div class="cu-next-lbl" id="cu-next-lbl">Что будет дальше</div>
+        <ul class="cu-next-list" id="cu-next-list"></ul>
+      </div>
 
       <!-- TRUST SCORE с тултипом -->
       <div class="trust-wrap" id="trust-wrap">
@@ -986,7 +1039,8 @@ function applyUiTranslations(){
 
   updateBreakingLabel();
   updateCookieBanner();
-  
+  if (heroArticle) renderContentUnit(heroArticle);
+
   // Update Filter Panel Labels
   const f = t.filter;
   const fTtl = document.getElementById('filt-ttl'); if (fTtl) fTtl.textContent = f.title;
@@ -1210,8 +1264,107 @@ function renderHero(article) {
     }
   }
 
+  // Render AERA Content Unit blocks
+  renderContentUnit(article);
+
   // Reset Ask Q&A box for new article
   if (article.id) resetAskBox(article.id);
+}
+
+function renderContentUnit(article) {
+  const t = UI[currentLang];
+  const lang = currentLang;
+
+  // Helper: parse JSONB field by language
+  function cuField(base, fallback) {
+    let raw = article[base];
+    if (!raw) return fallback;
+    if (typeof raw === 'string') {
+      try { raw = JSON.parse(raw); } catch(e) { return fallback; }
+    }
+    if (typeof raw === 'object' && raw[lang]) return raw[lang];
+    return fallback;
+  }
+
+  // Bullets
+  const bullets = cuField('summary_bullets', []);
+  const bulletsEl = document.getElementById('cu-bullets');
+  if (bulletsEl) {
+    if (Array.isArray(bullets) && bullets.length > 0) {
+      bulletsEl.innerHTML = bullets.map(b => `<li class="cu-bullet">${escapeHtml(b)}</li>`).join('');
+      bulletsEl.style.display = 'flex';
+    } else {
+      bulletsEl.style.display = 'none';
+    }
+  }
+
+  // What means
+  const whatMeans = cuField('what_means', '');
+  const wmEl = document.getElementById('cu-what-means');
+  const wmTxt = document.getElementById('cu-what-means-txt');
+  const wmLbl = document.getElementById('cu-what-means-lbl');
+  if (wmEl && wmTxt) {
+    if (whatMeans && whatMeans.length > 5) {
+      if (wmLbl) wmLbl.textContent = lang === 'ro' ? 'Ce înseamnă asta' : lang === 'en' ? 'What This Means' : 'Что это значит';
+      wmTxt.textContent = whatMeans;
+      wmEl.style.display = 'block';
+    } else {
+      wmEl.style.display = 'none';
+    }
+  }
+
+  // Impact
+  const impact = cuField('impact', null);
+  const impactEl = document.getElementById('cu-impact');
+  if (impactEl && impact && typeof impact === 'object') {
+    const peopleTxt = document.getElementById('cu-impact-people-txt');
+    const econTxt = document.getElementById('cu-impact-economy-txt');
+    const moldovaTxt = document.getElementById('cu-impact-moldova-txt');
+    const peopleLbl = document.getElementById('cu-impact-people-lbl');
+    const econLbl = document.getElementById('cu-impact-economy-lbl');
+    if (peopleLbl) peopleLbl.textContent = lang === 'ro' ? 'Oameni' : lang === 'en' ? 'People' : 'Люди';
+    if (econLbl) econLbl.textContent = lang === 'ro' ? 'Economie' : lang === 'en' ? 'Economy' : 'Экономика';
+    if (peopleTxt) peopleTxt.textContent = impact.people || '';
+    if (econTxt) econTxt.textContent = impact.economy || '';
+    if (moldovaTxt) moldovaTxt.textContent = impact.moldova || '';
+    impactEl.style.display = (impact.people || impact.economy) ? 'grid' : 'none';
+  } else if (impactEl) {
+    impactEl.style.display = 'none';
+  }
+
+  // Next steps
+  const nextSteps = cuField('next_steps', []);
+  const nextEl = document.getElementById('cu-next');
+  const nextList = document.getElementById('cu-next-list');
+  const nextLbl = document.getElementById('cu-next-lbl');
+  if (nextEl && nextList) {
+    if (Array.isArray(nextSteps) && nextSteps.length > 0) {
+      if (nextLbl) nextLbl.textContent = lang === 'ro' ? 'Ce urmează' : lang === 'en' ? 'What Happens Next' : 'Что будет дальше';
+      nextList.innerHTML = nextSteps.map(s => `<li class="cu-next-item">${escapeHtml(s)}</li>`).join('');
+      nextEl.style.display = 'block';
+    } else {
+      nextEl.style.display = 'none';
+    }
+  }
+
+  // Update status badge (LIVE / DEVELOPING / VERIFIED)
+  const statusVal = article.update_status || 'VERIFIED';
+  const trustWrap = document.querySelector('.trust-wrap');
+  const existingBadge = document.getElementById('cu-status-badge');
+  if (existingBadge) existingBadge.remove();
+  if (trustWrap && statusVal === 'LIVE') {
+    const badge = document.createElement('span');
+    badge.id = 'cu-status-badge';
+    badge.className = 'cu-status live';
+    badge.textContent = '🔴 LIVE';
+    trustWrap.appendChild(badge);
+  } else if (trustWrap && statusVal === 'DEVELOPING') {
+    const badge = document.createElement('span');
+    badge.id = 'cu-status-badge';
+    badge.className = 'cu-status developing';
+    badge.textContent = '🟡 DEVELOPING';
+    trustWrap.appendChild(badge);
+  }
 }
 
 function updateHeroText() {
