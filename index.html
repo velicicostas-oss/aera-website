@@ -236,6 +236,43 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
 .cu-status.developing{background:var(--ty-bg);color:var(--ty-txt);}
 .cu-status.verified{background:var(--tg-bg);color:var(--tg-txt);}
 
+/* ── HERO STATUS TAG (на фото) ── */
+.hero-status-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 13px;border-radius:4px;
+  font-size:10px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:#fff;
+  backdrop-filter:blur(4px);
+}
+.hero-status-tag.s-live{background:var(--accent);}
+.hero-status-tag.s-developing{background:rgba(190,90,0,.9);}
+.hero-status-tag.s-verified{background:rgba(15,100,45,.82);}
+
+/* EYEBROW LIVE DOT */
+.eyebrow-live{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:700;color:var(--accent);
+  letter-spacing:.07em;text-transform:uppercase;
+}
+.eyebrow-live .pip{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 2s infinite;}
+
+/* ── WHAT MEANS INLINE MODE ── */
+#cu-what-means.wm-inline-mode{
+  margin:0 0 16px;padding:0;
+  background:transparent;border-left:none;border-radius:0;
+}
+#cu-what-means.wm-inline-mode .cu-block-lbl{
+  display:inline;
+  font-size:14px;font-weight:700;
+  color:var(--text);
+  text-transform:none;letter-spacing:normal;margin-bottom:0;
+}
+#cu-what-means.wm-inline-mode .cu-block-lbl::after{content:' '}
+#cu-what-means.wm-inline-mode .cu-block-txt{
+  display:inline;
+  font-size:14px;color:var(--text2);line-height:1.75;
+}
+
 .sources{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap;}
 .stag{font-size:11px;padding:3px 9px;border-radius:4px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);}
 
@@ -494,12 +531,14 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
       <img class="hero-img" src="https://images.unsplash.com/photo-1523867574998-1a336b6ded04?w=900&q=80" alt="Военный корабль"/>
       <div class="hero-overlay"></div>
       <div class="hero-badges">
-        <div class="live-tag"><div class="pip"></div>Live</div>
-        <div class="over-tag">Безопасность · Международное</div>
+        <div id="hero-status-tag-el" class="hero-status-tag s-developing"><div class="pip"></div>DEVELOPING</div>
+        <div class="over-tag" id="hero-over-tag">Безопасность · Международное</div>
       </div>
     </div>
     <div class="hero-body">
       <div class="eyebrow">
+        <div id="eyebrow-live-badge" class="eyebrow-live" style="display:none;"><div class="pip"></div>LIVE</div>
+        <div class="esep" id="eyebrow-live-sep" style="display:none;"></div>
         <div class="ecat">Персидский залив</div>
         <div class="esep"></div>
         <div class="etime">Обновлено 14:32 · 8 мин назад</div>
@@ -1187,6 +1226,31 @@ function renderHero(article) {
     }
   }
 
+  // ── HERO STATUS BADGE on image ──
+  const heroStatusEl = document.getElementById('hero-status-tag-el');
+  const heroStatusVal = article.update_status || 'VERIFIED';
+  if (heroStatusEl) {
+    heroStatusEl.className = 'hero-status-tag s-' + heroStatusVal.toLowerCase();
+    const statusLabels = {
+      LIVE:      {ro:'LIVE',          ru:'LIVE',         en:'LIVE'},
+      DEVELOPING:{ro:'ÎN CURS',       ru:'РАЗВИВАЕТСЯ',  en:'DEVELOPING'},
+      VERIFIED:  {ro:'VERIFICAT',     ru:'ПРОВЕРЕНО',    en:'VERIFIED'}
+    };
+    const lbl = (statusLabels[heroStatusVal] || statusLabels.VERIFIED)[currentLang];
+    heroStatusEl.innerHTML = heroStatusVal === 'LIVE'
+      ? `<div class="pip"></div>${lbl}`
+      : (heroStatusVal === 'DEVELOPING' ? `▶&nbsp;${lbl}` : `✓&nbsp;${lbl}`);
+  }
+
+  // ── EYEBROW LIVE badge ──
+  const eyebrowLive = document.getElementById('eyebrow-live-badge');
+  const eyebrowLiveSep = document.getElementById('eyebrow-live-sep');
+  if (eyebrowLive) {
+    const isLive = heroStatusVal === 'LIVE';
+    eyebrowLive.style.display = isLive ? 'inline-flex' : 'none';
+    if (eyebrowLiveSep) eyebrowLiveSep.style.display = isLive ? 'block' : 'none';
+  }
+
   updateHeroText();
   document.querySelector('.ecat').textContent = translateCategory(article.category || 'general');
   document.querySelector('.etime').textContent = `${t.updated} ${formatTime(article.created_at)}`;
@@ -1298,18 +1362,23 @@ function renderContentUnit(article) {
     }
   }
 
-  // What means
+  // What means — inline mode (replaces deck to avoid duplication)
   const whatMeans = cuField('what_means', '');
   const wmEl = document.getElementById('cu-what-means');
   const wmTxt = document.getElementById('cu-what-means-txt');
   const wmLbl = document.getElementById('cu-what-means-lbl');
+  const deckEl = document.querySelector('.deck');
   if (wmEl && wmTxt) {
     if (whatMeans && whatMeans.length > 5) {
-      if (wmLbl) wmLbl.textContent = lang === 'ro' ? 'Ce înseamnă asta' : lang === 'en' ? 'What This Means' : 'Что это значит';
+      if (wmLbl) wmLbl.textContent = lang === 'ro' ? 'Ce înseamnă asta:' : lang === 'en' ? 'What this means:' : 'Что это значит:';
       wmTxt.textContent = whatMeans;
       wmEl.style.display = 'block';
+      wmEl.classList.add('wm-inline-mode');
+      if (deckEl) deckEl.style.display = 'none'; // скрываем deck — нет дублирования
     } else {
       wmEl.style.display = 'none';
+      wmEl.classList.remove('wm-inline-mode');
+      if (deckEl) deckEl.style.display = ''; // показываем deck если нет what_means
     }
   }
 
@@ -1347,24 +1416,7 @@ function renderContentUnit(article) {
     }
   }
 
-  // Update status badge (LIVE / DEVELOPING / VERIFIED)
-  const statusVal = article.update_status || 'VERIFIED';
-  const trustWrap = document.querySelector('.trust-wrap');
-  const existingBadge = document.getElementById('cu-status-badge');
-  if (existingBadge) existingBadge.remove();
-  if (trustWrap && statusVal === 'LIVE') {
-    const badge = document.createElement('span');
-    badge.id = 'cu-status-badge';
-    badge.className = 'cu-status live';
-    badge.textContent = '🔴 LIVE';
-    trustWrap.appendChild(badge);
-  } else if (trustWrap && statusVal === 'DEVELOPING') {
-    const badge = document.createElement('span');
-    badge.id = 'cu-status-badge';
-    badge.className = 'cu-status developing';
-    badge.textContent = '🟡 DEVELOPING';
-    trustWrap.appendChild(badge);
-  }
+  // Status badge теперь на фото (hero-status-tag-el) — см. renderHero()
 }
 
 function updateHeroText() {
