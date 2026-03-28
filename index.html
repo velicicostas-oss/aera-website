@@ -102,22 +102,73 @@ body.dark .tth{left:22px;background:var(--text);}
 /* ── HERO ── */
 .hero{display:grid;grid-template-columns:1fr 360px;border-bottom:1px solid var(--border);}
 .hero-l{border-right:1px solid var(--border);}
-.hero-img-wrap{position:relative;height:300px;overflow:hidden;}
-.hero-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease;}
-.hero-img-wrap:hover .hero-img{transform:scale(1.03);}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.06) 0%,rgba(0,0,0,.65) 100%);}
-.hero-badges{position:absolute;top:16px;left:20px;display:flex;align-items:center;gap:8px;}
+.hero-img-wrap{position:relative;height:440px;overflow:hidden;cursor:pointer;}
+.hero-img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease;}
+.hero-img-wrap:hover .hero-img{transform:scale(1.04);}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 0%,rgba(0,0,0,.08) 35%,rgba(0,0,0,.62) 62%,rgba(0,0,0,.90) 100%);}
+
+/* top badges (status + category) */
+.hero-badges{position:absolute;top:18px;left:20px;display:flex;align-items:center;gap:8px;}
 .live-tag{display:flex;align-items:center;gap:5px;background:var(--accent);padding:4px 11px;border-radius:4px;font-size:11px;font-weight:700;color:#fff;letter-spacing:.07em;text-transform:uppercase;}
 .pip{width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.12}}
-.over-tag{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);border-radius:4px;padding:4px 11px;font-size:11px;color:rgba(255,255,255,.88);}
-.hero-body{padding:28px 32px;}
-.eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:14px;}
+.over-tag{background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.16);border-radius:4px;padding:4px 11px;font-size:11px;color:rgba(255,255,255,.85);}
+
+/* ── TITLE ON PHOTO ── */
+.hero-photo-bottom{position:absolute;bottom:0;left:0;right:0;padding:0 24px 22px;}
+.hero-photo-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:9px;}
+.hero-photo-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.11em;color:rgba(255,255,255,.65);}
+.hero-photo-sep{width:1px;height:8px;background:rgba(255,255,255,.28);}
+.hero-photo-time-txt{font-size:10px;color:rgba(255,255,255,.55);}
+.hero-photo-title{
+  font-family:'Playfair Display',serif;
+  font-size:32px;line-height:1.12;font-weight:700;
+  color:#fff;letter-spacing:-.4px;margin:0;
+  text-shadow:0 2px 16px rgba(0,0,0,.35);
+}
+
+/* ── IMPACT STRIP (inside photo) ── */
+.hero-impact-strip{
+  position:absolute;bottom:0;left:0;right:0;
+  display:none;align-items:stretch;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.hero-impact-label{
+  flex-shrink:0;background:var(--accent);
+  padding:7px 14px;
+  font-size:9px;font-weight:800;letter-spacing:.13em;
+  text-transform:uppercase;color:#fff;
+  display:flex;align-items:center;
+}
+.hero-impact-text{
+  background:rgba(0,0,0,.6);
+  padding:7px 16px;
+  font-size:11px;font-weight:600;color:#fff;
+  letter-spacing:.03em;text-transform:uppercase;
+  display:flex;align-items:center;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+
+/* HERO BODY */
+.hero-body{padding:18px 28px 24px;}
+.eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
 .ecat{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);}
 .esep{width:1px;height:10px;background:var(--border2);}
 .etime{font-size:11px;color:var(--text3);}
-.h1{font-family:'Playfair Display',serif;font-size:36px;line-height:1.13;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:-.3px;}
-.deck{font-size:14px;color:var(--text2);line-height:1.7;max-width:540px;margin-bottom:20px;}
+.h1{display:none;}/* title now lives on photo */
+.deck{font-size:14px;color:var(--text2);line-height:1.7;max-width:540px;margin-bottom:18px;}
+
+/* ── READ BUTTONS (enhanced) ── */
+.read-row{display:flex;gap:6px;margin:14px 0 16px;flex-wrap:wrap;}
+.rm{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;
+  border:1px solid var(--border);background:transparent;color:var(--text2);
+  cursor:pointer;transition:all .15s;letter-spacing:.01em;
+}
+.rm:hover{border-color:var(--border2);color:var(--text);background:var(--bg2);}
+.rm.on{background:var(--text);color:var(--bg);border-color:var(--text);}
+.rm-icon{font-size:13px;line-height:1;}
 
 /* ── TRUST SCORE ── */
 .trust-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px;position:relative;}
@@ -350,9 +401,9 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
   .nav-mid{display:none;}
   .hero{grid-template-columns:1fr;}
   .hero-l{border-right:none;}
-  .hero-img-wrap{height:240px;}
-  .h1{font-size:26px;}
-  .hero-body{padding:20px 18px;}
+  .hero-img-wrap{height:300px;}
+  .hero-photo-title{font-size:22px;}
+  .hero-body{padding:16px 16px 20px;}
   .sb{border-top:1px solid var(--border);}
   .sec{padding:0 16px;}
   .grid{grid-template-columns:1fr;}
@@ -530,9 +581,24 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
     <div class="hero-img-wrap">
       <img class="hero-img" src="https://images.unsplash.com/photo-1523867574998-1a336b6ded04?w=900&q=80" alt="Военный корабль"/>
       <div class="hero-overlay"></div>
+      <!-- Status + category badges (top) -->
       <div class="hero-badges">
         <div id="hero-status-tag-el" class="hero-status-tag s-developing"><div class="pip"></div>DEVELOPING</div>
         <div class="over-tag" id="hero-over-tag">Безопасность · Международное</div>
+      </div>
+      <!-- Impact strip (bottom, above title) -->
+      <div class="hero-impact-strip" id="hero-impact-strip">
+        <div class="hero-impact-label" id="hero-impact-label">ВАЖНО</div>
+        <div class="hero-impact-text" id="hero-impact-text"></div>
+      </div>
+      <!-- Title overlay (bottom of photo) -->
+      <div class="hero-photo-bottom">
+        <div class="hero-photo-eyebrow">
+          <span class="hero-photo-cat" id="hero-photo-cat">Категория</span>
+          <span class="hero-photo-sep"></span>
+          <span class="hero-photo-time-txt" id="hero-photo-time-txt">Обновлено только что</span>
+        </div>
+        <h2 class="hero-photo-title" id="hero-photo-title">Заголовок статьи</h2>
       </div>
     </div>
     <div class="hero-body">
@@ -639,8 +705,9 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
       </div>
 
       <div class="read-row">
-        <button class="rm on" onclick="setMode(this,'10s')">10 сек</button>
-        <button class="rm" onclick="setMode(this,'full')">Полностью</button>
+        <button class="rm on" onclick="setMode(this,'10s')"><span class="rm-icon">⚡</span><span id="rm-10s-lbl">10 сек</span></button>
+        <button class="rm" onclick="setMode(this,'bullets')"><span class="rm-icon">📋</span><span id="rm-bullets-lbl">Тезисы</span></button>
+        <button class="rm" onclick="setMode(this,'full')"><span class="rm-icon">📖</span><span id="rm-full-lbl">Полностью</span></button>
       </div>
       <p id="ctxt" style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;">США и Иран на пороге прямого столкновения в Персидском заливе.</p>
 
@@ -1226,6 +1293,14 @@ function renderHero(article) {
     }
   }
 
+  // ── TITLE ON PHOTO ──
+  const photoTitleEl = document.getElementById('hero-photo-title');
+  if (photoTitleEl) photoTitleEl.textContent = title;
+  const photoCatEl = document.getElementById('hero-photo-cat');
+  if (photoCatEl) photoCatEl.textContent = translateCategory(article.category || 'general');
+  const photoTimeEl = document.getElementById('hero-photo-time-txt');
+  if (photoTimeEl) photoTimeEl.textContent = formatTime(article.created_at);
+
   // ── HERO STATUS BADGE on image ──
   const heroStatusEl = document.getElementById('hero-status-tag-el');
   const heroStatusVal = article.update_status || 'VERIFIED';
@@ -1417,13 +1492,44 @@ function renderContentUnit(article) {
   }
 
   // Status badge теперь на фото (hero-status-tag-el) — см. renderHero()
+
+  // ── IMPACT STRIP (внизу фото) ──
+  const impactStrip = document.getElementById('hero-impact-strip');
+  const impactText = document.getElementById('hero-impact-text');
+  const impactLbl = document.getElementById('hero-impact-label');
+  if (impactStrip && impactText) {
+    // Берём первый bullet как "ключевой факт"
+    const firstBullet = Array.isArray(bullets) && bullets.length > 0 ? bullets[0] : null;
+    const firstNext = Array.isArray(nextSteps) && nextSteps.length > 0 ? nextSteps[0] : null;
+    const impactLine = firstBullet || firstNext || '';
+    if (impactLine && impactLine.length > 5) {
+      impactText.textContent = impactLine.toUpperCase();
+      if (impactLbl) impactLbl.textContent = lang === 'ro' ? 'ESENȚIAL' : lang === 'en' ? 'KEY FACT' : 'ГЛАВНОЕ';
+      impactStrip.style.display = 'flex';
+      // Recalculate photo-bottom padding to not overlap
+      const photoBottom = document.querySelector('.hero-photo-bottom');
+      if (photoBottom) photoBottom.style.paddingBottom = '52px';
+    } else {
+      impactStrip.style.display = 'none';
+      const photoBottom = document.querySelector('.hero-photo-bottom');
+      if (photoBottom) photoBottom.style.paddingBottom = '22px';
+    }
+  }
 }
 
 function updateHeroText() {
   if (!heroArticle) return;
-  const texts = { '10s': field(heroArticle,'summary10s'), 'full': field(heroArticle,'body') };
   const ctxt = document.getElementById('ctxt');
-  if (ctxt) ctxt.textContent = texts[currentMode] || '';
+  const bulletsEl = document.getElementById('cu-bullets');
+  if (currentMode === 'bullets') {
+    // Показываем bullets, скрываем ctxt
+    if (ctxt) ctxt.style.display = 'none';
+    if (bulletsEl) bulletsEl.style.display = 'flex';
+  } else {
+    if (bulletsEl) bulletsEl.style.display = 'none';
+    const texts = { '10s': field(heroArticle,'summary10s'), 'full': field(heroArticle,'body') };
+    if (ctxt) { ctxt.style.display = ''; ctxt.textContent = texts[currentMode] || ''; }
+  }
 }
 
 function renderSidebar(articles) {
