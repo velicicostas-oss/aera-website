@@ -711,7 +711,7 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
       </div>
       <p id="ctxt" style="font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:16px;">США и Иран на пороге прямого столкновения в Персидском заливе.</p>
 
-      <div class="listen-btn" onclick="startPlay(this)">
+      <div class="listen-btn" onclick="startPlay()">
         <div class="lico"><svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg></div>
         <div style="flex:1;">
           <div class="llabel" id="play-label">Слушать</div>
@@ -1140,8 +1140,7 @@ function applyUiTranslations(){
     const playLabel = document.getElementById('play-label'); 
     if (playLabel) playLabel.textContent = t.listen; 
   }
-  const durLabel = document.getElementById('ldur'); 
-  if (durLabel) durLabel.textContent = t.listenDurSuffix;
+  // Duration label recalculates dynamically in renderHero / startPlay
 
   updateBreakingLabel();
   updateCookieBanner();
@@ -1276,6 +1275,12 @@ function renderPage(){
 
 function renderHero(article) {
   if (!article) return;
+  stopPlayIfActive(); // stop TTS when article changes
+  // Update estimated duration for new article
+  setTimeout(() => {
+    const durEl = document.getElementById('ldur');
+    if (durEl) durEl.textContent = _ttsEstimateDuration(_ttsGetText());
+  }, 100);
   const t = UI[currentLang];
   const title = field(article,'title');
   const deck = field(article,'summary10s') || '';
@@ -1605,6 +1610,7 @@ function setMode(b, m) {
   document.querySelectorAll('.rm').forEach(x => x.classList.remove('on'));
   b.classList.add('on');
   currentMode = m;
+  stopPlayIfActive(); // stop TTS when switching read mode
   updateHeroText();
 }
 
@@ -1751,10 +1757,87 @@ function toggleTooltip() {
   const tt = document.getElementById('trust-tooltip');
   if (tt) tt.classList.toggle('show');
 }
-function startPlay(btn) {
-  // Аудио-версия пока не реализована
+// ─── TTS / Listen ────────────────────────────────────────────────────────────
+let ttsUtterance = null;
+
+function _ttsGetText() {
+  if (!heroArticle) return '';
+  const title = field(heroArticle, 'title') || '';
+  const body  = field(heroArticle, 'body')  || field(heroArticle, 'summary10s') || '';
+  return title ? title + '. ' + body : body;
+}
+
+function _ttsEstimateDuration(text) {
+  const words = text.trim().split(/\s+/).length;
+  const totalSec = Math.round(words / 2.5); // ~150 words/min
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  const t = UI[currentLang];
+  if (currentLang === 'ru') return m ? `${m} мин ${s} сек` : `${s} сек`;
+  if (currentLang === 'ro') return m ? `${m} min ${s} sec` : `${s} sec`;
+  return m ? `${m} min ${s} sec` : `${s} sec`;
+}
+
+function _ttsSetUI(isPlaying) {
+  playing = isPlaying;
+  const t   = UI[currentLang];
   const lbl = document.getElementById('play-label');
-  if (lbl) lbl.textContent = UI[currentLang]?.listen || 'Listen';
+  const ico = document.querySelector('.lico');
+  const btn = document.querySelector('.listen-btn');
+  if (lbl) lbl.textContent = isPlaying ? (t.playing || 'Воспроизводится...') : (t.listen || 'Слушать');
+  if (btn) btn.style.borderColor = isPlaying ? 'var(--accent)' : '';
+  if (ico) ico.innerHTML = isPlaying
+    ? '<svg width="10" height="12" viewBox="0 0 10 12"><rect x="0" y="0" width="3.5" height="12" fill="white" rx="1"/><rect x="6.5" y="0" width="3.5" height="12" fill="white" rx="1"/></svg>'
+    : '<svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg>';
+}
+
+function startPlay() {
+  // If already playing — stop
+  if (playing) {
+    window.speechSynthesis.cancel();
+    _ttsSetUI(false);
+    const lbar = document.getElementById('lbar');
+    if (lbar) lbar.style.width = '0%';
+    return;
+  }
+
+  const text = _ttsGetText();
+  if (!text.trim()) return;
+
+  // Show estimated duration
+  const durEl = document.getElementById('ldur');
+  if (durEl) durEl.textContent = _ttsEstimateDuration(text);
+
+  ttsUtterance = new SpeechSynthesisUtterance(text);
+  ttsUtterance.lang  = currentLang === 'ru' ? 'ru-RU' : currentLang === 'ro' ? 'ro-RO' : 'en-US';
+  ttsUtterance.rate  = 0.95;
+  ttsUtterance.pitch = 1.0;
+
+  // Progress bar via boundary events
+  const lbar = document.getElementById('lbar');
+  const totalLen = text.length;
+  ttsUtterance.onboundary = (e) => {
+    if (lbar && e.charIndex != null)
+      lbar.style.width = Math.min(100, Math.round(e.charIndex / totalLen * 100)) + '%';
+  };
+  ttsUtterance.onend = () => {
+    _ttsSetUI(false);
+    if (lbar) lbar.style.width = '100%';
+    setTimeout(() => { if (lbar) lbar.style.width = '0%'; }, 800);
+  };
+  ttsUtterance.onerror = () => { _ttsSetUI(false); };
+
+  window.speechSynthesis.speak(ttsUtterance);
+  _ttsSetUI(true);
+}
+
+function stopPlayIfActive() {
+  if (playing) {
+    window.speechSynthesis.cancel();
+    _ttsSetUI(false);
+    const lbar = document.getElementById('lbar');
+    if (lbar) lbar.style.width = '0%';
+  }
 }
 function showTrustInfo(score, level) {
   // Вызывается из статичного HTML до загрузки данных — не требует реализации
