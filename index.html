@@ -959,6 +959,7 @@ function applyUiTranslations(){
   const fLabI = document.getElementById('f-lab-importance'); if (fLabI) fLabI.textContent = f.importance;
   const fLabV = document.getElementById('f-lab-verification'); if (fLabV) fLabV.textContent = f.verification;
   
+  const fLabel = document.getElementById('filt-label'); if (fLabel) fLabel.textContent = f.title;
   const fAdv = document.getElementById('f-adv-toggle'); if (fAdv) fAdv.textContent = f.advanced;
   const fShow = document.querySelector('.filt-panel .cookie-bar-btn'); if (fShow) fShow.textContent = f.showMatches;
   
@@ -972,6 +973,7 @@ function applyUiTranslations(){
     else if (key === 'verified-only') key = 'verifiedOnly';
     else if (key === 'all-v') key = 'vAll';
     else if (key === 'partial') key = 'vPartial';
+    else if (key === 'what-it-means') key = 'whatMeans';
     else {
       key = key.replace(/-./g, x => x[1].toUpperCase());
     }
@@ -1023,8 +1025,9 @@ function renderPage(){
       if (activeFilters.includes('money-impact') && !(cat === 'money' || cat === 'economy' || cat.includes('finan'))) return false;
       
       // Region
-      if (activeFilters.includes('reg-moldova') && !region.includes('moldova') && !cat.includes('moldova')) return false;
-      if (activeFilters.includes('reg-world') && !cat.includes('world') && !cat.includes('мир')) return false;
+      if ((activeFilters.includes('reg-moldova') || activeFilters.includes('moldova')) && !region.includes('moldova') && !cat.includes('moldova')) return false;
+      if ((activeFilters.includes('reg-world') || activeFilters.includes('world')) && !cat.includes('world') && !cat.includes('inter')) return false;
+      if (activeFilters.includes('geopolitics') && !cat.includes('geo') && !(article.tags||[]).map(t=>t.toLowerCase()).includes('geopolit')) return false;
       if (activeFilters.includes('reg-europe') && !region.includes('europe') && !tags.includes('europe')) return false;
       if (activeFilters.includes('reg-romania') && !region.includes('romania') && !tags.includes('romania')) return false;
       if (activeFilters.includes('reg-ukraine') && !region.includes('ukraine') && !tags.includes('ukraine')) return false;
@@ -1095,7 +1098,13 @@ function renderHero(article) {
   updateHeroText();
   document.querySelector('.ecat').textContent = translateCategory(article.category || 'general');
   document.querySelector('.etime').textContent = `${t.updated} ${formatTime(article.created_at)}`;
-  if (article.photo_url) document.querySelector('.hero-img').src = article.photo_url;
+  if (article.photo_url) {
+    const heroImg = document.querySelector('.hero-img');
+    if (heroImg) {
+      heroImg.src = article.photo_url;
+      heroImg.onerror = () => { heroImg.style.display = 'none'; };
+    }
+  }
   
   // Dynamic Sources
   let sourceNames = [];
@@ -1184,7 +1193,7 @@ function renderSidebar(articles) {
     const item = document.createElement('div');
     item.className = 'sb-item';
     item.onclick = () => window.location.href = `news.html?id=${article.id}`;
-    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt=""/>` : `<div class="sb-thumb-ph"></div>`) + 
+    item.innerHTML = (article.photo_url ? `<img class="sb-thumb" src="${article.photo_url}" alt="" onerror="this.outerHTML='<div class=sb-thumb-ph></div>'"/>` : `<div class="sb-thumb-ph"></div>`) +
       `<div><div class="sb-hed">${escapeHtml(title)}</div><div class="sb-meta"><span class="sb-time">${time}</span>${labelHtml}</div></div>`;
     sb.appendChild(item);
   });
@@ -1196,7 +1205,7 @@ function renderGrid(articles) {
   grid.innerHTML = '';
   articles.forEach(article => {
     const title = field(article,'title');
-    const preview = updateArticlePreview(article);
+    const preview = getCardPreview(article);
     const time = formatTime(article.created_at);
     const labels = getPriorityLabels(article);
     const labelHtml = labels.map(l => `<span class="mt ${l.class}" style="margin-right:4px;">${l.text}</span>`).join('');
@@ -1204,7 +1213,7 @@ function renderGrid(articles) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="card-img-wrap" onclick="window.location.href='news.html?id=${article.id}'">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt=""/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div>
+      <div class="card-img-wrap" onclick="window.location.href='news.html?id=${article.id}'">${article.photo_url ? `<img class="card-img" src="${article.photo_url}" alt="" onerror="this.outerHTML='<div class=card-img style=background:var(--bg3)></div>'"/>` : `<div class="card-img" style="background:var(--bg3);"></div>`}</div>
       <div class="card-body">
         <div class="ccat-row" style="margin-bottom:8px;">${labelHtml}</div>
         <div class="ched" onclick="window.location.href='news.html?id=${article.id}'">${escapeHtml(title)}</div>
@@ -1250,6 +1259,20 @@ function setSt(el) {
   activeSection = el.dataset.tab || 'all';
   renderPage();
 }
+// ─── Недостающие функции ──────────────────────────────────────────────────
+function toggleTooltip() {
+  const tt = document.getElementById('trust-tooltip');
+  if (tt) tt.classList.toggle('show');
+}
+function startPlay(btn) {
+  // Аудио-версия пока не реализована
+  const lbl = document.getElementById('play-label');
+  if (lbl) lbl.textContent = UI[currentLang]?.listen || 'Listen';
+}
+function showTrustInfo(score, level) {
+  // Вызывается из статичного HTML до загрузки данных — не требует реализации
+}
+
 // ─── Запуск ───────────────────────────────────────────────────────────────
 const qp = new URLSearchParams(window.location.search);
 const sectionParam = qp.get('section');
