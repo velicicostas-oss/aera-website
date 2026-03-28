@@ -1791,10 +1791,12 @@ function _ttsSetUI(isPlaying) {
     : '<svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg>';
 }
 
-function startPlay() {
+let ttsAudio = null;
+
+async function startPlay() {
   // If already playing — stop
   if (playing) {
-    window.speechSynthesis.cancel();
+    if (ttsAudio) { ttsAudio.pause(); ttsAudio.src = ''; ttsAudio = null; }
     _ttsSetUI(false);
     const lbar = document.getElementById('lbar');
     if (lbar) lbar.style.width = '0%';
@@ -1804,36 +1806,66 @@ function startPlay() {
   const text = _ttsGetText();
   if (!text.trim()) return;
 
-  // Show estimated duration
-  const durEl = document.getElementById('ldur');
-  if (durEl) durEl.textContent = _ttsEstimateDuration(text);
+  // Show loading state
+  _ttsSetUI('loading');
+  const lbl = document.getElementById('play-label');
+  if (lbl) lbl.textContent = currentLang === 'ru' ? 'Загрузка...' : currentLang === 'ro' ? 'Se încarcă...' : 'Loading...';
 
-  ttsUtterance = new SpeechSynthesisUtterance(text);
-  ttsUtterance.lang  = currentLang === 'ru' ? 'ru-RU' : currentLang === 'ro' ? 'ro-RO' : 'en-US';
-  ttsUtterance.rate  = 0.95;
-  ttsUtterance.pitch = 1.0;
+  try {
+    const resp = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.slice(0, 5000) }),
+    });
 
-  // Progress bar via boundary events
-  const lbar = document.getElementById('lbar');
-  const totalLen = text.length;
-  ttsUtterance.onboundary = (e) => {
-    if (lbar && e.charIndex != null)
-      lbar.style.width = Math.min(100, Math.round(e.charIndex / totalLen * 100)) + '%';
-  };
-  ttsUtterance.onend = () => {
+    if (!resp.ok) throw new Error('TTS API error ' + resp.status);
+
+    const blob = await resp.blob();
+    const url  = URL.createObjectURL(blob);
+
+    ttsAudio = new Audio(url);
+
+    // Real duration once loaded
+    ttsAudio.onloadedmetadata = () => {
+      const dur = ttsAudio.duration;
+      const m = Math.floor(dur / 60), s = Math.floor(dur % 60);
+      const durEl = document.getElementById('ldur');
+      if (durEl) durEl.textContent = currentLang === 'ru'
+        ? (m ? `${m} мин ${s} сек` : `${s} сек`)
+        : (m ? `${m} min ${s} sec` : `${s} sec`);
+    };
+
+    // Animate progress bar
+    ttsAudio.ontimeupdate = () => {
+      const lbar = document.getElementById('lbar');
+      if (lbar && ttsAudio.duration)
+        lbar.style.width = Math.round(ttsAudio.currentTime / ttsAudio.duration * 100) + '%';
+    };
+
+    ttsAudio.onended = () => {
+      _ttsSetUI(false);
+      URL.revokeObjectURL(url);
+      const lbar = document.getElementById('lbar');
+      setTimeout(() => { if (lbar) lbar.style.width = '0%'; }, 800);
+    };
+
+    ttsAudio.onerror = () => { _ttsSetUI(false); URL.revokeObjectURL(url); };
+
+    ttsAudio.play();
+    _ttsSetUI(true);
+
+  } catch (err) {
+    console.error('[TTS]', err);
     _ttsSetUI(false);
-    if (lbar) lbar.style.width = '100%';
-    setTimeout(() => { if (lbar) lbar.style.width = '0%'; }, 800);
-  };
-  ttsUtterance.onerror = () => { _ttsSetUI(false); };
-
-  window.speechSynthesis.speak(ttsUtterance);
-  _ttsSetUI(true);
+    const lbl2 = document.getElementById('play-label');
+    if (lbl2) lbl2.textContent = '⚠ Ошибка';
+    setTimeout(() => { const l = document.getElementById('play-label'); if(l) l.textContent = UI[currentLang]?.listen || 'Слушать'; }, 2000);
+  }
 }
 
 function stopPlayIfActive() {
-  if (playing) {
-    window.speechSynthesis.cancel();
+  if (playing || ttsAudio) {
+    if (ttsAudio) { ttsAudio.pause(); ttsAudio.src = ''; ttsAudio = null; }
     _ttsSetUI(false);
     const lbar = document.getElementById('lbar');
     if (lbar) lbar.style.width = '0%';
