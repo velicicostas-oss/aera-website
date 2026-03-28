@@ -16,7 +16,7 @@ module.exports = async function handler(req, res) {
   }
 
   const API_KEY  = process.env.ELEVENLABS_API_KEY;
-  const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'BTL5iDLqtiUxgJtpekus'; // Радислав Сиетов
+  const VOICE_ID = process.env.ELEVENLABS_VOICE_ID || 'pNInz6obpgDQGcFmaJgB'; // Adam — free tier, multilingual
 
   if (!API_KEY) {
     return res.status(500).json({ error: 'ElevenLabs API key not configured' });
