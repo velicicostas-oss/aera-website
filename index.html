@@ -1145,7 +1145,12 @@ function applyUiTranslations(){
 
   updateBreakingLabel();
   updateCookieBanner();
-  if (heroArticle) renderContentUnit(heroArticle);
+  if (heroArticle) {
+    renderContentUnit(heroArticle);
+    // Update category badge in photo when language changes
+    const heroOverTag = document.getElementById('hero-over-tag');
+    if (heroOverTag) heroOverTag.textContent = translateCategory(heroArticle.category || 'general');
+  }
 
   // Update Filter Panel Labels
   const f = t.filter;
@@ -1327,8 +1332,12 @@ function renderHero(article) {
   }
 
   updateHeroText();
-  document.querySelector('.ecat').textContent = translateCategory(article.category || 'general');
+  const catLabel = translateCategory(article.category || 'general');
+  document.querySelector('.ecat').textContent = catLabel;
   document.querySelector('.etime').textContent = `${t.updated} ${formatTime(article.created_at)}`;
+  // ── Fix: update hero-over-tag badge on photo with actual article category ──
+  const heroOverTag = document.getElementById('hero-over-tag');
+  if (heroOverTag) heroOverTag.textContent = catLabel;
   if (article.photo_url) {
     const heroImg = document.querySelector('.hero-img');
     if (heroImg) {
