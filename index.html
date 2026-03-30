@@ -882,11 +882,11 @@ body.dark .ask-ans-hdr{background:rgba(255,255,255,.04);}
 <div class="foot">
   <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
   <div class="flinks">
-    <a class="flink" href="about.html">О редакции</a>
-    <a class="flink" href="verification.html">Политика верификации</a>
-    <a class="flink" href="contact.html">Контакты</a>
-    <a class="flink" href="privacy.html">Конфиденциальность</a>
-    <a class="flink" href="terms.html">Условия</a>
+    <a class="flink" href="about.html" data-fkey="about">О редакции</a>
+    <a class="flink" href="verification.html" data-fkey="verification">Политика верификации</a>
+    <a class="flink" href="contact.html" data-fkey="contact">Контакты</a>
+    <a class="flink" href="privacy.html" data-fkey="privacy">Конфиденциальность</a>
+    <a class="flink" href="terms.html" data-fkey="terms">Условия</a>
     <a class="flink" href="cookies.html">Cookies</a>
   </div>
   <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
@@ -992,6 +992,7 @@ const UI = {
     askLabel:'Вопрос редакции', askPlaceholder:'Задайте вопрос по теме...',
     moldovaImpact:'Что это значит для Молдовы', verified:'Проверено', partial:'Частично', unverified:'Непроверено',
     footerNote:'Проверенные новости · Обновление каждые 15 минут', empty:'Статьи появятся здесь в ближайшее время 🚀',
+    footerLinks:{about:'О редакции',verification:'Политика верификации',contact:'Контакты',privacy:'Конфиденциальность',terms:'Условия'},
     cookies: {
       text: '🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.',
       accept: 'Принять',
@@ -1020,6 +1021,7 @@ const UI = {
     askLabel:'Ask the newsroom', askPlaceholder:'Ask a question about this topic...',
     moldovaImpact:'What this means for Moldova', verified:'Verified', partial:'Partial', unverified:'Unverified',
     footerNote:'Verified news · Updated every 15 minutes', empty:'Stories will appear here soon 🚀',
+    footerLinks:{about:'About',verification:'Verification Policy',contact:'Contacts',privacy:'Privacy',terms:'Terms'},
     cookies: {
       text: '🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.',
       accept: 'Accept',
@@ -1048,6 +1050,7 @@ const UI = {
     askLabel:'Întrebare pentru redacție', askPlaceholder:'Pune o întrebare despre subiect...',
     moldovaImpact:'Ce înseamnă asta pentru Moldova', verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
     footerNote:'Știri verificate · Actualizare la fiecare 15 minute', empty:'Articolele vor apărea aici imediat ce agenții publică primele materiale 🚀',
+    footerLinks:{about:'Despre redacție',verification:'Politica de verificare',contact:'Contacte',privacy:'Confidențialitate',terms:'Termeni'},
     cookies: {
       text: '🍪 <strong>Folosim cookies.</strong> Acest site folosește module cookie pentru analiză, performanță și personalizarea conținutului. Apăsând "Accept", sunteți de acord cu <a href="cookies.html">politica noastră de cookies</a>.',
       accept: 'Acceptă',
@@ -1121,7 +1124,12 @@ function applyUiTranslations(){
   const t = UI[currentLang];
   document.documentElement.lang = currentLang;
   document.querySelectorAll('.ni[data-section], .mi[data-section]').forEach(el => el.textContent = t.nav[el.dataset.section] || el.textContent);
+  const moreBtn = document.getElementById('nav-more-btn'); if (moreBtn) moreBtn.textContent = t.nav.more;
   const allTopics = document.querySelector('.ni[style]'); if (allTopics) allTopics.textContent = t.nav.allTopics;
+  // Footer links
+  if (t.footerLinks) document.querySelectorAll('.flink[data-fkey]').forEach(el => { if (t.footerLinks[el.dataset.fkey]) el.textContent = t.footerLinks[el.dataset.fkey]; });
+  // Ask counter text
+  const askCtr = document.getElementById('ask-counter-txt'); if (askCtr) askCtr.textContent = _askCounterText(_askRemaining);
   document.querySelectorAll('.st[data-tab]').forEach(el => el.textContent = t.tabs[el.dataset.tab] || el.textContent);
   const sbTitle = document.querySelector('.sb-ttl'); if (sbTitle) sbTitle.textContent = t.latest;
   const sbRefresh = document.querySelector('.sb-refresh'); if (sbRefresh) sbRefresh.textContent = t.refresh;
@@ -1439,16 +1447,14 @@ function renderContentUnit(article) {
     return fallback;
   }
 
-  // Bullets
+  // Bullets — pre-populate for "Тезисы" tab; always hidden here (tab shows via updateHeroText)
   const bullets = cuField('summary_bullets', []);
   const bulletsEl = document.getElementById('cu-bullets');
   if (bulletsEl) {
     if (Array.isArray(bullets) && bullets.length > 0) {
       bulletsEl.innerHTML = bullets.map(b => `<li class="cu-bullet">${escapeHtml(b)}</li>`).join('');
-      bulletsEl.style.display = 'flex';
-    } else {
-      bulletsEl.style.display = 'none';
     }
+    bulletsEl.style.display = 'none';
   }
 
   // What means — inline mode (replaces deck to avoid duplication)

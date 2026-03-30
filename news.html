@@ -130,8 +130,11 @@ body.dark .tth{left:22px;background:var(--text);}
 .art-body blockquote cite{display:block;font-size:12px;color:var(--text3);margin-top:8px;font-style:normal;}
 
 /* CONTENT MODES */
-.mode-10s,.mode-full{display:none;}
-.mode-10s.active,.mode-full.active{display:block;}
+.mode-10s,.mode-full,.mode-bullets{display:none;}
+.mode-10s.active,.mode-full.active,.mode-bullets.active{display:block;}
+.mode-bullets ul{margin:10px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+.mode-bullets li{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--text2);line-height:1.6;}
+.mode-bullets li::before{content:'•';color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px;}
 
 /* INFOGRAPHIC */
 .infographic{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:28px 0;}
@@ -221,6 +224,7 @@ body.dark .tth{left:22px;background:var(--text);}
 .mt{font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;border:1px solid;}
 .mtg{background:var(--tg-bg);border-color:var(--tg-b);color:var(--tg-txt);}
 .mty{background:var(--ty-bg);border-color:var(--ty-b);color:var(--ty-txt);}
+.mtr{background:var(--tr-bg);border-color:var(--tr-b);color:var(--tr-txt);}
 
 /* FACTS BLOCK */
 .facts-block{padding:16px;}
@@ -414,6 +418,7 @@ body.dark .tth{left:22px;background:var(--text);}
     <div class="read-row">
       <button class="rm" onclick="setMode(this,'10s')">10 сек</button>
       <button class="rm on" onclick="setMode(this,'full')">Полностью</button>
+      <button class="rm" id="btn-bullets" onclick="setMode(this,'bullets')" style="display:none;">Тезисы</button>
     </div>
 
     <!-- AUDIO -->
@@ -432,6 +437,7 @@ body.dark .tth{left:22px;background:var(--text);}
     <div class="art-body">
       <div class="mode-10s" id="mode-10s"></div>
       <div class="mode-full active" id="mode-full"></div>
+      <div class="mode-bullets" id="mode-bullets"></div>
     </div>
 
     <!-- WHAT IT MEANS -->
@@ -489,7 +495,7 @@ body.dark .tth{left:22px;background:var(--text);}
 
     <!-- ASK -->
     <div class="ask-wrap">
-      <div class="ask-label">Вопрос редакции</div>
+      <div class="ask-label" id="news-ask-label">Вопрос редакции</div>
       <div class="ask-row">
         <div class="ask-field">
           <svg class="ask-ico" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -543,10 +549,10 @@ body.dark .tth{left:22px;background:var(--text);}
 <div class="foot">
   <div class="flogo"><div class="flogo-text">AERA</div><div class="flogo-dot"></div></div>
   <div class="flinks">
-    <a class="flink" href="about.html">О редакции</a>
-    <a class="flink" href="verification.html">Политика верификации</a>
-    <a class="flink" href="verification.html">Trust Score — как считается</a>
-    <a class="flink" href="contact.html">Контакты</a>
+    <a class="flink" href="about.html" data-fkey="about">О редакции</a>
+    <a class="flink" href="verification.html" data-fkey="verification">Политика верификации</a>
+    <a class="flink" href="verification.html" data-fkey="trustscore">Trust Score — как считается</a>
+    <a class="flink" href="contact.html" data-fkey="contact">Контакты</a>
     <a class="flink" href="#">RSS</a>
   </div>
   <div class="fnote">Проверенные новости · Обновление каждые 15 минут</div>
@@ -581,7 +587,7 @@ if (chart) {
 }
 
 // ── READ MODES ──
-const modeContent={ '10s':'mode-10s', 'full':'mode-full' };
+const modeContent={ '10s':'mode-10s', 'full':'mode-full', 'bullets':'mode-bullets' };
 function setMode(btn,m){
   document.querySelectorAll('.rm').forEach(x=>x.classList.remove('on'));
   btn.classList.add('on');
@@ -593,17 +599,113 @@ function setMode(btn,m){
   if(target) target.classList.add('active');
 }
 
-// ── AUDIO ──
-let playing=false;
-function startPlay(btn){
-  if(playing)return;playing=true;
-  document.getElementById('play-label').textContent='Воспроизводится...';
-  document.getElementById('lbar-wrap').style.display='block';
-  const bar=document.getElementById('lbar');let w=0;
-  const iv=setInterval(()=>{w+=0.3;bar.style.width=w+'%';
-    if(w>=100){clearInterval(iv);document.getElementById('play-label').textContent='Слушать';
-    document.getElementById('lbar-wrap').style.display='none';bar.style.width='0%';playing=false;}
-  },650);
+// ── AUDIO / TTS ──
+let playing = false;
+let ttsAudio = null;
+
+function _ttsGetText() {
+  if (!articleData) return '';
+  const title = field(articleData, 'title') || '';
+  const body  = field(articleData, 'body') || field(articleData, 'summary10s') || '';
+  return title ? title + '. ' + body : body;
+}
+
+function _ttsSetUI(state) {
+  playing = (state === true || state === 'loading');
+  const lbl = document.getElementById('play-label');
+  const lico = document.querySelector('.listen-btn .lico');
+  if (state === true) {
+    if (lbl) lbl.textContent = currentLang === 'ru' ? 'Воспроизводится...' : currentLang === 'ro' ? 'Se redă...' : 'Playing...';
+    if (lico) lico.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="3" height="8" fill="white"/><rect x="6" y="1" width="3" height="8" fill="white"/></svg>';
+  } else if (state === 'loading') {
+    if (lbl) lbl.textContent = currentLang === 'ru' ? 'Загрузка...' : currentLang === 'ro' ? 'Se încarcă...' : 'Loading...';
+  } else {
+    if (lbl) lbl.textContent = currentLang === 'ru' ? 'Слушать' : currentLang === 'ro' ? 'Ascultă' : 'Listen';
+    if (lico) lico.innerHTML = '<svg width="9" height="11" viewBox="0 0 9 11"><polygon points="0,0 9,5.5 0,11" fill="white"/></svg>';
+    const lbar = document.getElementById('lbar');
+    if (lbar) lbar.style.width = '0%';
+  }
+}
+
+async function startPlay(btn) {
+  if (playing) {
+    if (ttsAudio) { ttsAudio.pause(); ttsAudio.src = ''; ttsAudio = null; }
+    _ttsSetUI(false);
+    return;
+  }
+  const text = _ttsGetText();
+  if (!text.trim()) return;
+
+  _ttsSetUI('loading');
+  try {
+    const resp = await fetch('/api/tts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text.slice(0, 5000) }),
+    });
+
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({}));
+      if (resp.status === 402 || errData.error === 'quota_exceeded') {
+        const shortText = field(articleData, 'summary10s') || text.slice(0, 200);
+        if (shortText && shortText !== text.slice(0, 5000)) {
+          const resp2 = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: shortText }),
+          });
+          if (resp2.ok) {
+            const blob2 = await resp2.blob();
+            const url2 = URL.createObjectURL(blob2);
+            ttsAudio = new Audio(url2);
+            ttsAudio.onended = () => { _ttsSetUI(false); URL.revokeObjectURL(url2); };
+            ttsAudio.onerror = () => { _ttsSetUI(false); URL.revokeObjectURL(url2); };
+            ttsAudio.play();
+            _ttsSetUI(true);
+            const lbl2 = document.getElementById('play-label');
+            if (lbl2) lbl2.textContent = currentLang === 'ru' ? 'Краткая версия' : currentLang === 'ro' ? 'Versiune scurtă' : 'Short version';
+            return;
+          }
+        }
+        _ttsSetUI(false);
+        const lbl = document.getElementById('play-label');
+        if (lbl) lbl.textContent = currentLang === 'ru' ? 'Лимит исчерпан' : currentLang === 'ro' ? 'Limită depășită' : 'Quota exceeded';
+        return;
+      }
+      throw new Error('TTS error ' + resp.status);
+    }
+
+    const blob = await resp.blob();
+    const url  = URL.createObjectURL(blob);
+    ttsAudio = new Audio(url);
+
+    ttsAudio.onloadedmetadata = () => {
+      const dur = ttsAudio.duration;
+      const m = Math.floor(dur / 60), s = Math.floor(dur % 60);
+      const durEl = document.getElementById('ldur');
+      if (durEl) durEl.textContent = currentLang === 'ru'
+        ? (m ? `${m} мин ${s} сек` : `${s} сек`)
+        : (m ? `${m} min ${s} sec` : `${s} sec`);
+    };
+    ttsAudio.ontimeupdate = () => {
+      const lbar = document.getElementById('lbar');
+      if (lbar && ttsAudio.duration)
+        lbar.style.width = Math.round(ttsAudio.currentTime / ttsAudio.duration * 100) + '%';
+    };
+    ttsAudio.onended = () => {
+      _ttsSetUI(false);
+      URL.revokeObjectURL(url);
+    };
+    ttsAudio.onerror = () => { _ttsSetUI(false); URL.revokeObjectURL(url); };
+    ttsAudio.play();
+    _ttsSetUI(true);
+
+  } catch(err) {
+    console.error('[TTS news]', err);
+    _ttsSetUI(false);
+    const lbl = document.getElementById('play-label');
+    if (lbl) { lbl.textContent = '⚠ Ошибка'; setTimeout(() => _ttsSetUI(false), 2000); }
+  }
 }
 
 // ── TRUST TOOLTIP ──
@@ -638,8 +740,9 @@ const NEWS_UI = {
     ask:'Вопрос редакции', askEditorial: 'Что-то не понятно? Спросите редакцию', askPlaceholder:'Спросите по теме статьи...',
     sources:'Источники:', share:'Поделиться:', telegram:'Telegram', copy:'Скопировать ссылку', copied:'✓ Скопировано',
     allNews:'Все новости', moldovaImpact:'Что это значит для Молдовы',
-    listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью',
+    listen:'Слушать', playing:'Воспроизводится...', read10:'10 сек', readFull:'Полностью', readBullets:'Тезисы',
     footerNote:'Проверенные новости · Обновление каждые 15 минут',
+    footerLinks:{about:'О редакции',verification:'Политика верификации',trustscore:'Trust Score — как считается',contact:'Контакты'},
     verified:'Проверено', partial:'Частично', unverified:'Непроверено',
     whatMeansPrefix:'→ Что это значит:', explain10s:'Объяснить за 10 сек', askQuestion:'Задать вопрос',
     cookies:{text:'🍪 <strong>Мы используем cookies.</strong> Этот сайт использует файлы cookie для аналитики, улучшения работы и персонализации контента. Нажимая «Принять», вы соглашаетесь с нашей <a href="cookies.html">политикой использования cookie</a>.', accept:'Принять', decline:'Отклонить'},
@@ -652,8 +755,9 @@ const NEWS_UI = {
     ask:'Ask the newsroom', askEditorial: 'Didn’t understand something? Ask the editorial team', askPlaceholder:'Ask about this story...',
     sources:'Sources:', share:'Share:', telegram:'Telegram', copy:'Copy link', copied:'✓ Copied',
     allNews:'All news', moldovaImpact:'What this means for Moldova',
-    listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full',
+    listen:'Listen', playing:'Playing...', read10:'10 sec', readFull:'Full', readBullets:'Bullets',
     footerNote:'Verified news · Updated every 15 minutes',
+    footerLinks:{about:'About',verification:'Verification Policy',trustscore:'Trust Score — how it works',contact:'Contacts'},
     verified:'Verified', partial:'Partial', unverified:'Unverified',
     whatMeansPrefix:'→ What it means:', explain10s:'Explain in 10s', askQuestion:'Ask a question',
     cookies:{text:'🍪 <strong>We use cookies.</strong> This site uses cookies for analytics, performance improvements, and content personalization. By clicking "Accept", you agree to our <a href="cookies.html">cookie policy</a>.', accept:'Accept', decline:'Decline'},
@@ -666,8 +770,9 @@ const NEWS_UI = {
     ask:'Întrebare pentru redacție', askEditorial: 'Nu ai înțeles ceva? Întreabă redacția', askPlaceholder:'Întreabă despre acest articol...',
     sources:'Surse:', share:'Distribuie:', telegram:'Telegram', copy:'Copiază linkul', copied:'✓ Copiat',
     allNews:'Toate știrile', moldovaImpact:'Ce înseamnă asta pentru Moldova',
-    listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet',
+    listen:'Ascultă', playing:'Se redă...', read10:'10 sec', readFull:'Complet', readBullets:'Teze',
     footerNote:'Știri verificate · Actualizare la fiecare 15 minute',
+    footerLinks:{about:'Despre redacție',verification:'Politica de verificare',trustscore:'Trust Score — cum se calculează',contact:'Contacte'},
     verified:'Verificat', partial:'Parțial', unverified:'Neverificat',
     whatMeansPrefix:'→ Ce înseamnă:', explain10s:'Explică în 10 sec', askQuestion:'Pune o întrebare',
     cookies:{text:'🍪 <strong>Folosim cookie-uri.</strong> Acest site folosește cookie-uri pentru analiză, îmbunătățirea performanței și personalizarea conținutului. Apăsând „Acceptă", ești de acord cu <a href="cookies.html">politica noastră privind cookie-urile</a>.', accept:'Acceptă', decline:'Refuză'},
@@ -728,7 +833,7 @@ function applyNewsUi(){
   const bcNews = document.getElementById('bc-news'); if(bcNews) bcNews.textContent = t.bc.news;
   const bcCur = document.getElementById('bc-cur'); if(bcCur) bcCur.textContent = t.bc.article;
 
-  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent = t.askEditorial;
+  const askLabel=document.querySelector('.ask-label'); if(askLabel) askLabel.textContent = t.ask;
   const askIn=document.querySelector('.ask-in'); if(askIn) askIn.placeholder = t.askPlaceholder;
   
   const whatPrefix = document.getElementById('art-what-prefix'); if(whatPrefix) whatPrefix.textContent = t.whatMeansPrefix;
@@ -747,18 +852,23 @@ function applyNewsUi(){
   const back=document.querySelector('a[href="index.html"] span'); if(back) back.textContent = t.allNews;
   const footer=document.querySelector('.fnote'); if(footer) footer.textContent = t.footerNote;
   const readBtns=document.querySelectorAll('.rm'); if(readBtns[0]) readBtns[0].textContent = t.read10; if(readBtns[1]) readBtns[1].textContent = t.readFull;
-  
-  if(!playing){ 
-    const play=document.getElementById('play-label'); 
-    if(play) play.textContent = t.listen; 
+  // "Тезисы" tab button (only visible when article has bullets)
+  const btnBullets = document.getElementById('btn-bullets'); if(btnBullets) btnBullets.textContent = t.readBullets;
+
+  if(!playing){
+    const play=document.getElementById('play-label');
+    if(play) play.textContent = t.listen;
   }
-  
+
   const sbHeaders = document.querySelectorAll('.sb-block-hdr');
   if(sbHeaders[0]) sbHeaders[0].textContent = t.keyFacts;
   if(sbHeaders[1]) sbHeaders[1].textContent = t.latest;
-  
+
   const breakingLabel = document.getElementById('breaking-label');
   if (breakingLabel) breakingLabel.textContent = (currentLang === 'ro' ? 'ÎN DIRECT' : currentLang === 'en' ? 'LIVE' : 'В ЭФИРЕ');
+
+  // Footer links
+  if (t.footerLinks) document.querySelectorAll('.flink[data-fkey]').forEach(el => { if (t.footerLinks[el.dataset.fkey]) el.textContent = t.footerLinks[el.dataset.fkey]; });
 }
 
 async function loadArticle() {
@@ -792,12 +902,44 @@ function renderArticle(article) {
   const catEl = document.querySelector('.art-cat'); if (catEl) catEl.textContent = translateCategory(article.category || 'general');
   const timeEl = document.querySelector('.art-time'); if (timeEl) timeEl.textContent = `${t.updated} ${formatTime(article.created_at)}`;
   
-  const m10 = document.getElementById('mode-10s'); 
+  const m10 = document.getElementById('mode-10s');
   const mfull = document.getElementById('mode-full');
+  const mbullets = document.getElementById('mode-bullets');
   const summary = field(article, 'summary10s');
-  
-  if (m10) m10.textContent = summary; 
+
+  if (m10) m10.textContent = summary;
   if (mfull) mfull.textContent = field(article, 'body');
+
+  // Update estimated TTS duration
+  setTimeout(() => {
+    const durEl = document.getElementById('ldur');
+    if (durEl) {
+      const txt = (field(article, 'title') || '') + '. ' + (field(article, 'body') || summary || '');
+      const words = txt.trim().split(/\s+/).length;
+      const totalSec = Math.round(words / 2.5);
+      const m = Math.floor(totalSec / 60), s = totalSec % 60;
+      durEl.textContent = currentLang === 'ru'
+        ? (m ? `${m} мин ${s} сек` : `${s} сек`)
+        : (m ? `${m} min ${s} sec` : `${s} sec`);
+    }
+  }, 50);
+
+  // Populate bullets tab
+  const btnBullets = document.getElementById('btn-bullets');
+  if (mbullets && btnBullets) {
+    let bullets = [];
+    try {
+      const raw = article.summary_bullets;
+      const obj = typeof raw === 'string' ? JSON.parse(raw) : (raw || {});
+      bullets = Array.isArray(obj) ? obj : (obj[currentLang] || obj['ru'] || obj['ro'] || obj['en'] || []);
+    } catch(e) {}
+    if (Array.isArray(bullets) && bullets.length > 0) {
+      mbullets.innerHTML = '<ul>' + bullets.map(b => `<li>${escapeHtml(b)}</li>`).join('') + '</ul>';
+      btnBullets.style.display = '';
+    } else {
+      btnBullets.style.display = 'none';
+    }
+  }
 
   const whatMeansBlock = document.getElementById('art-what-it-means');
   const whatMeansText = document.getElementById('art-what-text');
@@ -825,6 +967,19 @@ function renderArticle(article) {
     if (trust) {
       trust.className = `trust ${scoreClass}`;
       trust.innerHTML = `<div class="tbar"><div class="tfill" style="width:${score}%;background:${score>=80?'#1a7a3c':score>=50?'#8a6000':'#b03020'};"></div></div>${scoreLabel} · ${score}/100 <span style="font-size:11px;opacity:.6;">ⓘ</span>`;
+    }
+    // Update tooltip header with real score
+    const ttHeader = document.querySelector('.tt-header');
+    if (ttHeader) {
+      const bgColor = score >= 80 ? 'var(--tg-bg)' : score >= 50 ? 'var(--ty-bg)' : 'var(--tr-bg)';
+      const bColor  = score >= 80 ? 'var(--tg-b)' : score >= 50 ? 'var(--ty-b)' : 'var(--tr-b)';
+      const txtColor = score >= 80 ? 'var(--tg-txt)' : score >= 50 ? 'var(--ty-txt)' : 'var(--tr-txt)';
+      ttHeader.style.background = bgColor;
+      ttHeader.style.borderBottomColor = bColor;
+      const scoreBig = ttHeader.querySelector('.tt-score-big');
+      const scoreLbl = ttHeader.querySelector('.tt-score-label');
+      if (scoreBig) { scoreBig.style.color = txtColor; scoreBig.textContent = score; }
+      if (scoreLbl) { scoreLbl.style.color = txtColor; }
     }
   }
 
@@ -1056,59 +1211,41 @@ function populateBreakingBar(articles){
   track.innerHTML = joined;
 }
 
-async function loadKeyNumbers() {
+function loadKeyNumbers() {
   const container = document.getElementById('facts-container');
-  if (!container) return;
-
   const knBlock = document.getElementById('kn-block');
-  if (knBlock) knBlock.style.display = 'none';
+  if (!container || !knBlock) return;
 
+  // Only show key_numbers from the CURRENT article
+  if (!articleData) { knBlock.style.display = 'none'; return; }
+
+  let nums = [];
   try {
-    // Fetch latest 6 articles to extract key numbers from
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/articles?status=eq.published&order=created_at.desc&limit=6`, {
-      headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-    });
-    const articles = await res.json();
-    
-    let allNumbers = [];
-    articles.forEach(art => {
-      let nums = [];
-      try {
-        const kn = typeof art.key_numbers === 'string' ? JSON.parse(art.key_numbers) : art.key_numbers;
-        if (kn && kn[currentLang]) {
-          nums = kn[currentLang].map(n => ({ ...n, artId: art.id, priority: art.priority }));
-        }
-      } catch(e) {}
-      allNumbers = allNumbers.concat(nums);
-    });
+    const kn = typeof articleData.key_numbers === 'string'
+      ? JSON.parse(articleData.key_numbers)
+      : (articleData.key_numbers || {});
+    nums = kn[currentLang] || kn['ru'] || kn['ro'] || kn['en'] || [];
+  } catch(e) {}
 
-    // Sort by article priority and limit to 5
-    const priorityMap = { 'urgent': 0, 'important': 1, 'planned': 2, 'normal': 3, 'low': 4 };
-    allNumbers.sort((a, b) => (priorityMap[a.priority] || 9) - (priorityMap[b.priority] || 9));
-    
-    const displayNums = allNumbers.slice(0, 5);
-    
-    if (displayNums.length === 0) {
-      if (knBlock) knBlock.style.display = 'none';
-      return;
-    }
-
-    if (knBlock) knBlock.style.display = 'block';
-
-    container.innerHTML = displayNums.map(n => `
-      <a href="news.html?id=${n.artId}" class="fact-row" style="text-decoration:none; color:inherit;">
-        <div class="fact-ico">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="fact-text">
-          <div class="fact-val">${escapeHtml(n.value)}</div>
-          <div>${escapeHtml(n.label)}</div>
-        </div>
-      </a>
-    `).join('');
-  } catch (e) {
-    console.error("Error loading key numbers:", e);
+  if (!Array.isArray(nums) || nums.length === 0) {
+    knBlock.style.display = 'none';
+    return;
   }
+
+  knBlock.style.display = 'block';
+  container.innerHTML = nums.slice(0, 5).map(n => `
+    <div class="fact-row">
+      <div class="fact-ico">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+        </svg>
+      </div>
+      <div class="fact-text">
+        <div class="fact-val">${escapeHtml(String(n.value || ''))}</div>
+        <div>${escapeHtml(String(n.label || ''))}</div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // Cookie Banner
