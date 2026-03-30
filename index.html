@@ -1534,15 +1534,30 @@ function renderContentUnit(article) {
 function updateHeroText() {
   if (!heroArticle) return;
   const ctxt = document.getElementById('ctxt');
-  const bulletsEl = document.getElementById('cu-bullets');
+  if (!ctxt) return;
+
   if (currentMode === 'bullets') {
-    // Показываем bullets, скрываем ctxt
-    if (ctxt) ctxt.style.display = 'none';
-    if (bulletsEl) bulletsEl.style.display = 'flex';
+    // Render summary_bullets as a list inside ctxt
+    const raw = heroArticle.summary_bullets;
+    let bullets = [];
+    try {
+      const obj = typeof raw === 'string' ? JSON.parse(raw) : (raw || {});
+      bullets = Array.isArray(obj) ? obj : (obj[currentLang] || obj['ru'] || obj['ro'] || obj['en'] || []);
+    } catch(e) {}
+    if (bullets.length > 0) {
+      ctxt.style.display = '';
+      ctxt.innerHTML = '<ul style="padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">' +
+        bullets.map(b => `<li style="display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--text2);line-height:1.6;"><span style="color:var(--accent);font-weight:700;flex-shrink:0;">•</span><span>${escapeHtml(b)}</span></li>`).join('') +
+        '</ul>';
+    } else {
+      ctxt.style.display = '';
+      ctxt.textContent = field(heroArticle,'summary10s') || '';
+    }
   } else {
-    if (bulletsEl) bulletsEl.style.display = 'none';
     const texts = { '10s': field(heroArticle,'summary10s'), 'full': field(heroArticle,'body') };
-    if (ctxt) { ctxt.style.display = ''; ctxt.textContent = texts[currentMode] || ''; }
+    ctxt.style.display = '';
+    ctxt.innerHTML = '';
+    ctxt.textContent = texts[currentMode] || '';
   }
 }
 
