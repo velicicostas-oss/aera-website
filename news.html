@@ -167,6 +167,20 @@ body.dark .tth{left:22px;background:var(--text);}
 .md-stat-lbl{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.3;font-weight:500;}
 .md-stat-bar{height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden;display:none;}
 .md-stat-fill{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .6s ease-out;}
+/* ── CONTENT UNIT BLOCKS (news page) ── */
+.cu-block{margin:20px 0 0;padding:12px 14px;border-radius:8px;background:var(--bg2);border-left:3px solid var(--accent);}
+.cu-block-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:6px;}
+.cu-block-txt{font-size:13px;color:var(--text2);line-height:1.7;}
+.cu-impact{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0 0;}
+.cu-impact-item{padding:10px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);}
+.cu-impact-ico{font-size:14px;margin-bottom:4px;}
+.cu-impact-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:3px;}
+.cu-impact-txt{font-size:12px;color:var(--text2);line-height:1.5;}
+.cu-next{margin:20px 0 0;padding:12px 14px;border-radius:8px;background:var(--ty-bg);border:1px solid var(--ty-b);}
+.cu-next-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ty-txt);margin-bottom:6px;}
+.cu-next-list{padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;}
+.cu-next-item{display:flex;gap:7px;align-items:flex-start;font-size:12px;color:var(--ty-txt);line-height:1.5;}
+.cu-next-dot{color:var(--accent);flex-shrink:0;font-weight:700;}
 
 /* ASK */
 .ask-wrap{margin:24px 0;}
@@ -420,6 +434,26 @@ body.dark .tth{left:22px;background:var(--text);}
       <div class="mode-full active" id="mode-full"></div>
     </div>
 
+    <!-- WHAT IT MEANS -->
+    <div class="cu-block" id="news-what-means" style="display:none;">
+      <div class="cu-block-lbl" id="news-what-means-lbl">Что это значит</div>
+      <div class="cu-block-txt" id="news-what-means-txt"></div>
+    </div>
+
+    <!-- IMPACT: People & Economy -->
+    <div class="cu-impact" id="news-cu-impact" style="display:none;">
+      <div class="cu-impact-item">
+        <div class="cu-impact-ico">👥</div>
+        <div class="cu-impact-lbl" id="news-impact-people-lbl">Люди</div>
+        <div class="cu-impact-txt" id="news-impact-people-txt"></div>
+      </div>
+      <div class="cu-impact-item">
+        <div class="cu-impact-ico">💰</div>
+        <div class="cu-impact-lbl" id="news-impact-economy-lbl">Экономика</div>
+        <div class="cu-impact-txt" id="news-impact-economy-txt"></div>
+      </div>
+    </div>
+
     <!-- INFOGRAPHIC -->
     <div class="infographic" style="display:none;">
       <div class="infog-header">
@@ -445,6 +479,12 @@ body.dark .tth{left:22px;background:var(--text);}
           <div class="md-stat"><div class="md-stat-val"></div><div class="md-stat-lbl"></div><div class="md-stat-bar"><div class="md-stat-fill"></div></div></div>
         </div>
       </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="cu-next" id="news-cu-next" style="display:none;">
+      <div class="cu-next-lbl" id="news-cu-next-lbl">Что будет дальше</div>
+      <ul class="cu-next-list" id="news-cu-next-list"></ul>
     </div>
 
     <!-- ASK -->
@@ -887,8 +927,76 @@ function renderArticle(article) {
       }
     }
 
+  renderNewsContentUnit(article);
   renderRelated(article.id);
   populateBreakingBar(relatedArticles);
+}
+
+function renderNewsContentUnit(article) {
+  const lang = currentLang;
+
+  function cuFieldNews(base) {
+    const raw = article[base];
+    if (!raw) return null;
+    const obj = typeof raw === 'string' ? (() => { try { return JSON.parse(raw); } catch(e) { return null; } })() : raw;
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) {
+      return obj[lang] || obj['ro'] || obj['ru'] || obj['en'] || null;
+    }
+    return typeof raw === 'string' ? raw : null;
+  }
+
+  // What it means
+  const whatMeans = cuFieldNews('what_means');
+  const wmEl = document.getElementById('news-what-means');
+  const wmLbl = document.getElementById('news-what-means-lbl');
+  const wmTxt = document.getElementById('news-what-means-txt');
+  if (wmEl) {
+    if (whatMeans && whatMeans.length > 5) {
+      if (wmLbl) wmLbl.textContent = lang === 'ro' ? 'Ce înseamnă asta' : lang === 'en' ? 'What this means' : 'Что это значит';
+      if (wmTxt) wmTxt.textContent = whatMeans;
+      wmEl.style.display = 'block';
+    } else {
+      wmEl.style.display = 'none';
+    }
+  }
+
+  // Impact: People & Economy
+  const impactRaw = article['impact'];
+  const impactTop = typeof impactRaw === 'string' ? (() => { try { return JSON.parse(impactRaw); } catch(e) { return null; } })() : (impactRaw || null);
+  const impactEl = document.getElementById('news-cu-impact');
+  if (impactEl && impactTop && typeof impactTop === 'object') {
+    const impact = impactTop[lang] || impactTop['ro'] || impactTop['ru'] || impactTop['en'];
+    const peopleTxt = document.getElementById('news-impact-people-txt');
+    const econTxt   = document.getElementById('news-impact-economy-txt');
+    const peopleLbl = document.getElementById('news-impact-people-lbl');
+    const econLbl   = document.getElementById('news-impact-economy-lbl');
+    if (peopleLbl) peopleLbl.textContent = lang === 'ro' ? 'Oameni' : lang === 'en' ? 'People' : 'Люди';
+    if (econLbl)   econLbl.textContent   = lang === 'ro' ? 'Economie' : lang === 'en' ? 'Economy' : 'Экономика';
+    if (impact && typeof impact === 'object') {
+      if (peopleTxt) peopleTxt.textContent = impact.people || '';
+      if (econTxt)   econTxt.textContent   = impact.economy || '';
+      impactEl.style.display = (impact.people || impact.economy) ? 'grid' : 'none';
+    } else {
+      impactEl.style.display = 'none';
+    }
+  } else if (impactEl) {
+    impactEl.style.display = 'none';
+  }
+
+  // Next steps
+  const nextSteps = cuFieldNews('next_steps');
+  const nextEl   = document.getElementById('news-cu-next');
+  const nextLbl  = document.getElementById('news-cu-next-lbl');
+  const nextList = document.getElementById('news-cu-next-list');
+  if (nextEl) {
+    if (Array.isArray(nextSteps) && nextSteps.length > 0) {
+      if (nextLbl) nextLbl.textContent = lang === 'ro' ? 'Ce urmează' : lang === 'en' ? "What's next" : 'Что будет дальше';
+      if (nextList) nextList.innerHTML = nextSteps.map(s => `<li class="cu-next-item"><span class="cu-next-dot">→</span><span>${escapeHtml(String(s))}</span></li>`).join('');
+      nextEl.style.display = 'block';
+    } else {
+      nextEl.style.display = 'none';
+    }
+  }
 }
 
 function renderRelated(currentId) {
