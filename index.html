@@ -1833,7 +1833,37 @@ async function startPlay() {
       body: JSON.stringify({ text: text.slice(0, 5000) }),
     });
 
-    if (!resp.ok) throw new Error('TTS API error ' + resp.status);
+    if (!resp.ok) {
+      const errData = await resp.json().catch(() => ({}));
+      if (resp.status === 402 || errData.error === 'quota_exceeded') {
+        // Fallback: try with just the 10-second summary (~100 chars)
+        const shortText = field(heroArticle, 'summary10s') || text.slice(0, 200);
+        if (shortText && shortText !== text.slice(0, 5000)) {
+          const resp2 = await fetch('/api/tts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: shortText }),
+          });
+          if (resp2.ok) {
+            const blob2 = await resp2.blob();
+            const url2 = URL.createObjectURL(blob2);
+            ttsAudio = new Audio(url2);
+            ttsAudio.onended = () => { _ttsSetUI(false); URL.revokeObjectURL(url2); };
+            ttsAudio.onerror = () => { _ttsSetUI(false); URL.revokeObjectURL(url2); };
+            ttsAudio.play();
+            _ttsSetUI(true);
+            const lbl2 = document.getElementById('play-label');
+            if (lbl2) lbl2.textContent = currentLang === 'ru' ? 'Краткая версия' : currentLang === 'ro' ? 'Versiune scurtă' : 'Short version';
+            return;
+          }
+        }
+        _ttsSetUI(false);
+        const lbl = document.getElementById('play-label');
+        if (lbl) lbl.textContent = currentLang === 'ru' ? 'Лимит исчерпан' : currentLang === 'ro' ? 'Limită depășită' : 'Quota exceeded';
+        return;
+      }
+      throw new Error('TTS API error ' + resp.status);
+    }
 
     const blob = await resp.blob();
     const url  = URL.createObjectURL(blob);

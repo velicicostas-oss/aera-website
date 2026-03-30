@@ -34,7 +34,7 @@ module.exports = async function handler(req, res) {
         },
         body: JSON.stringify({
           text: text.slice(0, 5000),
-          model_id: 'eleven_multilingual_v2', // RU + RO + EN
+          model_id: 'eleven_flash_v2_5', // fast, multilingual, free-tier compatible
           voice_settings: {
             stability: 0.50,
             similarity_boost: 0.75,
@@ -48,6 +48,10 @@ module.exports = async function handler(req, res) {
     if (!response.ok) {
       const errText = await response.text();
       console.error('[TTS] ElevenLabs error:', response.status, errText);
+      // Detect quota_exceeded and return friendly message
+      if (errText.includes('quota_exceeded')) {
+        return res.status(402).json({ error: 'quota_exceeded', message: 'ElevenLabs quota exceeded. Please upgrade your plan at elevenlabs.io.' });
+      }
       return res.status(response.status).json({ error: errText });
     }
 
