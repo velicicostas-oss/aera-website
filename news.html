@@ -951,8 +951,18 @@ function renderArticle(article) {
     if (artActions) artActions.style.display = 'flex';
   }
   
-  const img = document.querySelector('.art-img'); 
-  if (img && article.photo_url) { img.src = article.photo_url; img.alt = title; }
+  const img = document.querySelector('.art-img');
+  const imgWrap = document.querySelector('.art-img-wrap');
+  if (img && article.photo_url) {
+    img.alt = title;
+    img.onerror = () => {
+      // Broken/expired URL — hide image wrap gracefully
+      if (imgWrap) imgWrap.style.display = 'none';
+    };
+    img.src = article.photo_url;
+  } else if (imgWrap) {
+    imgWrap.style.display = 'none';
+  }
 
   // Trust Score
   const trustWrap = document.getElementById('trust-wrap');
